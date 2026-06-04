@@ -1,0 +1,17 @@
+name: Keep Render App Awake
+
+on:
+  schedule:
+    # Run every 14 minutes (Render free tier goes to sleep after 15 minutes of inactivity)
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub actions tab
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping YojanaMitra App
+        run: |
+          echo "Pinging YojanaMitra to keep it awake..."
+          curl -sI https://yojanamitra-ym.onrender.com || echo "Ping failed, but continuing..."
+          curl -sI https://yojanamitra-1.onrender.com || echo "Alternative ping failed, but continuing..."
