@@ -1,0 +1,444 @@
+{
+  "_comment": "DO NOT EDIT — generated from scripts/generate_profile_registry.py",
+  "version": "1.0",
+  "profile_fields": {
+    "age": {
+      "type": "integer",
+      "concepts": ["age"],
+      "form_mappings": ["age"],
+      "derives": {}
+    },
+    "aadhaar_available": {
+      "type": "boolean",
+      "concepts": ["has_aadhaar"],
+      "form_mappings": ["aadhaar_available", "aadhaarAvailable"],
+      "derives": {}
+    },
+    "aadhaar_linked_bank": {
+      "type": "boolean",
+      "concepts": ["has_aadhaar_linked_bank"],
+      "form_mappings": ["aadhaar_linked_bank", "aadhaarLinkedBank"],
+      "derives": {}
+    },
+    "achievement_certificates": {
+      "type": "string",
+      "concepts": ["achievement"],
+      "form_mappings": ["achievement_certificates", "achievementCertificates"],
+      "derives": {}
+    },
+    "annual_family_income": {
+      "type": "integer",
+      "concepts": ["annual_income", "income"],
+      "form_mappings": ["annual_family_income", "annualFamilyIncome"],
+      "derives": {}
+    },
+    "bank_account_available": {
+      "type": "boolean",
+      "concepts": ["has_bank_account"],
+      "form_mappings": ["bank_account_available", "bankAccountAvailable"],
+      "derives": {}
+    },
+    "block_taluk": {
+      "type": "string",
+      "concepts": ["block_taluk"],
+      "form_mappings": ["block_taluk", "blockTaluk"],
+      "derives": {}
+    },
+    "career_goal": {
+      "type": "string",
+      "concepts": ["career_goal"],
+      "form_mappings": ["career_goal", "careerGoal"],
+      "derives": {}
+    },
+    "caste": {
+      "type": "category",
+      "concepts": ["category", "caste"],
+      "form_mappings": ["caste"],
+      "derives": {}
+    },
+    "child_age": {
+      "type": "integer",
+      "concepts": ["child_age"],
+      "form_mappings": ["child_age", "childAge"],
+      "derives": {}
+    },
+    "current_course": {
+      "type": "string",
+      "concepts": ["education"],
+      "form_mappings": ["current_course", "currentCourse"],
+      "derives": {}
+    },
+    "disability": {
+      "type": "boolean",
+      "concepts": ["is_disabled", "disability"],
+      "form_mappings": ["disability"],
+      "derives": {}
+    },
+    "disability_percentage": {
+      "type": "integer",
+      "concepts": ["disability"],
+      "form_mappings": ["disability_percentage", "disabilityPercentage"],
+      "derives": {}
+    },
+    "district": {
+      "type": "string",
+      "concepts": ["district"],
+      "form_mappings": ["district"],
+      "derives": {}
+    },
+    "dob": {
+      "type": "date",
+      "concepts": ["dob"],
+      "form_mappings": ["dob"],
+      "derives": {}
+    },
+    "documents_available": {
+      "type": "boolean",
+      "concepts": ["has_documents"],
+      "form_mappings": ["documents_available", "documentsAvailable"],
+      "derives": {}
+    },
+    "domicile_status": {
+      "type": "string",
+      "concepts": ["domicile_status"],
+      "form_mappings": ["domicile_status", "domicileStatus"],
+      "derives": {}
+    },
+    "education": {
+      "type": "string",
+      "concepts": ["education_level"],
+      "form_mappings": ["education"],
+      "derives": {}
+    },
+    "education_milestones": {
+      "type": "string",
+      "concepts": ["education"],
+      "form_mappings": ["education_milestones", "educationMilestones"],
+      "derives": {}
+    },
+    "education_status": {
+      "type": "string",
+      "concepts": ["education_status"],
+      "form_mappings": ["education_status", "educationStatus"],
+      "derives": {}
+    },
+    "email": {
+      "type": "string",
+      "concepts": ["email"],
+      "form_mappings": ["email"],
+      "derives": {}
+    },
+    "employment_status": {
+      "type": "string",
+      "concepts": ["employment_status"],
+      "form_mappings": ["employment_status", "employmentStatus"],
+      "derives": {}
+    },
+    "ews_status": {
+      "type": "boolean",
+      "concepts": ["is_ews"],
+      "form_mappings": ["ews_status", "ewsStatus"],
+      "derives": {}
+    },
+    "family_type": {
+      "type": "string",
+      "concepts": ["family_type"],
+      "form_mappings": ["family_type", "familyType"],
+      "derives": {}
+    },
+    "father_occupation": {
+      "type": "string",
+      "concepts": ["occupation"],
+      "form_mappings": ["father_occupation", "fatherOccupation"],
+      "derives": {}
+    },
+    "gender": {
+      "type": "category",
+      "concepts": ["gender"],
+      "form_mappings": ["gender"],
+      "derives": {}
+    },
+    "govt_employee_in_family": {
+      "type": "boolean",
+      "concepts": ["govt_employee"],
+      "form_mappings": ["govt_employee_in_family", "govtEmployeeInFamily"],
+      "derives": {}
+    },
+    "has_pucca_house": {
+      "type": "boolean",
+      "concepts": ["has_pucca_house"],
+      "form_mappings": ["has_pucca_house", "hasPuccaHouse"],
+      "derives": {}
+    },
+    "highest_education_level": {
+      "type": "string",
+      "concepts": ["education_level"],
+      "form_mappings": ["highest_education_level", "highestEducationLevel"],
+      "derives": {}
+    },
+    "house_type": {
+      "type": "string",
+      "concepts": ["house_type"],
+      "form_mappings": ["house_type", "houseType"],
+      "derives": {}
+    },
+    "income": {
+      "type": "integer",
+      "concepts": ["income", "annual_income"],
+      "form_mappings": ["income"],
+      "derives": {}
+    },
+    "income_certificate_available": {
+      "type": "boolean",
+      "concepts": ["has_income_certificate"],
+      "form_mappings": ["income_certificate_available", "incomeCertificateAvailable"],
+      "derives": {}
+    },
+    "income_cert_last_1_year": {
+      "type": "boolean",
+      "concepts": ["has_income_certificate"],
+      "form_mappings": ["income_cert_last_1_year", "incomeCertLast1Year"],
+      "derives": {}
+    },
+    "income_slab": {
+      "type": "string",
+      "concepts": ["income"],
+      "form_mappings": ["income_slab", "incomeSlab"],
+      "derives": {}
+    },
+    "institution_type": {
+      "type": "string",
+      "concepts": ["institution_type"],
+      "form_mappings": ["institution_type", "institutionType"],
+      "derives": {}
+    },
+    "is_bocw_registered": {
+      "type": "boolean",
+      "concepts": ["is_bocw_registered"],
+      "form_mappings": ["is_bocw_registered", "isBOCWRegistered"],
+      "derives": {}
+    },
+    "is_bpl": {
+      "type": "boolean",
+      "concepts": ["is_bpl", "poverty_status"],
+      "form_mappings": ["is_bpl", "isBPL"],
+      "derives": {}
+    },
+    "is_disabled": {
+      "type": "boolean",
+      "concepts": ["is_disabled"],
+      "form_mappings": ["is_disabled", "isDisabled"],
+      "derives": {}
+    },
+    "is_farmer": {
+      "type": "boolean",
+      "concepts": ["is_farmer"],
+      "form_mappings": ["is_farmer", "isFarmer"],
+      "derives": {}
+    },
+    "is_first_gen_student": {
+      "type": "boolean",
+      "concepts": ["is_first_gen_student"],
+      "form_mappings": ["is_first_gen_student", "isFirstGenStudent"],
+      "derives": {}
+    },
+    "is_head_of_family": {
+      "type": "boolean",
+      "concepts": ["is_head_of_family"],
+      "form_mappings": ["is_head_of_family", "isHeadOfFamily"],
+      "derives": {}
+    },
+    "is_landless": {
+      "type": "boolean",
+      "concepts": ["is_landless"],
+      "form_mappings": ["is_landless", "isLandless"],
+      "derives": {}
+    },
+    "is_minority": {
+      "type": "boolean",
+      "concepts": ["is_minority"],
+      "form_mappings": ["is_minority", "isMinority", "minority_status", "minorityStatus"],
+      "derives": {}
+    },
+    "is_orphan": {
+      "type": "boolean",
+      "concepts": ["is_orphan"],
+      "form_mappings": ["is_orphan", "isOrphan"],
+      "derives": {}
+    },
+    "is_pensioner": {
+      "type": "boolean",
+      "concepts": ["is_pensioner"],
+      "form_mappings": ["is_pensioner", "isPensioner"],
+      "derives": {}
+    },
+    "is_school_dropout": {
+      "type": "boolean",
+      "concepts": ["is_school_dropout"],
+      "form_mappings": ["is_school_dropout", "isSchoolDropout"],
+      "derives": {}
+    },
+    "is_senior_citizen": {
+      "type": "boolean",
+      "concepts": ["is_senior_citizen"],
+      "form_mappings": ["is_senior_citizen", "isSeniorCitizen"],
+      "derives": {}
+    },
+    "is_tenant_farmer": {
+      "type": "boolean",
+      "concepts": ["is_tenant_farmer"],
+      "form_mappings": ["is_tenant_farmer", "isTenantFarmer"],
+      "derives": {}
+    },
+    "is_tribal": {
+      "type": "boolean",
+      "concepts": ["is_tribal"],
+      "form_mappings": ["is_tribal", "isTribal"],
+      "derives": {}
+    },
+    "is_widow": {
+      "type": "boolean",
+      "concepts": ["is_widow"],
+      "form_mappings": ["is_widow", "isWidow", "is_widow_single_woman", "isWidowSingleWoman"],
+      "derives": {}
+    },
+    "land_owned_acres": {
+      "type": "float",
+      "concepts": ["land_ownership", "land_size"],
+      "form_mappings": ["land_owned_acres", "landOwnedAcres", "landSizeAcres"],
+      "derives": {}
+    },
+    "land_type": {
+      "type": "string",
+      "concepts": ["land_type"],
+      "form_mappings": ["land_type", "landType"],
+      "derives": {}
+    },
+    "marital_status": {
+      "type": "string",
+      "concepts": ["marital_status"],
+      "form_mappings": ["marital_status", "maritalStatus"],
+      "derives": {}
+    },
+    "mobile": {
+      "type": "string",
+      "concepts": ["mobile"],
+      "form_mappings": ["mobile"],
+      "derives": {}
+    },
+    "mobile_linked_bank": {
+      "type": "boolean",
+      "concepts": ["has_mobile_linked_bank"],
+      "form_mappings": ["mobile_linked_bank", "mobileLinkedBank"],
+      "derives": {}
+    },
+    "mother_occupation": {
+      "type": "string",
+      "concepts": ["occupation"],
+      "form_mappings": ["mother_occupation", "motherOccupation"],
+      "derives": {}
+    },
+    "name": {
+      "type": "string",
+      "concepts": ["name"],
+      "form_mappings": ["name"],
+      "derives": {}
+    },
+    "num_daughters": {
+      "type": "integer",
+      "concepts": ["child_count"],
+      "form_mappings": ["num_daughters", "numDaughters"],
+      "derives": {}
+    },
+    "occupation": {
+      "type": "string",
+      "concepts": ["occupation"],
+      "form_mappings": ["occupation"],
+      "derives": {}
+    },
+    "own_agricultural_land": {
+      "type": "boolean",
+      "concepts": ["has_land"],
+      "form_mappings": ["own_agricultural_land", "ownAgriculturalLand"],
+      "derives": {}
+    },
+    "ration_card_available": {
+      "type": "boolean",
+      "concepts": ["has_ration_card"],
+      "form_mappings": ["ration_card_available", "rationCardAvailable"],
+      "derives": {}
+    },
+    "ration_card_type": {
+      "type": "string",
+      "concepts": ["ration_card_type"],
+      "form_mappings": ["ration_card_type", "rationCardType"],
+      "derives": {}
+    },
+    "religion": {
+      "type": "string",
+      "concepts": ["religion"],
+      "form_mappings": ["religion"],
+      "derives": {}
+    },
+    "residence": {
+      "type": "category",
+      "concepts": ["residence", "residence_type"],
+      "form_mappings": ["residence"],
+      "derives": {}
+    },
+    "scheme_previously_availed": {
+      "type": "boolean",
+      "concepts": ["previous_beneficiary"],
+      "form_mappings": ["scheme_previously_availed", "schemePreviouslyAvailed"],
+      "derives": {}
+    },
+    "schemes_applied": {
+      "type": "string",
+      "concepts": ["schemes_applied"],
+      "form_mappings": ["schemes_applied", "schemesApplied"],
+      "derives": {}
+    },
+    "schemes_availed": {
+      "type": "string",
+      "concepts": ["schemes_availed"],
+      "form_mappings": ["schemes_availed", "schemesAvailed"],
+      "derives": {}
+    },
+    "schemes_completed": {
+      "type": "string",
+      "concepts": ["schemes_completed"],
+      "form_mappings": ["schemes_completed", "schemesCompleted"],
+      "derives": {}
+    },
+    "schemes_rejected": {
+      "type": "string",
+      "concepts": ["schemes_rejected"],
+      "form_mappings": ["schemes_rejected", "schemesRejected"],
+      "derives": {}
+    },
+    "state": {
+      "type": "string",
+      "concepts": ["state"],
+      "form_mappings": ["state"],
+      "derives": {}
+    },
+    "sub_caste": {
+      "type": "string",
+      "concepts": ["sub_caste"],
+      "form_mappings": ["sub_caste", "subCaste"],
+      "derives": {}
+    },
+    "total_family_members": {
+      "type": "integer",
+      "concepts": ["family_size"],
+      "form_mappings": ["total_family_members", "totalFamilyMembers"],
+      "derives": {}
+    },
+    "willing_to_submit_docs": {
+      "type": "boolean",
+      "concepts": ["has_willingness"],
+      "form_mappings": ["willing_to_submit_docs", "willingToSubmitDocs"],
+      "derives": {}
+    }
+  }
+}
