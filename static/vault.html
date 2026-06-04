@@ -204,6 +204,76 @@ nav a.nav-cta:hover { background: #ea6a0a; }
   .upload-zone { padding: 24px 16px !important; }
   .modal { width: 96vw !important; padding: 20px !important; }
 }
+
+    /* --- INLINE MOBILE DRAWER CSS --- */
+    .mobile-nav-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0; visibility: hidden;
+        z-index: 99998;
+        transition: all 0.3s ease;
+    }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+
+    .mobile-nav-drawer {
+        position: fixed;
+        top: 0; right: -300px; width: 280px; height: 100%;
+        background: #0b1a16;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 99999;
+        display: flex; flex-direction: column;
+        transition: right 0.3s ease;
+        padding: 24px;
+    }
+    .mobile-nav-drawer.open { right: 0; }
+
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 16px; }
+    .drawer-logo { display: flex; align-items: center; gap: 8px; font-weight: 800; color: #ffffff; font-size: 1.2rem; }
+    .drawer-logo .logo-mark { background: #f97316; color: #fff; padding: 3px 6px; border-radius: 6px; font-size: 0.9rem; }
+    .drawer-close { font-size: 2rem; background: transparent; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 0; line-height: 1; }
+    .drawer-body { display: flex; flex-direction: column; gap: 28px; }
+    .drawer-nav-group, .drawer-action-group { display: flex; flex-direction: column; gap: 16px; }
+    .drawer-link { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 1.1rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 6px 0; }
+    .drawer-link.active, .drawer-link:hover { color: #f97316; }
+    .drawer-btn { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 1rem; margin-bottom: 8px; }
+    .drawer-btn.btn-primary { background: #f97316; color: #ffffff; }
+    .drawer-btn.btn-secondary { background: rgba(255,255,255,0.1); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); }
+    body.menu-open { overflow: hidden !important; }
+
+    @media (max-width: 768px) {
+      /* Kill all media and images */
+      img, video, canvas, iframe, picture, figure, .hero-image, .story-image, .scrolly-container { 
+        display: none !important; 
+        background-image: none !important;
+      }
+      
+      /* Flatten backgrounds to solid colors to prevent image loading */
+      .hero, .global-patriotic-bg, section { 
+        background-image: none !important; 
+      }
+      
+      body, html {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+      }
+
+      /* Clean up grids and layout */
+      .container, section, .hero-container, .dashboard-container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      
+      .grid-2, .grid-3, .row, .col-md-6, .col-md-4, .col-lg-3, .col-lg-4, .col-lg-8 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+      }
+    }
 </style>
 </head>
 <body>

@@ -1451,7 +1451,65 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-    </style>
+    
+    @media (max-width: 768px) {
+      /* Kill all media and images */
+      img, video, canvas, iframe, picture, figure, .hero-image, .story-image, .scrolly-container { 
+        display: none !important; 
+        background-image: none !important;
+      }
+      
+      /* Flatten backgrounds to solid colors to prevent image loading */
+      * { 
+        background-image: none !important; 
+      }
+      
+      body, html {
+        background-color: #0b1a16 !important; /* solid dark theme */
+        color: #ffffff !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* Clean up grids and layout */
+      .container, section, .hero-container, .dashboard-container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      
+      .grid-2, .grid-3, .row, .col-md-6, .col-md-4, .col-lg-3, .col-lg-4, .col-lg-8 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+      }
+
+      /* Fix the menu */
+      #global-header nav, #global-header .header-actions { 
+        display: none !important; 
+      }
+      .hamburger-btn { 
+        display: flex !important; 
+        flex-direction: column !important;
+        justify-content: space-around !important;
+        width: 30px !important;
+        height: 25px !important;
+        background: transparent !important;
+        border: none !important;
+        z-index: 100000 !important;
+      }
+      .hamburger-btn .bar {
+        width: 100% !important;
+        height: 3px !important;
+        background-color: #ffffff !important;
+        border-radius: 2px !important;
+      }
+    }
+</style>
 </head>
 
 <body>
