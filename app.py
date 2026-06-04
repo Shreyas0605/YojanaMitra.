@@ -7069,9 +7069,10 @@ def test_notifications():
         "success": success
     }), 200
 
+# ── Initialize DB (runs on import — needed for gunicorn/Render) ──
+init_db()
+
 if __name__ == '__main__':
-    init_db()
-    
     # Initialize and start the scheduler
     print("Initializing background scheduler...")
     from scheduler import init_scheduler
