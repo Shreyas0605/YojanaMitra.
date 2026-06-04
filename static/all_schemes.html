@@ -849,7 +849,13 @@
       z-index: 1040 !important;
       background: transparent !important;
     }
-  </style>
+  
+    @media (max-width: 768px) {
+      #global-header nav, #global-header .header-actions { display: none !important; }
+      .hamburger-btn { display: flex !important; }
+      #aurora-mount { display: none !important; }
+    }
+</style>
   <style>
     .chatbot-fab-container {
       position: fixed;

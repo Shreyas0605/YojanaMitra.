@@ -2178,13 +2178,31 @@
             opacity: 1;
         }
 
-        @media (max-width: 900px) {
-            #global-header nav {
-                display: none;
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                max-width: 100vw !important;
             }
-
+            #global-header nav {
+                display: none !important;
+            }
+            #global-header .header-actions {
+                display: none !important;
+            }
             #global-header {
                 padding: 0 8px 0 16px !important;
+            }
+            .hamburger-btn {
+                display: flex !important;
+            }
+            #scrolly-intro, .scrolly-container {
+                display: none !important;
+                height: 0 !important;
+                overflow: hidden !important;
+            }
+            #aurora-mount {
+                display: none !important;
             }
         }
 

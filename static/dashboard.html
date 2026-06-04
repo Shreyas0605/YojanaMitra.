@@ -3477,7 +3477,13 @@
     .omr-btn:hover {
       transform: translateY(-2px);
     }
-  </style>
+  
+    @media (max-width: 768px) {
+      #global-header nav, #global-header .header-actions { display: none !important; }
+      .hamburger-btn { display: flex !important; }
+      #aurora-mount { display: none !important; }
+    }
+</style>
 </head>
 
 <body>
