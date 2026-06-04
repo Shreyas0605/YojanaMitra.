@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YojanaMitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+        body{background:#0b1a16;color:#f8fafc;padding-bottom:80px;overflow-x:hidden;}
+        a{text-decoration:none;color:inherit;}
+
+        .mobile-header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);}
+        .header-left{display:flex;align-items:center;gap:10px;}
+        .logo-box{width:38px;height:38px;background:#f97316;border-radius:10px;display:flex;justify-content:center;align-items:center;font-weight:900;color:#fff;font-size:16px;}
+        .brand-text{font-weight:800;font-size:18px;}
+        .tagline{color:#64748b;font-size:11px;}
+        .bell-btn{width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;justify-content:center;align-items:center;position:relative;}
+        .bell-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;background:#f97316;border-radius:4px;border:1.5px solid #0b1a16;}
+
+        .hero-section{padding:20px 16px;}
+        .ai-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(249,115,22,0.12);padding:5px 12px;border-radius:20px;border:1px solid rgba(249,115,22,0.3);margin-bottom:14px;}
+        .ai-chip span{color:#f97316;font-size:12px;font-weight:600;}
+        .hero-title{font-size:30px;font-weight:800;line-height:38px;margin-bottom:12px;}
+        .text-orange{color:#f97316;}
+        .hero-sub{color:#94a3b8;font-size:15px;line-height:23px;margin-bottom:24px;}
+        .btn-primary{background:#f97316;color:#fff;width:100%;height:56px;border-radius:14px;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:700;font-size:16px;border:none;box-shadow:0 6px 12px rgba(249,115,22,0.35);margin-bottom:12px;cursor:pointer;}
+        .btn-secondary{width:100%;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#94a3b8;font-weight:600;font-size:14px;display:flex;justify-content:center;align-items:center;cursor:pointer;}
+
+        .stats-row{display:flex;margin:24px 16px;background:rgba(255,255,255,0.04);border-radius:14px;border:1px solid rgba(255,255,255,0.08);padding:16px 0;}
+        .stat-card{flex:1;display:flex;flex-direction:column;align-items:center;}
+        .stat-val{font-size:22px;font-weight:800;}
+        .stat-label{color:#64748b;font-size:11px;margin-top:3px;font-weight:500;}
+        .stat-div{width:1px;background:rgba(255,255,255,0.08);margin:4px 0;}
+
+        .nudge-card{margin:24px 16px;background:rgba(249,115,22,0.06);border-radius:14px;border:1px solid rgba(249,115,22,0.2);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+        .nudge-icon{width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.15);display:flex;justify-content:center;align-items:center;flex-shrink:0;}
+        .nudge-title{font-size:14px;font-weight:700;margin-bottom:2px;}
+        .nudge-sub{color:#94a3b8;font-size:12px;line-height:17px;margin-bottom:8px;}
+        .progress-bg{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:4px;}
+        .progress-fill{width:60%;height:100%;background:#f97316;border-radius:2px;}
+        .progress-text{color:#f97316;font-size:11px;font-weight:600;}
+
+        .section-header{display:flex;justify-content:space-between;align-items:center;padding:0 16px;margin:28px 0 14px 0;}
+        .section-title{font-size:18px;font-weight:700;}
+        .section-link{color:#f97316;font-size:13px;font-weight:600;display:flex;align-items:center;gap:2px;}
+
+        .horizontal-scroll{display:flex;overflow-x:auto;padding:0 16px;gap:10px;scrollbar-width:none;}
+        .horizontal-scroll::-webkit-scrollbar{display:none;}
+        .cat-pill{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:72px;}
+        .cat-icon-box{width:52px;height:52px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);display:flex;justify-content:center;align-items:center;}
+        .cat-label{color:#94a3b8;font-size:11px;font-weight:600;}
+
+        .scheme-card{width:300px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;flex-shrink:0;}
+        .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 6px;border-radius:4px;margin-bottom:8px;}
+        .badge-central{background:#0284c7;color:#fff;}
+        .badge-state{background:#7c3aed;color:#fff;}
+        .scheme-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+        .scheme-desc{font-size:13px;color:#94a3b8;line-height:1.4;margin-bottom:12px;}
+        .match-score{color:#22c55e;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px;}
+        .btn-outline-orange{width:100%;padding:10px;border-radius:8px;border:1px solid #f97316;color:#f97316;background:transparent;font-weight:600;font-size:14px;text-align:center;display:block;cursor:pointer;}
+
+        /* Featured */
+        .featured-card{margin:0 16px;background:rgba(249,115,22,0.07);border-radius:16px;border:1px solid rgba(249,115,22,0.25);padding:18px;}
+        .featured-top{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+        .featured-badge{display:flex;align-items:center;gap:4px;background:rgba(249,115,22,0.15);border-radius:6px;padding:3px 8px;border:1px solid rgba(249,115,22,0.3);color:#f97316;font-size:10px;font-weight:700;}
+        .featured-central{background:rgba(3,105,161,0.2);border-radius:6px;padding:3px 8px;color:#38bdf8;font-size:10px;font-weight:700;}
+        .featured-title{font-size:20px;font-weight:800;margin-bottom:8px;}
+        .featured-desc{color:#94a3b8;font-size:13px;line-height:20px;margin-bottom:16px;}
+        .benefits-row{display:flex;gap:8px;margin-bottom:16px;}
+        .benefit-chip{flex:1;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);padding:10px;text-align:center;}
+        .benefit-val{font-size:15px;font-weight:800;}
+        .benefit-label{color:#64748b;font-size:10px;margin-top:2px;}
+        .btn-featured{background:#f97316;border-radius:10px;height:46px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;width:100%;color:#0b1a16;font-weight:800;font-size:14px;cursor:pointer;}
+
+        /* Steps */
+        .steps-container{margin:0 16px;background:rgba(255,255,255,0.03);border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:18px;}
+        .step-row{display:flex;gap:14px;}
+        .step-left{display:flex;flex-direction:column;align-items:center;width:40px;}
+        .step-icon{width:40px;height:40px;border-radius:20px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);display:flex;justify-content:center;align-items:center;}
+        .step-connector{flex:1;width:1px;background:rgba(249,115,22,0.2);margin:6px 0;min-height:20px;}
+        .step-num{color:#f97316;font-size:10px;font-weight:700;letter-spacing:1px;}
+        .step-title{font-size:15px;font-weight:700;margin:2px 0 4px;}
+        .step-desc{color:#64748b;font-size:13px;line-height:19px;}
+
+        /* Trust */
+        .trust-row{display:flex;gap:8px;justify-content:center;padding:0 16px;margin-top:24px;}
+        .trust-badge{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border-radius:20px;padding:7px 12px;border:1px solid rgba(255,255,255,0.08);}
+        .trust-text{color:#94a3b8;font-size:12px;font-weight:600;}
+
+        /* Bottom CTA */
+        .bottom-cta{margin:28px 16px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;text-align:center;}
+        .bottom-cta-emoji{font-size:32px;margin-bottom:12px;}
+        .bottom-cta-title{font-size:20px;font-weight:800;margin-bottom:8px;}
+        .bottom-cta-sub{color:#94a3b8;font-size:14px;margin-bottom:16px;}
+
+        .mobile-bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:64px;background:#0b1a16;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;z-index:99999;padding-bottom:env(safe-area-inset-bottom);}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:#64748b;font-size:11px;font-weight:500;gap:4px;width:25%;}
+        .nav-item.active{color:#f97316;}
+        .mobile-fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:#f97316;color:#fff;display:flex;align-items:center;justify-content:center;border:none;box-shadow:0 4px 12px rgba(249,115,22,0.4);z-index:99999;cursor:pointer;}
+
+        @media(min-width:769px){body{display:none;}}
+    </style>
+</head>
+<body>
+    <header class="mobile-header">
+        <div class="header-left">
+            <div class="logo-box">YM</div>
+            <div><div class="brand-text">YojanaMitra</div><div class="tagline">Your welfare companion</div></div>
+        </div>
+        <div class="bell-btn"><i data-lucide="bell" style="color:#f8fafc;width:20px;height:20px;"></i><div class="bell-dot"></div></div>
+    </header>
+
+    <section class="hero-section">
+        <div class="ai-chip"><i data-lucide="sparkles" style="color:#f97316;width:13px;height:13px;"></i><span>AI-Powered Matching</span></div>
+        <h1 class="hero-title">Access Government Welfare <span class="text-orange">Made Simple</span></h1>
+        <p class="hero-sub">Personalised scheme matches for 140Cr+ citizens. Answer 5 questions and discover benefits you deserve today.</p>
+        <button class="btn-primary" onclick="window.location.href='dashboard.html'"><i data-lucide="sparkles" style="width:18px;"></i> Match Me With Schemes</button>
+        <button class="btn-secondary" onclick="window.location.href='all_schemes.html'">Browse All 4,200+ Schemes</button>
+    </section>
+
+    <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">4,200+</div><div class="stat-label">Schemes</div></div>
+        <div class="stat-div"></div>
+        <div class="stat-card"><div class="stat-val">&#8377;2.8Cr</div><div class="stat-label">Disbursed</div></div>
+        <div class="stat-div"></div>
+        <div class="stat-card"><div class="stat-val">28</div><div class="stat-label">States</div></div>
+    </div>
+
+    <a class="nudge-card" href="dashboard.html">
+        <div class="nudge-icon"><i data-lucide="zap" style="color:#f97316;width:20px;"></i></div>
+        <div style="flex:1;"><div class="nudge-title">Complete Your Profile</div><div class="nudge-sub">Unlock 12 more scheme matches tailored to you</div><div class="progress-bg"><div class="progress-fill"></div></div><div class="progress-text">60% complete</div></div>
+        <i data-lucide="chevron-right" style="color:#f97316;width:18px;"></i>
+    </a>
+
+    <div class="section-header"><div class="section-title">Browse by Category</div></div>
+    <div class="horizontal-scroll">
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(34,197,94,0.1);"><i data-lucide="leaf" style="color:#22c55e;"></i></div><div class="cat-label">Agriculture</div></div>
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(239,68,68,0.1);"><i data-lucide="heart" style="color:#ef4444;"></i></div><div class="cat-label">Health</div></div>
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(59,130,246,0.1);"><i data-lucide="book-open" style="color:#3b82f6;"></i></div><div class="cat-label">Education</div></div>
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(167,139,250,0.1);"><i data-lucide="home" style="color:#a78bfa;"></i></div><div class="cat-label">Housing</div></div>
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(245,158,11,0.1);"><i data-lucide="landmark" style="color:#f59e0b;"></i></div><div class="cat-label">Finance</div></div>
+        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(236,72,153,0.1);"><i data-lucide="users" style="color:#ec4899;"></i></div><div class="cat-label">Women</div></div>
+    </div>
+
+    <div class="section-header"><div class="section-title">Trending Schemes</div><a href="all_schemes.html" class="section-link">See All <i data-lucide="chevron-right" style="width:14px;"></i></a></div>
+    <div class="horizontal-scroll" style="gap:14px;">
+        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Kisan Samman Nidhi</div><div class="scheme-desc">Income support of &#8377;6,000 per year in three equal installments to all landholding farmer families.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 95% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">Ayushman Bharat (PM-JAY)</div><div class="scheme-desc">Health insurance cover of &#8377;5 Lakh per family per year for secondary and tertiary care hospitalization.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 88% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Ladli Behna Yojana</div><div class="scheme-desc">Financial assistance to women to enhance their health, nutrition and financial independence.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 92% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+    </div>
+
+    <div class="section-header"><div class="section-title">Featured This Week</div></div>
+    <div class="featured-card">
+        <div class="featured-top"><div class="featured-badge"><i data-lucide="trending-up" style="width:11px;"></i> FEATURED</div><div class="featured-central">Central Govt</div></div>
+        <div class="featured-title">PM Ujjwala Yojana 2.0</div>
+        <div class="featured-desc">Free LPG connections to BPL households and women below poverty line. Covers deposit, first refill and stove at no cost.</div>
+        <div class="benefits-row"><div class="benefit-chip"><div class="benefit-val">&#8377;1,600</div><div class="benefit-label">One-time Aid</div></div><div class="benefit-chip"><div class="benefit-val">8.3Cr+</div><div class="benefit-label">Beneficiaries</div></div><div class="benefit-chip"><div class="benefit-val">97%</div><div class="benefit-label">Your Match</div></div></div>
+        <button class="btn-featured">View &amp; Apply Now <i data-lucide="arrow-right" style="width:16px;"></i></button>
+    </div>
+
+    <div class="section-header"><div class="section-title">How It Works</div></div>
+    <div class="steps-container">
+        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="users" style="color:#f97316;width:18px;"></i></div><div class="step-connector"></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 01</div><div class="step-title">Build Your Profile</div><div class="step-desc">Answer a few simple questions about your income, location, and family.</div><div style="height:20px;"></div></div></div>
+        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="sparkles" style="color:#f97316;width:18px;"></i></div><div class="step-connector"></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 02</div><div class="step-title">AI Matches You</div><div class="step-desc">Our engine scans 4,200+ schemes and ranks your eligibility instantly.</div><div style="height:20px;"></div></div></div>
+        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="check-circle" style="color:#f97316;width:18px;"></i></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 03</div><div class="step-title">Apply in Minutes</div><div class="step-desc">Use your secure Document Vault to apply with pre-filled forms.</div></div></div>
+    </div>
+
+    <div class="trust-row">
+        <div class="trust-badge"><i data-lucide="shield" style="color:#22c55e;width:14px;"></i><span class="trust-text">Govt. Verified</span></div>
+        <div class="trust-badge"><i data-lucide="star" style="color:#f59e0b;width:14px;"></i><span class="trust-text">4.9 Rating</span></div>
+        <div class="trust-badge"><i data-lucide="zap" style="color:#a78bfa;width:14px;"></i><span class="trust-text">Instant Match</span></div>
+    </div>
+
+    <div class="bottom-cta">
+        <div class="bottom-cta-emoji">&#127470;&#127475;</div>
+        <div class="bottom-cta-title">Ready to claim your benefits?</div>
+        <div class="bottom-cta-sub">It's free, secure, and takes under 3 minutes.</div>
+        <button class="btn-primary" onclick="window.location.href='dashboard.html'">Get Started Free</button>
+    </div>
+
+    <button class="mobile-fab"><i data-lucide="sparkles"></i></button>
+
+    <nav class="mobile-bottom-nav">
+        <a href="mobile_home.html" class="nav-item active"><i data-lucide="home" style="width:22px;height:22px;"></i><span>Home</span></a>
+        <a href="all_schemes.html" class="nav-item"><i data-lucide="search" style="width:22px;height:22px;"></i><span>Schemes</span></a>
+        <a href="vault.html" class="nav-item"><i data-lucide="folder" style="width:22px;height:22px;"></i><span>Vault</span></a>
+        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
+    </nav>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

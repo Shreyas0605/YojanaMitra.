@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Schemes - YojanaMitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+        body{background:#0b1a16;color:#f8fafc;padding-bottom:80px;overflow-x:hidden;}
+        a{text-decoration:none;color:inherit;}
+
+        .search-bar{margin:16px;position:relative;}
+        .search-bar input{width:100%;height:48px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);padding:0 16px 0 44px;font-size:15px;color:#f8fafc;outline:none;}
+        .search-bar input::placeholder{color:#64748b;}
+        .search-bar i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748b;}
+
+        .filter-scroll{display:flex;overflow-x:auto;padding:0 16px;gap:8px;scrollbar-width:none;margin-bottom:20px;}
+        .filter-scroll::-webkit-scrollbar{display:none;}
+        .filter-chip{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.12);background:transparent;color:#94a3b8;white-space:nowrap;cursor:pointer;}
+        .filter-chip.active{background:#f97316;color:#fff;border-color:#f97316;}
+
+        .scheme-list{padding:0 16px;display:flex;flex-direction:column;gap:16px;}
+        .scheme-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;}
+        .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 6px;border-radius:4px;margin-bottom:8px;}
+        .badge-central{background:#0284c7;color:#fff;}
+        .badge-state{background:#7c3aed;color:#fff;}
+        .scheme-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+        .scheme-desc{font-size:13px;color:#94a3b8;line-height:1.4;margin-bottom:12px;}
+        .match-score{color:#22c55e;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px;}
+        .btn-outline-orange{width:100%;padding:10px;border-radius:8px;border:1px solid #f97316;color:#f97316;background:transparent;font-weight:600;font-size:14px;text-align:center;display:block;cursor:pointer;}
+
+        .mobile-bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:64px;background:#0b1a16;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;z-index:99999;padding-bottom:env(safe-area-inset-bottom);}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:#64748b;font-size:11px;font-weight:500;gap:4px;width:25%;}
+        .nav-item.active{color:#f97316;}
+        .mobile-fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:#f97316;color:#fff;display:flex;align-items:center;justify-content:center;border:none;box-shadow:0 4px 12px rgba(249,115,22,0.4);z-index:99999;cursor:pointer;}
+
+        @media(min-width:769px){body{display:none;}}
+    </style>
+</head>
+<body>
+    <div class="search-bar">
+        <i data-lucide="search" style="width:18px;height:18px;"></i>
+        <input type="text" placeholder="Search 4,200+ schemes..." id="mobile-scheme-search">
+    </div>
+
+    <div class="filter-scroll">
+        <div class="filter-chip active">All</div>
+        <div class="filter-chip">Agriculture</div>
+        <div class="filter-chip">Education</div>
+        <div class="filter-chip">Health</div>
+        <div class="filter-chip">Women</div>
+        <div class="filter-chip">Housing</div>
+        <div class="filter-chip">Finance</div>
+    </div>
+
+    <div class="scheme-list" id="mobile-scheme-list">
+        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Kisan Samman Nidhi</div><div class="scheme-desc">Income support of &#8377;6,000 per year in three equal installments to all landholding farmer families.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 95% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">Ayushman Bharat (PM-JAY)</div><div class="scheme-desc">Health insurance cover of &#8377;5 Lakh per family per year for secondary and tertiary care hospitalization.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 88% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Ladli Behna Yojana</div><div class="scheme-desc">Financial assistance to women to enhance their health, nutrition and financial independence.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 92% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Ujjwala Yojana 2.0</div><div class="scheme-desc">Free LPG connections to BPL households and women below poverty line. Covers deposit, first refill and stove.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 97% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Mukhyamantri Kanya Vivah Yojana</div><div class="scheme-desc">Financial assistance for marriage of daughters from economically weaker sections of society.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 85% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+    </div>
+
+    <button class="mobile-fab"><i data-lucide="sparkles"></i></button>
+    <nav class="mobile-bottom-nav">
+        <a href="mobile_home.html" class="nav-item"><i data-lucide="home" style="width:22px;height:22px;"></i><span>Home</span></a>
+        <a href="mobile_schemes.html" class="nav-item active"><i data-lucide="search" style="width:22px;height:22px;"></i><span>Schemes</span></a>
+        <a href="mobile_vault.html" class="nav-item"><i data-lucide="folder" style="width:22px;height:22px;"></i><span>Vault</span></a>
+        <a href="mobile_dashboard.html" class="nav-item"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

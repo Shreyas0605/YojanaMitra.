@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vault - YojanaMitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+        body{background:#0b1a16;color:#f8fafc;padding-bottom:80px;overflow-x:hidden;}
+        a{text-decoration:none;color:inherit;}
+
+        .vault-header{padding:24px 16px 0;text-align:center;}
+        .vault-title{font-size:24px;font-weight:800;margin-bottom:24px;}
+
+        .upload-zone{margin:0 16px 24px;border:2px dashed rgba(249,115,22,0.4);border-radius:16px;padding:24px;text-align:center;background:rgba(249,115,22,0.04);cursor:pointer;}
+        .upload-icon{width:48px;height:48px;border-radius:50%;background:rgba(249,115,22,0.15);display:flex;justify-content:center;align-items:center;margin:0 auto 12px;}
+        .upload-text{font-size:16px;font-weight:700;margin-bottom:4px;}
+        .upload-sub{color:#64748b;font-size:13px;}
+
+        .doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px;}
+        .doc-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;position:relative;}
+        .doc-icon{width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.12);display:flex;justify-content:center;align-items:center;margin-bottom:12px;}
+        .doc-menu{position:absolute;top:12px;right:12px;color:#64748b;cursor:pointer;}
+        .doc-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+        .doc-date{color:#64748b;font-size:11px;}
+
+        .mobile-bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:64px;background:#0b1a16;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;z-index:99999;padding-bottom:env(safe-area-inset-bottom);}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:#64748b;font-size:11px;font-weight:500;gap:4px;width:25%;}
+        .nav-item.active{color:#f97316;}
+        .mobile-fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:#f97316;color:#fff;display:flex;align-items:center;justify-content:center;border:none;box-shadow:0 4px 12px rgba(249,115,22,0.4);z-index:99999;cursor:pointer;}
+
+        @media(min-width:769px){body{display:none;}}
+    </style>
+</head>
+<body>
+    <div class="vault-header"><h1 class="vault-title">Secure Document Vault</h1></div>
+
+    <div class="upload-zone">
+        <div class="upload-icon"><i data-lucide="upload" style="color:#f97316;width:24px;"></i></div>
+        <div class="upload-text">Upload Document</div>
+        <div class="upload-sub">PDF, JPG or PNG up to 10MB</div>
+    </div>
+
+    <div class="doc-grid">
+        <div class="doc-card"><div class="doc-icon"><i data-lucide="file-text" style="color:#f97316;width:20px;"></i></div><div class="doc-menu"><i data-lucide="more-vertical" style="width:16px;"></i></div><div class="doc-name">Aadhaar Card</div><div class="doc-date">Uploaded Oct 10</div></div>
+        <div class="doc-card"><div class="doc-icon"><i data-lucide="file-text" style="color:#f97316;width:20px;"></i></div><div class="doc-menu"><i data-lucide="more-vertical" style="width:16px;"></i></div><div class="doc-name">PAN Card</div><div class="doc-date">Uploaded Oct 10</div></div>
+        <div class="doc-card"><div class="doc-icon"><i data-lucide="file-text" style="color:#f97316;width:20px;"></i></div><div class="doc-menu"><i data-lucide="more-vertical" style="width:16px;"></i></div><div class="doc-name">Income Cert</div><div class="doc-date">Uploaded Oct 12</div></div>
+        <div class="doc-card"><div class="doc-icon"><i data-lucide="file-text" style="color:#f97316;width:20px;"></i></div><div class="doc-menu"><i data-lucide="more-vertical" style="width:16px;"></i></div><div class="doc-name">Caste Cert</div><div class="doc-date">Uploaded Oct 15</div></div>
+    </div>
+
+    <button class="mobile-fab"><i data-lucide="sparkles"></i></button>
+    <nav class="mobile-bottom-nav">
+        <a href="mobile_home.html" class="nav-item"><i data-lucide="home" style="width:22px;height:22px;"></i><span>Home</span></a>
+        <a href="mobile_schemes.html" class="nav-item"><i data-lucide="search" style="width:22px;height:22px;"></i><span>Schemes</span></a>
+        <a href="mobile_vault.html" class="nav-item active"><i data-lucide="folder" style="width:22px;height:22px;"></i><span>Vault</span></a>
+        <a href="mobile_dashboard.html" class="nav-item"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
+    </nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
