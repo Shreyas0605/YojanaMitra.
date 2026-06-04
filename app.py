@@ -105,12 +105,12 @@ def allowed_file(filename):
 
 # ----------------- Gemini AI Setup -----------------
 # Hardcoded API key - update this when needed
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "PASTE_YOUR_GEMINI_API_KEY_HERE")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo")
 print(f"GEMINI_API_KEY loaded: {GEMINI_API_KEY}")
 
-# Rate limiter for free tier (15 RPM = 1 request per 4 seconds)
+# Rate limiter for premium tier (1000 RPM)
 class RateLimiter:
-    def __init__(self, rpm=15):
+    def __init__(self, rpm=1000):
         self.min_interval = 60.0 / rpm
         self.last_request_time = 0
     
@@ -121,14 +121,25 @@ class RateLimiter:
             time.sleep(self.min_interval - elapsed)
         self.last_request_time = time.time()
 
-gemini_limiter = RateLimiter(rpm=15)
+gemini_limiter = RateLimiter(rpm=5000)
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
     model = genai.GenerativeModel('gemini-flash-latest')
-    print("Gemini model initialized (using gemini-flash-latest for stable quota).")
+    print("Gemini model initialized (using premium gemini-flash-latest for complex reasoning).")
 
-# ----------------- Production Config (ProxyFix) -----------------
+# ----------------- Utility Functions -----------------
+def strip_markdown(text):
+    if not text: return ""
+    # Remove bold/italic stars
+    text = re.sub(r'\*\*|__', '', text)
+    # Remove single stars or underscores
+    text = re.sub(r'[*_]', '', text)
+    # Remove markdown links [text](url) -> text (url)
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'\1 (\2)', text)
+    # Remove other brackets
+    text = text.replace('[', '').replace(']', '')
+    return text.strip()
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Apply ProxyFix to handle HTTPS behind Render/Load Balancer
@@ -201,10 +212,15 @@ def send_email_notification(to_email, subject, body, html_content=None, user_nam
     """Send Email using SendGrid HTTP API asynchronously (Explicit capture to prevent identity mixing)"""
     def _send_thread_worker(target_email, email_subject, email_body, final_html_content, name):
         try:
+            print(f"\n🚀 [EMAIL PROCESSOR] Initiating background email dispatch to {target_email} ({name})...", flush=True)
+            logger.info(f"[EMAIL PROCESSOR] Initiating background email dispatch to {target_email} ({name})...")
+
             if not SENDGRID_API_KEY:
-                print("⚠️ SENDGRID_API_KEY not configured - Email skipped")
+                print("⚠️ [EMAIL FAILURE] SENDGRID_API_KEY not configured in .env - Email skipped!", flush=True)
+                logger.warning("[EMAIL FAILURE] SENDGRID_API_KEY not configured in .env - Email skipped!")
                 return
 
+            print(f"[EMAIL PROCESSOR] Building email object (Sender: {FROM_EMAIL})", flush=True)
             sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
             from_email = Email(FROM_EMAIL)
             to_email_obj = To(target_email)
@@ -221,19 +237,26 @@ def send_email_notification(to_email, subject, body, html_content=None, user_nam
             # Add Unsubscribe Header for Gmail/Yahoo reputation
             mail_obj.add_header(Header("List-Unsubscribe", f"<mailto:unsubscribe@yojanamitra.in?subject=unsubscribe>, <https://yojanamitra-1.onrender.com/unsubscribe?email={target_email}>"))
             
+            print(f"[EMAIL PROCESSOR] Sending request to SendGrid API for {target_email}...", flush=True)
             response = sg.client.mail.send.post(request_body=mail_obj.get())
             
             if response.status_code >= 200 and response.status_code < 300:
-                print(f"📧 HTML Email successfully sent to {target_email} addressed to {name}")
+                print(f"📧 [EMAIL SUCCESS] SendGrid successfully sent email to {target_email} addressed to {name}! (Status: {response.status_code})\n", flush=True)
+                logger.info(f"📧 [EMAIL SUCCESS] SendGrid successfully sent email to {target_email} addressed to {name}! (Status: {response.status_code})")
             else:
-                print(f"❌ SendGrid failed with status {response.status_code}: {response.body}")
+                print(f"❌ [EMAIL FAILURE] SendGrid failed with status {response.status_code}: {response.body}", flush=True)
+                logger.error(f"❌ [EMAIL FAILURE] SendGrid failed with status {response.status_code}: {response.body}")
                 
         except Exception as e:
-            print(f"❌ Email failed to {target_email}: {str(e)}")
+            print(f"❌ [EMAIL EXCEPTION] Exception occurred during email dispatch to {target_email}: {str(e)}", flush=True)
+            logger.error(f"❌ [EMAIL EXCEPTION] Exception occurred during email dispatch to {target_email}: {str(e)}")
+            if hasattr(e, 'body'):
+                print(f"   Detailed Response Body: {e.body}", flush=True)
             import traceback
             traceback.print_exc()
 
-    print(f"📨 Queueing async email for {to_email} (Addressing: {user_name})")
+    print(f"\n📨 [EMAIL QUEUE] Queueing async email for {to_email} (Addressing: {user_name})", flush=True)
+    logger.info(f"[EMAIL QUEUE] Queueing async email for {to_email} (Addressing: {user_name})")
     
     # Pass arguments explicitly to the thread to avoid closure/binding issues in loops
     thread = threading.Thread(
@@ -252,6 +275,8 @@ def send_sms_notification(phone_number, message):
         
         twilio_sid = os.getenv('TWILIO_ACCOUNT_SID')
         twilio_token = os.getenv('TWILIO_AUTH_TOKEN')
+        twilio_api_key = os.getenv('TWILIO_API_KEY')
+        twilio_api_secret = os.getenv('TWILIO_API_SECRET')
         twilio_phone = os.getenv('TWILIO_PHONE_NUMBER')
 
         # Clean phone number (Ensure it has +91 for India if not specified)
@@ -330,16 +355,24 @@ def send_sms_notification(phone_number, message):
                 print(f"⚠️ Gateway connection failed: {ge}, falling back...")
 
         # 2. Fallback to Twilio
-        if all([twilio_sid, twilio_token, twilio_phone]) and twilio_sid != 'your_twilio_account_sid_here':
+        has_api_key = all([twilio_sid, twilio_api_key, twilio_api_secret]) and twilio_sid not in ['your_twilio_account_sid_here', 'AC_YOUR_TWILIO_ACCOUNT_SID_HERE']
+        has_auth_token = all([twilio_sid, twilio_token]) and twilio_sid not in ['your_twilio_account_sid_here', 'AC_YOUR_TWILIO_ACCOUNT_SID_HERE']
+        has_phone = twilio_phone and twilio_phone not in ['YOUR_TWILIO_PHONE_NUMBER_HERE', 'your_twilio_phone_number_here']
+
+        if (has_api_key or has_auth_token) and has_phone:
             from twilio.rest import Client
-            client = Client(twilio_sid, twilio_token)
+            if has_api_key:
+                client = Client(username=twilio_api_key, password=twilio_api_secret, account_sid=twilio_sid)
+            else:
+                client = Client(twilio_sid, twilio_token)
             
             sms = client.messages.create(
                 body=message,
                 from_=twilio_phone,
                 to=phone_number
             )
-            print(f"✅ Twilio SMS sent to {phone_number}: {sms.sid}")
+            print(f"✅ Twilio SMS sent successfully to {phone_number}: {sms.sid}", flush=True)
+            logger.info(f"✅ Twilio SMS sent successfully to {phone_number}: {sms.sid}")
             return True
         
         print(f"❌ No functional SMS provider configured for {phone_number}")
@@ -793,96 +826,15 @@ class User(db.Model):
             return default
 
     def to_dict(self):
-        # Exhaustive snake_case mapping for all 60+ database signals
-        p = {
-            'age':                    self.age,
-            'gender':                 self.gender,
-            'occupation':             self.occupation,
-            'income':                 self.income,
-            'annual_income':          self.income,
-            'annual_family_income':   self.annual_family_income,
-            'caste':                  self.caste,
-            'category':               self.caste, # Alias for engine
-            'state':                  self.state,
-            'domicile_state':         self.state,
-            'education':              self.education,
-            'marital_status':         self.marital_status,
-            'residence':              self.residence,
-            'father_occupation':      self.father_occupation,
-            'mother_occupation':      self.mother_occupation,
-            'religion':               self.religion,
-            'land_type':              self.land_type,
-            'dob':                    self.dob,
-            'district':               self.district,
-            'block_taluk':            self.block_taluk,
-            'domicile_status':        self.domicile_status,
-            'family_type':            self.family_type,
-            'total_family_members':   self.total_family_members,
-            'income_slab':            self.income_slab,
-            'sub_caste':              self.sub_caste,
-            'ration_card_type':       self.ration_card_type,
-            'education_status':       self.education_status,
-            'highest_education_level':self.highest_education_level or self.education,
-            'current_course':         self.current_course,
-            'institution_type':       self.institution_type,
-            'employment_status':      self.employment_status,
-            'land_size_acres':        self.land_size_acres,
-            'disability_percentage':  self.disability_percentage,
-            'num_daughters':          self.num_daughters,
-            'house_type':             self.house_type,
-            'residence_type':         self.residence_type,
-            'career_goal':            self.career_goal,
-            'child_age':              self.child_age,
-            'documents_available':    self.documents_available,
-            'achievement_certificates': self.achievement_certificates,
-            
-            # Boolean/Binary Signals (Yes/No Standardized)
-            'is_farmer':              _str_to_bool(self.is_farmer),
-            'is_student':             _str_to_bool(self.education_status == 'Student' or self.occupation == 'Student'),
-            'is_widow':               _str_to_bool(self.is_widow_single_woman),
-            'is_widow_single_woman':  _str_to_bool(self.is_widow_single_woman),
-            'is_senior_citizen':      _str_to_bool(self.is_senior_citizen),
-            'is_minority':            _str_to_bool(self.minority_status),
-            'minority_status':        _str_to_bool(self.minority_status),
-            'is_ews':                 _str_to_bool(self.ews_status),
-            'ews_status':             _str_to_bool(self.ews_status),
-            'is_disabled':            _str_to_bool(self.disability),
-            'disability':             self.disability,
-            'is_orphan':              _str_to_bool(self.is_orphan),
-            'is_tribal':              _str_to_bool(self.is_tribal),
-            'is_citizen':             _str_to_bool(self.is_citizen or 'Yes'), # Default to yes if not specified
-            'has_aadhaar':            _str_to_bool(self.aadhaar_available),
-            'aadhaar_available':      _str_to_bool(self.aadhaar_available),
-            'is_head_of_family':      _str_to_bool(self.is_head_of_family),
-            'income_certificate_available': _str_to_bool(self.income_certificate_available),
-            'ration_card_available':  _str_to_bool(self.ration_card_available),
-            'govt_employee_in_family':_str_to_bool(self.govt_employee_in_family),
-            'own_agricultural_land':  _str_to_bool(self.own_agricultural_land),
-            'is_tenant_farmer':       _str_to_bool(self.is_tenant_farmer),
-            'bank_account_available': _str_to_bool(self.bank_account_available),
-            'has_bank_account':       _str_to_bool(self.bank_account_available or self.has_bank_account),
-            'aadhaar_linked_bank':    _str_to_bool(self.aadhaar_linked_bank),
-            'mobile_linked_bank':     _str_to_bool(self.mobile_linked_bank),
-            'income_cert_last_1_year':_str_to_bool(self.income_cert_last_1_year),
-            'scheme_previously_availed':_str_to_bool(self.scheme_previously_availed),
-            'willing_to_submit_docs': _str_to_bool(self.willing_to_submit_docs),
-            'is_pensioner':           _str_to_bool(self.is_pensioner),
-            'has_pucca_house':        _str_to_bool(self.has_pucca_house),
-            'is_landless':            _str_to_bool(self.is_landless),
-            'is_bocw_registered':     _str_to_bool(self.is_bocw_registered),
-            'is_school_dropout':      _str_to_bool(self.is_school_dropout),
-            'is_first_gen_student':   _str_to_bool(self.is_first_gen_student),
-            'is_urban':               _str_to_bool(self.is_urban or (self.residence and 'urban' in self.residence.lower())),
-            'is_rural':               _str_to_bool(self.residence and 'rural' in self.residence.lower()),
-            'is_bpl':                 str(self.ration_card_type or '').lower() in ('bpl', 'antyodaya', 'aay')
-        }
+        # Use get_profile_dict for engine compatibility and inclusion of UserProfileAttribute
+        profile_data = self.get_profile_dict()
         
         return {
             'id': self.id,
             'name': self.name,
             'email': self.email,
             'mobile': self.mobile,
-            'profile': {k: v for k, v in p.items() if v is not None}
+            'profile': profile_data
         }
 
     def get_profile_dict(self):
@@ -1021,11 +973,11 @@ class Scheme(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'description': self.description,
+            'description': strip_markdown(self.description),
             'category': self.category,
             'targetAudience': self.target_audience,
-            'benefits': self.benefits,
-            'eligibility': self.eligibility,
+            'benefits': strip_markdown(self.benefits),
+            'eligibility': strip_markdown(self.eligibility),
             'applicationLink': self.application_link,
             'criteria': {
                 'minAge': self.min_age,
@@ -1572,6 +1524,34 @@ def dashboard():
     # Redirect to home where the dashboard logic resides
     return redirect(url_for('index'))
 
+@app.route('/api/toggle-ai', methods=['POST'])
+def toggle_ai_provider():
+    """Hot-swaps the AI engine between Gemini and NVIDIA"""
+    data = request.json or {}
+    new_provider = data.get('provider')
+    
+    if new_provider not in ['gemini', 'nvidia']:
+        return jsonify({'error': 'Invalid provider'}), 400
+        
+    session['ai_provider'] = new_provider
+    logger.info(f"AI Provider hot-swapped to: {new_provider}")
+    
+    from app.engine.ai_router import get_current_provider_label
+    return jsonify({
+        'status': 'success',
+        'provider': new_provider,
+        'label': get_current_provider_label()
+    })
+
+@app.route('/api/current-ai', methods=['GET'])
+def get_current_ai():
+    """Returns the currently active AI provider"""
+    from app.engine.ai_router import get_current_provider_label
+    return jsonify({
+        'provider': session.get('ai_provider', 'gemini'),
+        'label': get_current_provider_label()
+    })
+
 @app.route('/unsubscribe')
 def unsubscribe():
     # Placeholder for unsubscribe logic
@@ -1867,40 +1847,89 @@ def submit_batch_answers():
     import json as _j
 
     try:
+        # Collect affected scheme IDs to lock later
+        affected_sids = set()
+        
         for item in answers:
             field = item.get('field')
             value = item.get('value')
-            if not field or value is None or value == '' or value == 'null':
+            q_type = item.get('type', 'js')
+            q_id = item.get('question_id')
+            q_text = item.get('question', '')
+            scheme_ids = item.get('scheme_ids', [])
+
+            for sid in scheme_ids:
+                if sid:
+                    try:
+                        affected_sids.add(int(sid))
+                    except:
+                        pass
+
+            if value is None or value == '' or value == 'null':
                 continue
 
-            # 1. Save to QuestionAnswer model
-            db.session.add(QuestionAnswer(user_id=user_id, field=field, value=value, answered_at=datetime.utcnow()))
+            # A. Process dynamic AI question (SchemeClarification)
+            if q_type == 'ai' and q_id and scheme_ids:
+                for sid in scheme_ids:
+                    try:
+                        sid_int = int(sid)
+                        # Find existing clarification
+                        existing = SchemeClarification.query.filter_by(
+                            user_id=user_id,
+                            scheme_id=sid_int,
+                            question_id_hash=q_id
+                        ).first()
+                        
+                        ans_str = 'Yes' if value is True else ('No' if value is False else str(value))
+                        
+                        if existing:
+                            existing.answer_text = ans_str
+                            existing.ai_verdict = 'ELIGIBLE'
+                            existing.resolved_at = datetime.utcnow()
+                        else:
+                            clar = SchemeClarification(
+                                user_id=user_id,
+                                scheme_id=sid_int,
+                                question_id_hash=q_id,
+                                question_text=q_text,
+                                answer_text=ans_str,
+                                ai_verdict='ELIGIBLE',
+                                resolved_at=datetime.utcnow()
+                            )
+                            db.session.add(clar)
+                    except Exception as ex:
+                        print(f"Error saving batch dynamic clarification: {ex}")
 
-            # 2. Update user profile
-            saved_to_model = False
-            if hasattr(user, field):
-                setattr(user, field, value)
-                saved_to_model = True
+            # B. Process standard field (if present)
+            if field:
+                # 1. Save to QuestionAnswer model
+                db.session.add(QuestionAnswer(user_id=user_id, field=field, value=value, answered_at=datetime.utcnow()))
 
-            canonical = get_canonical_field(field)
-            mapped = FIELD_MAP.get(field) or FIELD_MAP.get(canonical)
-            if mapped and hasattr(user, mapped) and not saved_to_model:
-                setattr(user, mapped, value)
+                # 2. Update user profile
+                saved_to_model = False
+                if hasattr(user, field):
+                    setattr(user, field, value)
+                    saved_to_model = True
 
-            # Save as UserProfileAttribute
-            encoded_val = _j.dumps(value) if not isinstance(value, str) else value
-            existing_attr = UserProfileAttribute.query.filter_by(user_id=user_id, field=field).first()
-            if existing_attr:
-                existing_attr.value = encoded_val
-            else:
-                db.session.add(UserProfileAttribute(user_id=user_id, field=field, value=encoded_val, source='batch_question_answer', confidence=1.0))
-                
-            if canonical != field:
-                existing_canon = UserProfileAttribute.query.filter_by(user_id=user_id, field=canonical).first()
-                if existing_canon:
-                    existing_canon.value = encoded_val
+                canonical = get_canonical_field(field)
+                mapped = FIELD_MAP.get(field) or FIELD_MAP.get(canonical)
+                if mapped and hasattr(user, mapped) and not saved_to_model:
+                    setattr(user, mapped, value)
+
+                # Save as UserProfileAttribute
+                encoded_val = _j.dumps(value) if not isinstance(value, str) else value
+                existing_attr = UserProfileAttribute.query.filter_by(user_id=user_id, field=field).first()
+                if existing_attr:
+                    existing_attr.value = encoded_val
                 else:
-                    db.session.add(UserProfileAttribute(user_id=user_id, field=canonical, value=encoded_val, source='batch_question_answer', confidence=1.0))
+                    db.session.add(UserProfileAttribute(user_id=user_id, field=field, value=encoded_val, source='batch_question_answer', confidence=1.0))
+                    
+                if canonical != field:
+                    existing_canon = UserProfileAttribute.query.filter_by(user_id=user_id, field=canonical).first()
+                    if existing_canon:
+                        existing_canon.value = encoded_val
+                    else:
+                        db.session.add(UserProfileAttribute(user_id=user_id, field=canonical, value=encoded_val, source='batch_question_answer', confidence=1.0))
 
         # 3. Increment profile_version
         user.profile_version = (user.profile_version or 0) + 1
@@ -1909,9 +1938,39 @@ def submit_batch_answers():
         # 4. Trigger re-evaluation
         from app.engine_compat import get_orchestrator, build_engine_response
         orch = get_orchestrator(app.config)
-        all_schemes = Scheme.query.all()
-        # Increase question_cap slightly for better follow-up
+        
+        import time
+        start_eval = time.time()
+        # Optimize: Only evaluate ACTIVE schemes
+        all_schemes = Scheme.query.filter_by(is_active=True).all()
         result = build_engine_response(orch, user, all_schemes)
+        end_eval = time.time()
+        logger.info(f"PERF: Batch re-evaluation for user {user_id} took {end_eval - start_eval:.2f}s")
+
+        # 5. Lock resolved schemes (permanently persist status 99 sentinel)
+        if affected_sids:
+            elig_ids = {int(r.get('id')) for r in result.get('recommendations', []) if r.get('id')}
+            poss_ids = {int(p.get('id')) for p in result.get('possibly_eligible', []) if p.get('id')}
+            
+            for sid in affected_sids:
+                verdict = None
+                if sid in elig_ids:
+                    verdict = 'ELIGIBLE'
+                elif sid not in poss_ids:
+                    verdict = 'INELIGIBLE'
+                
+                if verdict:
+                    er = EligibilityResult.query.filter_by(user_id=user_id, scheme_id=sid).first()
+                    if not er:
+                        er = EligibilityResult(user_id=user_id, scheme_id=sid)
+                        db.session.add(er)
+                    er.status = verdict
+                    er.score = 95 if verdict == 'ELIGIBLE' else 40
+                    er.profile_version = 99  # sentinel lock
+                    er.audit_log = f"Locked via bulk resolve batch-answer re-evaluation ({verdict})"
+                    er.updated_at = datetime.utcnow()
+            
+            db.session.commit()
 
         return jsonify({
             'status': 'success',
@@ -2145,23 +2204,40 @@ OUTPUT STRICT JSON ARRAY ONLY (no markdown):
 
 
 
-        response = model.generate_content(prompt)
-        res_text = response.text.strip()
+        from app.engine import ai_router
+        questions = ai_router.generate_resolve_questions(prompt)
         
-        # Clean markdown fencing
-        if res_text.startswith('```json'):
-            res_text = res_text[7:]
-        if res_text.startswith('```'):
-            res_text = res_text[3:]
-        if res_text.endswith('```'):
-            res_text = res_text[:-3]
+        if questions is None:
+            # Fallback to Gemini
+            response = model.generate_content(prompt)
+            # Robust JSON extraction to handle AI noise or markdown blocks
+            text = response.text.strip()
+            json_match = re.search(r'\[.*\]', text, re.DOTALL)
+            if json_match:
+                text = json_match.group()
+            questions = json.loads(text)
+        
+        # If it returned a list of concepts, map them to the format expected by Phase 5
+        # Note: Mistral might return slightly different JSON keys than Gemini if not strictly followed
+        formatted_questions = []
+        for q in questions:
+            if not isinstance(q, dict): continue
+            formatted_questions.append({
+                "field": q.get('field'),
+                "question": q.get('question'),
+                "type": q.get('type', 'bool'),
+                "options": q.get('options', ["Yes", "No"]),
+                "affects_scheme_ids": q.get('affects_scheme_ids', [s.get('id') for s in schemes_info]),
+                "affects_scheme_names": q.get('affects_scheme_names', [s.get('name') for s in schemes_info])
+            })
 
-        questions = json.loads(res_text.strip())
-        
+
         scheme_ids = [s.get('id') for s in schemes_info]
+        
+        logger.info(f"Generated {len(formatted_questions)} questions for {len(schemes_info)} schemes.")
 
         return jsonify({
-            'questions': questions,
+            'questions': formatted_questions,
             'scheme_ids': scheme_ids,
         }), 200
 
@@ -2357,10 +2433,12 @@ def sync_profile_from_vault():
                 modified_fields.append('rationCardType')
 
         # ── YojanaMitra OMR Questionnaire Sync ────────────────────────────────
-        # Process keys starting with YM-Q- (e.g., YM-Q-IS_FARMER)
+        # Process keys starting with YM-Q- or YN-Q- (e.g., YN-Q-IS_FARMER)
         for doc_key, val in ex.items():
-            if str(doc_key).startswith('YM-Q-'):
-                field_name = doc_key.replace('YM-Q-', '').lower()
+            doc_key_str = str(doc_key).strip()
+            if doc_key_str.startswith('YM-Q-') or doc_key_str.startswith('YN-Q-'):
+                prefix = 'YM-Q-' if doc_key_str.startswith('YM-Q-') else 'YN-Q-'
+                field_name = doc_key_str.replace(prefix, '').lower()
                 clean_val = None
                 
                 try:
@@ -2378,25 +2456,80 @@ def sync_profile_from_vault():
                     else:
                         clean_val = str(val).strip()
 
-                    # 2. Save Type A: Standard User Model Field
+                    # 2. Save Type C: Dynamic Scheme Clarification (e.g. 41-abcdef12)
+                    parts = field_name.split('-')
+                    if len(parts) == 2 and parts[0].isdigit():
+                        try:
+                            scheme_id = int(parts[0])
+                            hash_prefix = parts[1]
+                            
+                            # Find existing SchemeClarification by hash prefix
+                            existing_clar = SchemeClarification.query.filter(
+                                SchemeClarification.user_id == user.id,
+                                SchemeClarification.scheme_id == scheme_id,
+                                SchemeClarification.question_id_hash.like(f"{hash_prefix}%")
+                            ).first()
+                            
+                            if existing_clar:
+                                existing_clar.answer_text = clean_val
+                                existing_clar.ai_verdict = 'ELIGIBLE'
+                                existing_clar.resolved_at = datetime.utcnow()
+                            else:
+                                # Create new placeholder clarification
+                                new_clar = SchemeClarification(
+                                    user_id=user.id,
+                                    scheme_id=scheme_id,
+                                    question_id_hash=hash_prefix,
+                                    question_text=f"OMR Dynamic Question ({field_name})",
+                                    answer_text=clean_val,
+                                    ai_verdict='ELIGIBLE',
+                                    resolved_at=datetime.utcnow()
+                                )
+                                db.session.add(new_clar)
+                            
+                            # Also increment user profile_version so re-evaluation triggers
+                            user.profile_version = (user.profile_version or 0) + 1
+                        except Exception as e:
+                            print(f"OMR dynamic clarification import error: {e}")
+
+                    # 3. Save Type A: Standard User Model Field & Mapped Canonical Fields
+                    from app.engine.eligibility import get_canonical_field, FIELD_MAP
+                    canonical = get_canonical_field(field_name)
+                    mapped = FIELD_MAP.get(field_name) or FIELD_MAP.get(canonical)
+                    
+                    saved_to_model = False
                     if hasattr(user, field_name):
                         setattr(user, field_name, clean_val)
+                        saved_to_model = True
                         if field_name not in modified_fields:
                             modified_fields.append(field_name)
+                            
+                    if mapped and hasattr(user, mapped) and not saved_to_model:
+                        setattr(user, mapped, clean_val)
+                        saved_to_model = True
+                        if mapped not in modified_fields:
+                            modified_fields.append(mapped)
+
+                    # 4. Save Type B: Flexible Key-Value (UserProfileAttribute)
+                    encoded_val = json.dumps(clean_val) if not isinstance(clean_val, (str, int, float, bool)) else str(clean_val)
+                    
+                    existing_attr = UserProfileAttribute.query.filter_by(user_id=user.id, field=field_name).first()
+                    if existing_attr:
+                        existing_attr.value = encoded_val
                     else:
-                        # 3. Save Type B: Flexible Key-Value (UserProfileAttribute)
-                        attr = UserProfileAttribute.query.filter_by(user_id=user.id, field=field_name).first()
-                        if not attr:
-                            attr = UserProfileAttribute(user_id=user.id, field=field_name)
-                            db.session.add(attr)
+                        attr = UserProfileAttribute(user_id=user.id, field=field_name, value=encoded_val, source="vault_omr", confidence=1.0)
+                        db.session.add(attr)
                         
-                        # Store as JSON if it's a complex type or just string
-                        attr.value = json.dumps(clean_val) if not isinstance(clean_val, (str, int, float, bool)) else str(clean_val)
-                        attr.source = "vault_omr"
-                        attr.answered_at = datetime.utcnow()
-                        
-                        if f"extra:{field_name}" not in modified_fields:
-                            modified_fields.append(f"extra:{field_name}")
+                    if canonical != field_name:
+                        existing_canon = UserProfileAttribute.query.filter_by(user_id=user.id, field=canonical).first()
+                        if existing_canon:
+                            existing_canon.value = encoded_val
+                        else:
+                            attr_canon = UserProfileAttribute(user_id=user.id, field=canonical, value=encoded_val, source="vault_omr", confidence=1.0)
+                            db.session.add(attr_canon)
+
+                    if f"extra:{field_name}" not in modified_fields:
+                        modified_fields.append(f"extra:{field_name}")
 
                 except Exception as e:
                     print(f"OMR Sync error for {field_name}: {e}")
@@ -3149,10 +3282,18 @@ def translate_scheme(scheme_id):
         JSON OUTPUT (Kannada):
         """
         
-        response = model.generate_content(prompt)
+        from app.engine import ai_router
+        text = ai_router.translate(prompt)
+        
+        if text is None:
+            # Fallback to Gemini
+            response = model.generate_content(prompt)
+            text = response.text.strip()
+            
         # Handle potential response formatting issues
-        text = response.text.replace('```json', '').replace('```', '').strip()
+        text = text.replace('```json', '').replace('```', '').strip()
         translated_data = json.loads(text)
+
         safe_print(f"DEBUG: Translate JSON parsed successfully. Keys: {list(translated_data.keys())}")
         
         # 3. Save to Cache (Dump entire JSON)
@@ -3204,9 +3345,16 @@ def translate_text_api():
     prompt = f"Translate the following government scheme related text into {target_name}. Return ONLY the translated text, no explanations:\n\n{text}"
     
     try:
-        response = model.generate_content(prompt)
-        translated = response.text.strip()
+        from app.engine import ai_router
+        translated = ai_router.translate(prompt)
+        
+        if translated is None:
+            # Fallback to Gemini
+            response = model.generate_content(prompt)
+            translated = response.text.strip()
+            
         return jsonify({'translated': translated})
+
     except Exception as e:
         logger.error(f"Text translation error: {e}")
         return jsonify({'translated': text, 'error': str(e)})
@@ -3305,16 +3453,20 @@ def distill_questions_api():
     """
 
     try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-
-        # Extract JSON array
-        json_match = re.search(r'\[.*\]', text, re.DOTALL)
-        if json_match:
-            text = json_match.group()
-
-        distilled = json.loads(text)
+        from app.engine import ai_router
+        distilled = ai_router.distill_questions(prompt)
+        
+        if distilled is None:
+            # Fallback to Gemini
+            response = model.generate_content(prompt)
+            text = response.text.strip()
+            json_match = re.search(r'\[.*\]', text, re.DOTALL)
+            if json_match:
+                text = json_match.group()
+            distilled = json.loads(text)
+            
         return jsonify(distilled), 200
+
 
     except Exception as e:
         print(f"ERROR in AI Question Distillation: {str(e)}")
@@ -3364,7 +3516,7 @@ def analyze_scheme_readiness_ai(scheme_id):
     if clarifications:
         clarification_text = "\n    PRIOR APPLICANT CLARIFICATIONS (CRITICAL: Use these to resolve uncertainties):\n    The applicant was previously asked these questions about edge cases and provided these answers:\n"
         for c in clarifications:
-            clarification_text += f"    - Question: {c.question}\n      Answer: {c.answer}\n"
+            clarification_text += f"    - Question: {c.question_text}\n      Answer: {c.answer_text}\n"
         clarification_text += "\n    NEW RULE: Use these clarifications to resolve FACTUAL UNCERTAINTIES. If their answer satisfies the requirements, mark the item as 'success' and DO NOT ask about it again."
     
     # 3. Build the specific Prompt
@@ -3414,7 +3566,8 @@ def analyze_scheme_readiness_ai(scheme_id):
     - "icon": A FontAwesome icon class (e.g. "fa-circle-check", "fa-circle-exclamation", "fa-circle-xmark", "fa-circle-info").
     - "question": (ONLY IF type is 'warning' or 'partial') A highly specific, natural language question directly asking the applicant to resolve the missing information.
     
-    Format the output purely as valid JSON without markdown wrapping:
+    Format the output purely as valid JSON without markdown wrapping.
+    CRITICAL: In the "text" and "question" fields, ABSOLUTELY NO MARKDOWN STARS (**) OR BRACKETS ([]) ALLOWED. Use plain text only.
     {{
        "score": 85,
        "items": [
@@ -3429,17 +3582,23 @@ def analyze_scheme_readiness_ai(scheme_id):
     """
     
     try:
-        # Rate limiting for free tier (15 RPM)
-        gemini_limiter.wait()
-        response = model.generate_content(prompt)
-        text = response.text.strip()
+        from app.engine import ai_router
+        result = ai_router.analyze_readiness(scheme, user_data_clean, doc_types, clarification_text)
         
-        # Robust JSON extraction to handle AI noise or markdown blocks
-        json_match = re.search(r'\{.*\}', text, re.DOTALL)
-        if json_match:
-            text = json_match.group()
+        if result is None:
+            # Fallback to Gemini Logic (Default)
+            gemini_limiter.wait()
+            response = model.generate_content(prompt)
+            text = response.text.strip()
+            
+            # Robust JSON extraction to handle AI noise or markdown blocks
+            json_match = re.search(r'\{.*\}', text, re.DOTALL)
+            if json_match:
+                text = json_match.group()
+            
+            result = json.loads(text)
         
-        result = json.loads(text)
+        import hashlib
         
         import hashlib
         if 'items' in result:
@@ -4083,12 +4242,17 @@ Return ONLY a valid JSON array. No markdown, no explanation.
         )
 
         try:
-            response = model.generate_content(prompt)
-            text = response.text.strip()
-            # Strip markdown fences
-            text = re.sub(r'^```(?:json)?|```$', '', text.strip(), flags=re.MULTILINE).strip()
-            batch_results = json.loads(text)
-
+            from app.engine import ai_router
+            batch_results = ai_router.batch_evaluate(prompt)
+            
+            if batch_results is None:
+                # Fallback to Gemini
+                response = model.generate_content(prompt)
+                text = response.text.strip()
+                # Strip markdown fences
+                text = re.sub(r'^```(?:json)?|```$', '', text.strip(), flags=re.MULTILINE).strip()
+                batch_results = json.loads(text)
+            
             if not isinstance(batch_results, list):
                 raise ValueError("Expected JSON array")
 
@@ -4483,7 +4647,7 @@ def run_deep_analysis():
         
     try:
         from app.engine_compat import get_orchestrator
-        from contextual_resolver import resolve_possibly_eligible_batch
+        from app.engine import ai_router
         
         orch = get_orchestrator(app.config)
         all_schemes = {s.id: s for s in Scheme.query.filter(Scheme.id.in_(scheme_ids)).all()}
@@ -4512,7 +4676,7 @@ def run_deep_analysis():
         profile = user.get_profile_dict() if hasattr(user, 'get_profile_dict') else {}
 
         # Run resolver (Adversarial double-check)
-        resolved_eligible, resolved_possibly, resolved_ineligible = resolve_possibly_eligible_batch(
+        resolved_eligible, resolved_possibly, resolved_ineligible = ai_router.resolve_possibly_eligible(
             profile, target_schemes
         )
         
@@ -4722,9 +4886,10 @@ Return ONLY a valid JSON array. No markdown. No explanation outside JSON.
             if s.id in clarifs_map:
                 s_text += "\n  PRIOR CLARIFICATIONS (DO NOT ASK THESE AGAIN - MARK AS RESOLVED IF SATISFIED):\n"
                 for c in clarifs_map[s.id]:
-                    s_text += f"    - Question: {c.question}\n      Answer: {c.answer}\n"
+                    s_text += f"    - Question: {c.question_text}\n      Answer: {c.answer_text}\n"
             batch_schemes_text_list.append(s_text)
         schemes_text = "\n".join(batch_schemes_text_list)
+
 
         prompt = READINESS_RECLASSIFY_PROMPT.format(
             profile=json.dumps(user_data_clean, indent=2),
@@ -4733,13 +4898,19 @@ Return ONLY a valid JSON array. No markdown. No explanation outside JSON.
         )
 
         try:
-            response = model.generate_content(prompt)
-            text = response.text.strip()
-            text = re.sub(r'^```(?:json)?|```$', '', text.strip(), flags=re.MULTILINE).strip()
-            batch_results = json.loads(text)
-
+            from app.engine import ai_router
+            batch_results = ai_router.batch_evaluate(prompt)
+            
+            if batch_results is None:
+                # Fallback to Gemini
+                response = model.generate_content(prompt)
+                text = response.text.strip()
+                text = re.sub(r'^```(?:json)?|```$', '', text.strip(), flags=re.MULTILINE).strip()
+                batch_results = json.loads(text)
+            
             if not isinstance(batch_results, list):
                 raise ValueError("Expected JSON array from Gemini")
+
 
             for r in batch_results:
                 sid = r.get('id')
@@ -4829,9 +5000,10 @@ def readiness_reevaluate():
 
     # 1. Throttling and Loop Prevention
     now = datetime.utcnow()
-    recent_answers = SchemeClarification.query.filter_by(user_id=user_id).order_by(SchemeClarification.resolved_at.desc()).first()
-    if recent_answers and (now - recent_answers.resolved_at).total_seconds() < 10:
-        return jsonify({"status": "throttled", "reason": "cooldown", "retry_after": 10}), 429
+    if not batch_mode:
+        recent_answers = SchemeClarification.query.filter_by(user_id=user_id).order_by(SchemeClarification.resolved_at.desc()).first()
+        if recent_answers and (now - recent_answers.resolved_at).total_seconds() < 10:
+            return jsonify({"status": "throttled", "reason": "cooldown", "retry_after": 10}), 429
 
     iteration_count = db.session.query(db.func.count(SchemeClarification.id)).filter_by(user_id=user_id, scheme_id=scheme_id).scalar()
     MAX_ITERATIONS = 3
@@ -5003,12 +5175,19 @@ IN CONTEXT: N/A"""
 Keep it brief (2-3 sentences). Plain English only."""
 
     try:
-        response = model.generate_content(prompt)
-        reply = response.text.strip()
+        from app.engine import ai_router
+        reply = ai_router.call_ai(prompt)
+        
+        if reply is None:
+            # Fallback to Gemini
+            response = model.generate_content(prompt)
+            reply = response.text.strip()
+            
         return jsonify({
             'reply':  reply,
             'action': action,
         }), 200
+
     except Exception as e:
         logger.error(f"Contextual AI error: {e}")
         return jsonify({'error': 'AI request failed', 'details': str(e)}), 500
@@ -5073,6 +5252,28 @@ def delete_verified_cache():
         db.session.rollback()
         logger.error(f"delete_verified_cache error: {e}")
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/user/eligibility-verdicts', methods=['GET'])
+def get_user_eligibility_verdicts():
+    """
+    Returns all permanently locked eligibility results for the current user.
+    profile_version=99 means manually audited via the AI chat — never re-evaluate.
+    The frontend uses this to pre-sort schemes on dashboard load without running any matching.
+    """
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Not logged in'}), 401
+    results = EligibilityResult.query.filter_by(user_id=user_id).all()
+    return jsonify({
+        'verdicts': [{
+            'scheme_id':   r.scheme_id,
+            'result':      r.result,          # 'ELIGIBLE' | 'INELIGIBLE' | 'POSSIBLY_ELIGIBLE'
+            'confidence':  r.confidence,
+            'reason':      r.blocking_reason or '',
+            'is_locked':   r.profile_version == 99  # only manually audited ones
+        } for r in results]
+    }), 200
 
 
 @app.route('/api/admin/login', methods=['POST'])
@@ -5451,22 +5652,29 @@ def chat():
         else:
             # Session exists but user doesn't (stale session)
             session.pop('user_id', None)
-    # Call Gemini API if model is configured
-    if model:
-        try:
+    # Call AI API through router
+    try:
+        from app.engine import ai_router
+        bot_response = ai_router.chat(user_message, context)
+        
+        if bot_response:
+            return jsonify({'response': bot_response, 'powered_by': 'nvidia'}), 200
+            
+        # Fallback to Gemini
+        if model:
             if 'gemini_limiter' in globals():
                 gemini_limiter.wait()
             response = model.generate_content(f"{system_prompt}\n\nUser: {user_message}\n\nAssistant:")
             bot_response = response.text
             return jsonify({'response': bot_response, 'powered_by': 'gemini'}), 200
-        except Exception as e:
-            error_str = str(e)
-            print(f"Gemini API Error: {error_str}")
-            if "429" in error_str or "quota" in error_str.lower():
-                return jsonify({
-                    'response': "⚠️ I'm currently handling a high volume of requests and have reached my temporary AI limit. I can still help with basic questions about schemes, or you can try again in a few minutes!",
-                    'powered_by': 'system_limit'
-                }), 200
+    except Exception as e:
+        error_str = str(e)
+        print(f"Gemini API Error: {error_str}")
+        if "429" in error_str or "quota" in error_str.lower():
+            return jsonify({
+                'response': "⚠️ I'm currently handling a high volume of requests and have reached my temporary AI limit. I can still help with basic questions about schemes, or you can try again in a few minutes!",
+                'powered_by': 'system_limit'
+            }), 200
 
     # Fallback response
     fallback = generate_fallback_response(user_message, context)
@@ -5541,25 +5749,17 @@ Example Output:
 ]
 """
 
-    if not model:
-        return jsonify({'error': 'AI engine is currently offline. Please try again later.'}), 503
-
     try:
-        # Use rate limiter to avoid 429s
-        if 'gemini_limiter' in globals():
-            gemini_limiter.wait()
-
-        response = model.generate_content(AUDIT_EXTRACT_PROMPT)
+        from app.engine import ai_router
+        raw_text = ai_router.call_ai(AUDIT_EXTRACT_PROMPT)
         
-        # Check if response has valid candidates
-        if not hasattr(response, 'candidates') or not response.candidates:
-             return jsonify({'error': 'AI refused to analyze this scheme (Safety Filter).'}), 400
-        
-        try:
+        if raw_text is None:
+            # Fallback to Gemini
+            if 'gemini_limiter' in globals():
+                gemini_limiter.wait()
+            response = model.generate_content(AUDIT_EXTRACT_PROMPT)
             raw_text = response.text.strip()
-        except Exception:
-            return jsonify({'error': 'AI could not generate a readable analysis for this scheme.'}), 400
-
+            
         # Robust JSON extraction: Find first '[' and last ']'
         start = raw_text.find('[')
         end = raw_text.rfind(']')
@@ -5631,15 +5831,17 @@ Return ONLY a JSON object:
 {{"verdict": "ELIGIBLE" | "INELIGIBLE", "reason": "...", "confidence": "100%"}}
 """
 
-    if not model:
-        return jsonify({'error': 'AI engine is currently offline.'}), 503
-
     try:
-        # Use rate limiter
-        if 'gemini_limiter' in globals():
-            gemini_limiter.wait()
+        from app.engine import ai_router
+        raw_text = ai_router.call_ai(AUDIT_VERDICT_PROMPT)
+        
+        if raw_text is None:
+            # Fallback to Gemini
+            if 'gemini_limiter' in globals():
+                gemini_limiter.wait()
+            response = model.generate_content(AUDIT_VERDICT_PROMPT)
+            raw_text = response.text.strip()
 
-        response = model.generate_content(AUDIT_VERDICT_PROMPT)
 
         if not hasattr(response, 'candidates') or not response.candidates:
              return jsonify({'error': 'AI refused to provide a verdict.'}), 400
@@ -5658,7 +5860,43 @@ Return ONLY a JSON object:
         else:
             v_text = re.sub(r'^```(?:json)?|```$', '', raw_text, flags=re.MULTILINE).strip()
             verdict_data = json.loads(v_text)
-        
+
+        # ── Persist verdict permanently to EligibilityResult ─────────────
+        user_id = session.get('user_id')
+        if user_id and scheme_id and 'verdict' in verdict_data:
+            try:
+                result_value = verdict_data['verdict']  # 'ELIGIBLE' or 'INELIGIBLE'
+                raw_conf = verdict_data.get('confidence', '100%')
+                try:
+                    conf_float = float(str(raw_conf).replace('%', '').strip()) / 100.0
+                except (ValueError, TypeError):
+                    conf_float = 1.0
+
+                existing = EligibilityResult.query.filter_by(
+                    user_id=user_id, scheme_id=scheme_id
+                ).first()
+                if existing:
+                    existing.result          = result_value
+                    existing.confidence      = conf_float
+                    existing.blocking_reason = verdict_data.get('reason', '')
+                    existing.computed_at     = datetime.utcnow()
+                    existing.profile_version = 99  # sentinel: manually audited, never re-evaluate
+                else:
+                    db.session.add(EligibilityResult(
+                        user_id         = user_id,
+                        scheme_id       = scheme_id,
+                        result          = result_value,
+                        confidence      = conf_float,
+                        blocking_reason = verdict_data.get('reason', ''),
+                        profile_version = 99
+                    ))
+                db.session.commit()
+                app.logger.info(f"[Verdict Persisted] user={user_id} scheme={scheme_id} => {result_value}")
+            except Exception as persist_err:
+                db.session.rollback()
+                app.logger.warning(f"[Verdict Persist Failed] {persist_err}")
+        # ─────────────────────────────────────────────────────────────────
+
         return jsonify(verdict_data), 200
     except Exception as e:
         err_msg = str(e)
@@ -5763,6 +6001,30 @@ def _docs_required_from_text(scheme_docs_text: str) -> list:
     return found
 
 
+def run_pipeline_async(scheme_id, trigger_notifications=True):
+    def target():
+        with app.app_context():
+            try:
+                scheme = db.session.get(Scheme, scheme_id)
+                if not scheme:
+                    return
+                print(f"=== PIPELINE ASYNC: Running Gemini extraction for scheme {scheme_id} ===")
+                from app.pipeline import get_pipeline
+                pipeline = get_pipeline(app)
+                pipeline.run(scheme, Scheme.query.filter_by(is_active=True).all())
+                print(f"=== PIPELINE ASYNC: Completed for scheme {scheme_id} ===")
+                
+                if trigger_notifications:
+                    print(f"📢 PIPELINE ASYNC: Triggering targeted notifications for scheme {scheme_id}...")
+                    notify_users_of_new_schemes([scheme])
+            except Exception as e:
+                print(f"=== PIPELINE ASYNC: FAILED for scheme {scheme_id}: {e} ===")
+                logger.warning(f"Pipeline failed for scheme {scheme_id}: {e}")
+
+    import threading
+    threading.Thread(target=target, daemon=True).start()
+
+
 # ----------------- Pending Schemes & Approval Workflow Routes -----------------
 @app.route('/api/admin/pending-schemes', methods=['GET'])
 def get_pending_schemes():
@@ -5858,19 +6120,8 @@ def approve_pending_scheme(scheme_id):
         
         db.session.commit()
 
-        # Run new pipeline to extract conditions (for AI-extracted conditions)
-        print(f"=== PIPELINE: Running Gemini extraction for scheme {approved_scheme.id} ===")
-        try:
-            from app.pipeline import get_pipeline
-            pipeline = get_pipeline(app)
-            pipeline.run(approved_scheme, Scheme.query.filter_by(is_active=True).all())
-            print(f"=== PIPELINE: Completed for scheme {approved_scheme.id} ===")
-        except Exception as pipeline_err:
-            print(f"=== PIPELINE: FAILED for scheme {approved_scheme.id}: {pipeline_err} ===")
-            logger.warning(f"Pipeline failed for scheme {approved_scheme.id}: {pipeline_err}")
-
-        # Send SMS notifications (Pass list of schemes)
-        notify_users_of_new_schemes([approved_scheme])
+        # Run new pipeline to extract conditions and send notifications in background
+        run_pipeline_async(approved_scheme.id, trigger_notifications=True)
     
     except Exception as e:
         db.session.rollback()
@@ -5916,7 +6167,7 @@ def batch_approve_pending_schemes():
     for s_id in scheme_ids:
         pending = db.session.get(PendingScheme, s_id)
         if pending and pending.status == 'pending':
-            # Create actual Scheme
+            # Create actual Scheme without flat columns
             approved_scheme = Scheme(
                 name=pending.name,
                 description=pending.description,
@@ -5925,38 +6176,11 @@ def batch_approve_pending_schemes():
                 benefits=pending.benefits,
                 eligibility=pending.eligibility,
                 application_link=pending.application_link,
-                min_age=pending.min_age,
-                max_age=pending.max_age,
-                allowed_genders=pending.allowed_genders,
-                min_income=pending.min_income,
-                max_income=pending.max_income,
-                allowed_occupations=pending.allowed_occupations,
-                allowed_castes=pending.allowed_castes,
-                allowed_states=pending.allowed_states,
-                allowed_education=pending.allowed_education,
-                allowed_marital_status=pending.allowed_marital_status,
-                disability_requirement=pending.disability_requirement,
-                residence_requirement=pending.residence_requirement,
-                # New holistic granular criteria
-                allowed_father_occupations=pending.allowed_father_occupations,
-                allowed_mother_occupations=pending.allowed_mother_occupations,
-                allowed_religions=pending.allowed_religions,
-                land_type_requirement=pending.land_type_requirement,
-                orphan_requirement=pending.orphan_requirement,
-                tribal_requirement=pending.tribal_requirement,
-                minority_requirement=pending.minority_requirement,
-                senior_citizen_requirement=pending.senior_citizen_requirement,
-                widow_requirement=pending.widow_requirement,
-                disability_percentage_min=pending.disability_percentage_min,
-                bank_account_required=pending.bank_account_required,
-                aadhaar_required=pending.aadhaar_required,
-                allowed_ration_card_types=pending.allowed_ration_card_types,
-                min_education_level=pending.min_education_level,
-                mutually_exclusive_with=pending.mutually_exclusive_with,
                 # Detailed information fields
                 exclusions=pending.exclusions,
                 application_process=pending.application_process,
-                documents_required=pending.documents_required
+                documents_required=pending.documents_required,
+                is_active=True
             )
             # Update pending status
             pending.status = 'approved'
@@ -5965,22 +6189,46 @@ def batch_approve_pending_schemes():
             
             AdminNotification.query.filter_by(pending_scheme_id=s_id).delete()
             db.session.add(approved_scheme)
+            db.session.flush()  # Get approved_scheme.id
+            
+            # AUTO-CONVERT: Convert PendingScheme flat fields to Condition rows
+            pending_data = {
+                'minAge': pending.min_age,
+                'maxAge': pending.max_age,
+                'allowedGenders': json.loads(pending.allowed_genders) if pending.allowed_genders else [],
+                'minIncome': pending.min_income,
+                'maxIncome': pending.max_income,
+                'allowedOccupations': json.loads(pending.allowed_occupations) if pending.allowed_occupations else [],
+                'allowedCastes': json.loads(pending.allowed_castes) if pending.allowed_castes else [],
+                'allowedStates': json.loads(pending.allowed_states) if pending.allowed_states else [],
+                'allowedEducation': json.loads(pending.allowed_education) if pending.allowed_education else [],
+                'allowedMaritalStatus': json.loads(pending.allowed_marital_status) if pending.allowed_marital_status else [],
+                'disabilityRequirement': pending.disability_requirement,
+                'residenceRequirement': pending.residence_requirement,
+                'allowedFatherOccupations': json.loads(pending.allowed_father_occupations) if pending.allowed_father_occupations else [],
+                'allowedMotherOccupations': json.loads(pending.allowed_mother_occupations) if pending.allowed_mother_occupations else [],
+                'allowedReligions': json.loads(pending.allowed_religions) if pending.allowed_religions else [],
+                'landTypeRequirement': pending.land_type_requirement,
+                'orphanRequirement': pending.orphan_requirement,
+                'tribalRequirement': pending.tribal_requirement,
+                'minorityRequirement': pending.minority_requirement,
+                'seniorCitizenRequirement': pending.senior_citizen_requirement,
+                'widowRequirement': pending.widow_requirement,
+                'disabilityPercentageMin': pending.disability_percentage_min,
+                'bankAccountRequired': pending.bank_account_required,
+                'aadhaarRequired': pending.aadhaar_required,
+                'allowedRationCardTypes': json.loads(pending.allowed_ration_card_types) if pending.allowed_ration_card_types else [],
+                'minEducationLevel': pending.min_education_level,
+            }
+            _auto_convert_to_conditions(approved_scheme, pending_data, source='extraction')
+            
             approved_count += 1
             approved_schemes.append(approved_scheme)
 
-            # Run pipeline for condition extraction
-            try:
-                from app.pipeline import get_pipeline
-                pipeline = get_pipeline(app)
-                pipeline.run(approved_scheme, Scheme.query.filter_by(is_active=True).all())
-            except Exception as pipeline_err:
-                logger.warning(f"Pipeline failed for scheme {approved_scheme.id}: {pipeline_err}")
+            # Run pipeline for condition extraction and notifications in background
+            run_pipeline_async(approved_scheme.id, trigger_notifications=True)
             
     db.session.commit()
-    
-    # Send notifications
-    if approved_schemes:
-        notify_users_of_new_schemes(approved_schemes)
         
     return jsonify({'message': f'Successfully approved {approved_count} schemes'}), 200
 
@@ -6031,56 +6279,56 @@ def approve_all_pending_schemes():
             benefits=pending.benefits,
             eligibility=pending.eligibility,
             application_link=pending.application_link,
-            min_age=pending.min_age,
-            max_age=pending.max_age,
-            allowed_genders=pending.allowed_genders,
-            min_income=pending.min_income,
-            max_income=pending.max_income,
-            allowed_occupations=pending.allowed_occupations,
-            allowed_castes=pending.allowed_castes,
-            allowed_states=pending.allowed_states,
-            allowed_education=pending.allowed_education,
-            allowed_marital_status=pending.allowed_marital_status,
-            disability_requirement=pending.disability_requirement,
-            residence_requirement=pending.residence_requirement,
-            allowed_father_occupations=pending.allowed_father_occupations,
-            allowed_mother_occupations=pending.allowed_mother_occupations,
-            allowed_religions=pending.allowed_religions,
-            land_type_requirement=pending.land_type_requirement,
-            orphan_requirement=pending.orphan_requirement,
-            tribal_requirement=pending.tribal_requirement,
-            minority_requirement=pending.minority_requirement,
-            senior_citizen_requirement=pending.senior_citizen_requirement,
-            widow_requirement=pending.widow_requirement,
-            disability_percentage_min=pending.disability_percentage_min,
-            bank_account_required=pending.bank_account_required,
-            aadhaar_required=pending.aadhaar_required,
-            allowed_ration_card_types=pending.allowed_ration_card_types,
-            min_education_level=pending.min_education_level,
-            mutually_exclusive_with=pending.mutually_exclusive_with,
             exclusions=pending.exclusions,
             application_process=pending.application_process,
-            documents_required=pending.documents_required
+            documents_required=pending.documents_required,
+            is_active=True
         )
         pending.status = 'approved'
         pending.approved_by = session.get('admin_id')
         pending.approved_at = datetime.now(timezone.utc)
         AdminNotification.query.filter_by(pending_scheme_id=pending.id).delete()
         db.session.add(approved_scheme)
+        db.session.flush()  # Get approved_scheme.id
+
+        # AUTO-CONVERT: Convert PendingScheme flat fields to Condition rows
+        pending_data = {
+            'minAge': pending.min_age,
+            'maxAge': pending.max_age,
+            'allowedGenders': json.loads(pending.allowed_genders) if pending.allowed_genders else [],
+            'minIncome': pending.min_income,
+            'maxIncome': pending.max_income,
+            'allowedOccupations': json.loads(pending.allowed_occupations) if pending.allowed_occupations else [],
+            'allowedCastes': json.loads(pending.allowed_castes) if pending.allowed_castes else [],
+            'allowedStates': json.loads(pending.allowed_states) if pending.allowed_states else [],
+            'allowedEducation': json.loads(pending.allowed_education) if pending.allowed_education else [],
+            'allowedMaritalStatus': json.loads(pending.allowed_marital_status) if pending.allowed_marital_status else [],
+            'disabilityRequirement': pending.disability_requirement,
+            'residenceRequirement': pending.residence_requirement,
+            'allowedFatherOccupations': json.loads(pending.allowed_father_occupations) if pending.allowed_father_occupations else [],
+            'allowedMotherOccupations': json.loads(pending.allowed_mother_occupations) if pending.allowed_mother_occupations else [],
+            'allowedReligions': json.loads(pending.allowed_religions) if pending.allowed_religions else [],
+            'landTypeRequirement': pending.land_type_requirement,
+            'orphanRequirement': pending.orphan_requirement,
+            'tribalRequirement': pending.tribal_requirement,
+            'minorityRequirement': pending.minority_requirement,
+            'seniorCitizenRequirement': pending.senior_citizen_requirement,
+            'widowRequirement': pending.widow_requirement,
+            'disabilityPercentageMin': pending.disability_percentage_min,
+            'bankAccountRequired': pending.bank_account_required,
+            'aadhaarRequired': pending.aadhaar_required,
+            'allowedRationCardTypes': json.loads(pending.allowed_ration_card_types) if pending.allowed_ration_card_types else [],
+            'minEducationLevel': pending.min_education_level,
+        }
+        _auto_convert_to_conditions(approved_scheme, pending_data, source='extraction')
+
         approved_count += 1
         approved_schemes.append(approved_scheme)
 
-        # Run pipeline for condition extraction
-        try:
-            from app.pipeline import get_pipeline
-            pipeline = get_pipeline(app)
-            pipeline.run(approved_scheme, Scheme.query.filter_by(is_active=True).all())
-        except Exception as pipeline_err:
-            logger.warning(f"Pipeline failed for scheme {approved_scheme.id}: {pipeline_err}")
+        # Run pipeline for condition extraction and notifications in background
+        run_pipeline_async(approved_scheme.id, trigger_notifications=True)
 
     db.session.commit()
-    if approved_schemes:
-        notify_users_of_new_schemes(approved_schemes)
     return jsonify({'message': f'Successfully approved all {approved_count} schemes'}), 200
 
 
@@ -6735,19 +6983,10 @@ def seed_schemes():
             benefits=s_data.get('benefits'),
             eligibility=s_data.get('eligibility'),
             application_link=s_data.get('applicationLink'),
-            min_age=s_data.get('minAge'),
-            max_age=s_data.get('maxAge'),
-            min_income=s_data.get('minIncome'),
-            allowed_genders=json.dumps(s_data.get('allowedGenders', [])),
-            allowed_occupations=json.dumps(s_data.get('allowedOccupations', [])),
-            allowed_castes=json.dumps(s_data.get('allowedCastes', [])),
-            allowed_states=json.dumps(s_data.get('allowedStates', [])),
-            allowed_education=json.dumps(s_data.get('allowedEducation', [])),
-            allowed_marital_status=json.dumps(s_data.get('allowedMaritalStatus', [])),
-            disability_requirement=s_data.get('disabilityRequirement', 'Any'),
-            residence_requirement=s_data.get('residenceRequirement', 'Any')
         )
         db.session.add(scheme)
+        db.session.flush()  # Get scheme.id
+        _auto_convert_to_conditions(scheme, s_data, source='migration')
     
     try:
         db.session.commit()
@@ -6856,4 +7095,6 @@ if __name__ == '__main__':
     print("Automated Scheme Detection: ENABLED", flush=True)
     print("Terminal Monitoring: ACTIVE (Logs will appear below)", flush=True)
     
-    app.run(debug=True, use_reloader=True, host='0.0.0.0', port=5000)
+    # Run with Werkzeug development server in multiprocessing mode (4 worker processes)
+    print("Starting Flask development server with multiprocessing (4 worker processes)...", flush=True)
+    app.run(debug=True, use_reloader=True, host='0.0.0.0', port=5000, threaded=False, processes=4)

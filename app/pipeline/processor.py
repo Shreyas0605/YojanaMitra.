@@ -341,7 +341,7 @@ class PipelineProcessor:
             return False
 
         # Step 2 + 3
-        conditions, ext_version, err = self.step2_extract(normalised)
+        conditions, ext_version, err, _ = self.step2_extract(normalised)
 
         # FILTER: Clean conditions (before validation)
         conditions = self.filter_conditions(conditions)

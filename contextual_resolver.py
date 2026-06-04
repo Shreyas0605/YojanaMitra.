@@ -1,10 +1,23 @@
 import os
 import json
 import time
+import re
 import logging
 from dotenv import load_dotenv
 
 logger = logging.getLogger('yojanamitra')
+
+def strip_markdown(text):
+    if not text: return ""
+    # Remove bold/italic stars
+    text = re.sub(r'\*\*|__', '', text)
+    # Remove single stars or underscores
+    text = re.sub(r'[*_]', '', text)
+    # Remove markdown links [text](url) -> text (url)
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'\1 (\2)', text)
+    # Remove other brackets
+    text = text.replace('[', '').replace(']', '')
+    return text.strip()
 
 GEMINI_API_KEY = ''
 try:
@@ -92,9 +105,8 @@ def resolve_possibly_eligible_batch(user_profile, possibly_list):
         }, indent=2)
 
         try:
-            # Small delay to prevent hitting rate limits (429)
-            if i > 0:
-                time.sleep(1.5)
+            # Removed sleep for Paid Tier high-speed performance
+            pass
 
             response = model.generate_content(payload)
             res_text = response.text.strip()
@@ -118,12 +130,12 @@ def resolve_possibly_eligible_batch(user_profile, possibly_list):
                 
                 if status == 'INELIGIBLE':
                     p['status'] = 'INELIGIBLE'
-                    p['reason'] = reason
+                    p['reason'] = strip_markdown(reason)
                     new_ineligible.append(p)
                 elif status == 'POSSIBLY_ELIGIBLE' or status == 'POSSIBLE':
                     if res.get('refined_question'):
-                        p['question_text'] = "Fact Check: " + res['refined_question']
-                    p['reason'] = reason
+                        p['question_text'] = "Fact Check: " + strip_markdown(res['refined_question'])
+                    p['reason'] = strip_markdown(reason)
                     new_possibly.append(p)
                 else:
                     new_eligible.append(p)

@@ -37,9 +37,9 @@ class EligibilityOrchestrator:
         for scheme in schemes_query:
             if not scheme.is_active:
                 continue
-            # Allow schemes that are extracted OR have conditions in DB
-            has_conditions = hasattr(scheme, 'condition_rows') and scheme.condition_rows.count() > 0
-            if scheme.extraction_status != "extracted" and not has_conditions:
+            # Allow schemes that have condition rows in the DB
+            has_conditions = scheme.condition_rows.count() > 0 if hasattr(scheme, 'condition_rows') else False
+            if not has_conditions:
                 continue
             if scheme.expires_at and scheme.expires_at < today:
                 continue
@@ -63,30 +63,32 @@ class EligibilityOrchestrator:
     # ── Cache check ────────────────────────────────────────────────────────────
 
     def _get_cached(self, user_id, scheme_id, profile_version):
-        from app import EligibilityResult
-        er = EligibilityResult.query.filter_by(
-            user_id=user_id, scheme_id=scheme_id
-        ).first()
-        if er and er.profile_version == profile_version:
-            return er
+        from app import app, EligibilityResult
+        with app.app_context():
+            er = EligibilityResult.query.filter_by(
+                user_id=user_id, scheme_id=scheme_id
+            ).first()
+            if er and er.profile_version == profile_version:
+                return er
         return None
 
     def _write_cache(self, user, scheme, elig_out):
-        from app import db, EligibilityResult
-        er = EligibilityResult.query.filter_by(
-            user_id=user.id, scheme_id=scheme.id
-        ).first()
-        if not er:
-            er = EligibilityResult(user_id=user.id, scheme_id=scheme.id)
-            db.session.add(er)
-        er.result          = elig_out.result
-        er.confidence      = elig_out.confidence
-        er.blocking_reason = elig_out.blocking_reason
-        er.missing_fields  = json.dumps(elig_out.missing_fields)
-        er.acquirable      = json.dumps(elig_out.acquirable)
-        er.computed_at     = datetime.now(timezone.utc)
-        er.profile_version = user.profile_version
-        db.session.commit()
+        from app import app, db, EligibilityResult
+        with app.app_context():
+            er = EligibilityResult.query.filter_by(
+                user_id=user.id, scheme_id=scheme.id
+            ).first()
+            if not er:
+                er = EligibilityResult(user_id=user.id, scheme_id=scheme.id)
+                db.session.add(er)
+            er.result          = elig_out.result
+            er.confidence      = elig_out.confidence
+            er.blocking_reason = elig_out.blocking_reason
+            er.missing_fields  = json.dumps(elig_out.missing_fields)
+            er.acquirable      = json.dumps(elig_out.acquirable)
+            er.computed_at     = datetime.now(timezone.utc)
+            er.profile_version = user.profile_version
+            db.session.commit()
 
     # ── Tiering ────────────────────────────────────────────────────────────────
 
@@ -199,14 +201,15 @@ class EligibilityOrchestrator:
 
     def invalidate_cache_for_field(self, user_id: str, field_name: str):
         """Delete cached results for schemes that have a condition on field_name."""
-        from app import db, EligibilityResult, Condition
-        affected_scheme_ids = db.session.query(Condition.scheme_id).filter_by(
-            field=field_name
-        ).distinct().all()
-        ids = [r[0] for r in affected_scheme_ids]
-        if ids:
-            EligibilityResult.query.filter(
-                EligibilityResult.user_id == user_id,
-                EligibilityResult.scheme_id.in_(ids),
-            ).delete(synchronize_session=False)
-            db.session.commit()
+        from app import app, db, EligibilityResult, Condition
+        with app.app_context():
+            affected_scheme_ids = db.session.query(Condition.scheme_id).filter_by(
+                field=field_name
+            ).distinct().all()
+            ids = [r[0] for r in affected_scheme_ids]
+            if ids:
+                EligibilityResult.query.filter(
+                    EligibilityResult.user_id == user_id,
+                    EligibilityResult.scheme_id.in_(ids),
+                ).delete(synchronize_session=False)
+                db.session.commit()

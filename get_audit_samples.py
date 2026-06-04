@@ -8,7 +8,7 @@ load_dotenv()
 
 # Config
 DB_PATH = r"C:\scrollyym\yojana-mitra-backend\instance\yojanamitra.db"
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "PASTE_YOUR_GEMINI_API_KEY_HERE")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo")
 TARGET_EMAIL = "shreyas6504@gmail.com"
 
 genai.configure(api_key=GEMINI_API_KEY)

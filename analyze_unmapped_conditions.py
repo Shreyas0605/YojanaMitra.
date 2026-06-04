@@ -22,7 +22,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "PASTE_YOUR_GEMINI_API_KEY_HERE")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo")
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-flash-latest")
 

@@ -2324,14 +2324,13 @@
                                         <th>Name</th>
                                         <th>Category</th>
                                         <th>Source</th>
-                                        <th>Confidence</th>
                                         <th>Detected</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pending-schemes-table-body">
                                     <tr>
-                                        <td colspan="7" class="text-center py-5">
+                                        <td colspan="6" class="text-center py-5">
                                             <div class="spinner-border" role="status" style="width:28px;height:28px;">
                                             </div>
                                             <div class="mt-2" style="font-size:12.5px;color:var(--text-3);">Loading
@@ -2719,10 +2718,10 @@
         // Check admin session status
         async function checkSession() {
             try {
-                const res = await fetch('api/admin/me');
+                const res = await fetch('/api/admin/me');
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.admin) {
+                    if (data.authenticated) {
                         showDashboard();
                         loadSchemes();
                         return;
@@ -2792,7 +2791,7 @@
             const logoutBtn = document.getElementById('logout-btn');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', async () => {
-                    await fetch('api/logout', { method: 'POST' });
+                    await fetch('/api/logout', { method: 'POST' });
                     sessionStorage.clear();
                     localStorage.clear();
                     window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
@@ -2819,13 +2818,13 @@
                     }
 
                     try {
-                        const res = await fetch('api/login', {
+                        const res = await fetch('/api/admin/login', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(Object.fromEntries(formData))
                         });
                         const respData = await res.json();
-                        if (res.ok && respData.user && respData.user.isAdmin) {
+                        if (res.ok && respData.message) {
                             loginForm.reset();
                             showDashboard();
                             loadSchemes();
@@ -3111,15 +3110,6 @@
                         <td style="font-weight:600;color:var(--text);">${p.name}</td>
                         <td><span class="ym-badge ym-badge-ghost">${p.category || 'Uncategorized'}</span></td>
                         <td style="font-size:12px;color:var(--text-3);">${p.sourceName || 'Unknown'}</td>
-                        <td>
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <div class="progress" style="height:6px;width:72px;border-radius:4px;">
-                                    <div class="progress-bar ${p.confidenceScore > 0.7 ? 'bg-success' : 'bg-warning'}"
-                                         style="width:${(p.confidenceScore * 100).toFixed(0)}%;"></div>
-                                </div>
-                                <span style="font-size:11px;font-family:var(--font-mono);color:var(--text-2);">${(p.confidenceScore * 100).toFixed(0)}%</span>
-                            </div>
-                        </td>
                         <td style="font-size:12px;color:var(--text-3);">${new Date(p.scrapedAt).toLocaleDateString()}</td>
                         <td>
                             <div style="display:flex;gap:6px;">
@@ -3131,7 +3121,7 @@
                     </tr>`).join('');
                     updatePendingCount(data.pagination.total);
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5" style="color:var(--text-3);">No pending schemes</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5" style="color:var(--text-3);">No pending schemes</td></tr>';
                     updatePendingCount(0);
                 }
             } catch (e) { console.error('Error loading pending schemes:', e); }
@@ -3147,7 +3137,8 @@
             try {
                 const res = await fetch(`/api/admin/pending-schemes/${id}/approve`, { method: 'POST' });
                 if (res.ok) { alert('Scheme approved!'); loadPendingSchemes(); loadSchemes(); }
-            } catch (e) { alert('Error approving scheme'); }
+                else { const err = await res.json(); alert('Error: ' + (err.error || res.status)); }
+            } catch (e) { alert('Error approving scheme: ' + e.message); }
         }
 
         async function rejectPendingScheme(id) {
@@ -3182,7 +3173,7 @@
             const ids = Array.from(selectedBoxes).map(cb => parseInt(cb.dataset.id));
             if (!confirm(`Approve all ${ids.length} selected schemes?`)) return;
             try {
-                const res = await fetch('api/admin/pending/batch-approve', {
+                const res = await fetch('/api/admin/pending/batch-approve', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids })
                 });
@@ -3201,7 +3192,7 @@
             const reason = prompt(`Reject all ${ids.length} schemes? Reason (optional):`);
             if (reason === null) return;
             try {
-                const res = await fetch('api/admin/pending/batch-reject', {
+                const res = await fetch('/api/admin/pending/batch-reject', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids, reason: reason || 'Batch rejection' })
                 });

@@ -11,7 +11,7 @@ import google.generativeai as genai
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configure Gemini
-API_KEY = os.environ.get('GEMINI_API_KEY', 'PASTE_YOUR_GEMINI_API_KEY_HERE')
+API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo')
 genai.configure(api_key=API_KEY)
 
 try:

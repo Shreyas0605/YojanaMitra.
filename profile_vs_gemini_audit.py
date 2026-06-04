@@ -40,7 +40,7 @@ from datetime import datetime
 # ── Gemini setup ──────────────────────────────────────────────────────────────
 import google.generativeai as genai
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "PASTE_YOUR_GEMINI_API_KEY_HERE")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo")
 genai.configure(api_key=GEMINI_API_KEY)
 MODEL = genai.GenerativeModel("gemini-flash-latest")
 

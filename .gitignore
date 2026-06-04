@@ -13,7 +13,8 @@ node_modules/
 # Database
 *.db
 *.sqlite3
-instance/
+instance/*
+!instance/yojanamitra.db
 
 # Data and Exports (Aggressive)
 *.json
@@ -35,11 +36,12 @@ instance/
 *.pdf
 static/ymad.mp4
 static/frames/
-static/img/scene*.png
-static/img/fire.png
-static/img/hero.png
-static/img/login.png
-static/img/register.png
+# Track these UI images for frontend display
+!static/img/scene*.png
+!static/img/fire.png
+!static/img/hero.png
+!static/img/login.png
+!static/img/register.png
 
 # Static/Uploads (Private user documents)
 static/uploads/

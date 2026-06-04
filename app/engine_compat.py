@@ -122,14 +122,15 @@ class NewEligibilityOrchestrator:
                 )
         else:
             try:
-                from app import SchemeClarification
-                sc = SchemeClarification.query.filter_by(user_id=user.id, scheme_id=scheme.id, ai_verdict='INELIGIBLE').first()
-                if sc:
-                    return EligibilityOutput(
-                        result=INELIGIBLE, confidence=1.0,
-                        blocking_reason=f"Disqualified based on your answer: {sc.answer_text}",
-                        missing_fields=[], acquirable=[],
-                    )
+                from app import app, SchemeClarification
+                with app.app_context():
+                    sc = SchemeClarification.query.filter_by(user_id=user.id, scheme_id=scheme.id, ai_verdict='INELIGIBLE').first()
+                    if sc:
+                        return EligibilityOutput(
+                            result=INELIGIBLE, confidence=1.0,
+                            blocking_reason=f"Disqualified based on your answer: {sc.answer_text}",
+                            missing_fields=[], acquirable=[],
+                        )
             except Exception as e:
                 log.warning(f"Answer-aware check failed: {e}")
 
@@ -210,7 +211,7 @@ class NewEligibilityOrchestrator:
             pass
 
         from sqlalchemy.orm import joinedload
-        candidates = self.prefilter(user, Scheme.query.options(joinedload(Scheme.conditions)).all())
+        candidates = self.prefilter(user, Scheme.query.filter_by(is_active=True).options(joinedload(Scheme.conditions)).all())
         scheme_results = []
         possible_pairs = []
 
@@ -221,7 +222,7 @@ class NewEligibilityOrchestrator:
             if eo.result == POSSIBLE:
                 possible_pairs.append((scheme, eo))
 
-        ranked = self.ranker.rank(scheme_results)
+        ranked = self.ranker.rank(scheme_results, include_ineligible=False, max_results=5000)
         questions = self.qengine.select_questions(possible_pairs, profile)
         if question_cap is not None:
             questions = questions[:question_cap]

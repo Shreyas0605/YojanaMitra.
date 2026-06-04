@@ -6,7 +6,7 @@ sys.path.insert(0, '.')
 from app import app, db, Condition
 from app.pipeline.extractor import GeminiExtractor
 
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'PASTE_YOUR_GEMINI_API_KEY_HERE')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo')
 
 # Load the scheme data
 JSON_FILE = 'all_schemes_fixed.json'

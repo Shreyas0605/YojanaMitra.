@@ -53,6 +53,7 @@ EligibilityResult = _flask_app.EligibilityResult
 SchemeFlag = _flask_app.SchemeFlag
 UserProfileAttribute = _flask_app.UserProfileAttribute
 QuestionAnswer = _flask_app.QuestionAnswer
+SchemeClarification = _flask_app.SchemeClarification
 Feedback = _flask_app.Feedback
 ApplicationFeedback = _flask_app.ApplicationFeedback
 init_db = _flask_app.init_db
@@ -71,6 +72,6 @@ __all__ = [
     "SchemeSource", "SchemeTranslation", "PendingScheme",
     "AdminNotification", "ScrapeLog", "Condition",
     "EligibilityResult", "SchemeFlag", "UserProfileAttribute",
-    "QuestionAnswer", "Feedback", "ApplicationFeedback",
+    "QuestionAnswer", "SchemeClarification", "Feedback", "ApplicationFeedback",
     "init_db", "calculate_profile_score",
 ]

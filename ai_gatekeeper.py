@@ -31,7 +31,7 @@ class AIGatekeeper:
         # 1. gemini-flash-latest-8b (Highly efficient, higher rate limits in some tiers)
         # 2. gemini-flash-latest (Reliable 1.5-flash)
         # 3. gemini-flash-latest (Fastest/New)
-        candidates = ['gemini-flash-latest', 'gemini-pro-latest']
+        candidates = ['gemini-flash-latest', 'gemini-flash-latest']
         
         # Priority logic: If role is "Tracker" (Scraper), it should yield if Vault is busy
         # For now, we use a simple lock, but we can add more nuanced yield logic here.

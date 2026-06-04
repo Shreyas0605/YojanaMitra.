@@ -146,7 +146,7 @@ def get_full_text(scheme):
     return text[:8000] # Token safety limit
 
 def run_extraction():
-    API_KEY = os.environ.get('GEMINI_API_KEY', 'PASTE_YOUR_GEMINI_API_KEY_HERE')
+    API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo')
     if not API_KEY:
         log.error("Missing GEMINI_API_KEY environment variable.")
         return

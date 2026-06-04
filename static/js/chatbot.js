@@ -71,7 +71,7 @@
     }
     .chat-toggle-btn:hover { transform: scale(1.06); box-shadow: 0 6px 18px rgba(26, 86, 219, 0.45); }
     .chat-toggle-btn:active { transform: scale(0.97); }
-    
+
     @keyframes chatBubbleIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -103,12 +103,12 @@
     .chat-input-area .input-group { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 4px; display: flex; align-items: center; }
     .chat-input-area input { border: none; background: transparent; padding: 8px 12px; flex-grow: 1; outline: none; font-size: 13px; color: white; box-shadow: none !important; }
     .chat-input-area input::placeholder { color: rgba(255, 255, 255, 0.4); }
-    .chat-header button { 
-        background: transparent !important; 
-        border: none !important; 
-        color: white !important; 
-        opacity: 0.8; 
-        transition: opacity 0.2s; 
+    .chat-header button {
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        opacity: 0.8;
+        transition: opacity 0.2s;
         box-shadow: none !important;
     }
     .chat-header button:hover { opacity: 1; background: transparent !important; }
@@ -119,7 +119,7 @@
     .ym-chat-dots span:nth-child(2) { animation-delay: 180ms; }
     .ym-chat-dots span:nth-child(3) { animation-delay: 360ms; }
     @keyframes ym-chat-glow { 0%,100% { opacity:.25; transform:scale(.85); } 50% { opacity:1; transform:scale(1.15); } }
-    
+    `;
 
     const styleSheet = document.createElement("style");
     styleSheet.innerText = chatbotStyles;
@@ -128,8 +128,8 @@
     // 2. Inject HTML
     const path = window.location.pathname;
     const isDashboard = path.endsWith('dashboard') || path.endsWith('dashboard.html') || path.includes('/dashboard');
-    
-    let chatbotHTML = 
+
+    let chatbotHTML =
     '<div class="chatbot-fab-container">' +
     '    <!-- Round button with headset icon -->' +
     '    <button class="chat-toggle-btn" onclick="toggleChat()" title="Ask YojanaMitra AI">' +
@@ -144,7 +144,7 @@
 
     // Only add bubble if not on dashboard
     if (!isDashboard) {
-        chatbotHTML += 
+        chatbotHTML +=
         '<!-- Tooltip -->' +
         '<div class="chatbot-bubble" id="chatbot-bubble" onclick="toggleChat()">' +
         '    <button class="close-btn" onclick="event.stopPropagation(); document.getElementById(\'chatbot-bubble\').style.display=\'none\'">×</button>' +
@@ -153,7 +153,7 @@
         '</div>';
     }
 
-    chatbotHTML += 
+    chatbotHTML +=
     '</div>' +
     '<div id="chatbox" class="chatbox" style="display:none;">' +
     '    <div class="chat-header">' +
@@ -250,7 +250,7 @@
         if (!container) return;
 
         const div = document.createElement('div');
-        div.className = `message ${ sender }`;
+        div.className = 'message ' + sender;
         div.textContent = text;
         div.id = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 5);
         container.appendChild(div);

@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 def get_pipeline(app):
     # Hardcoded API key - same as in root app.py
-    api_key = 'PASTE_YOUR_GEMINI_API_KEY_HERE'
+    api_key = 'AIzaSyD6ZgvxesZ8ywZpycK4Fb9DrVelw4z6kIo'
     key_preview = api_key[:10] if api_key else "NONE"
     print(f"=== PIPELINE: Using API key: {key_preview}... ===")
     extractor = GeminiExtractor(
