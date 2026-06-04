@@ -39,6 +39,9 @@ instance/*
 *.pdf
 static/ymad.mp4
 static/frames/
+# Unignore scrolly videos for animation
+!static/scrolly.mp4
+!static/scrolly_c.mp4
 # Track these UI images for frontend display
 !static/img/scene*.png
 !static/img/fire.png
