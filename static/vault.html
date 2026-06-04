@@ -188,11 +188,27 @@ nav a.nav-cta:hover { background: #ea6a0a; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 @media (max-width:1060px){.doc-grid{grid-template-columns:repeat(2,1fr)}.stat-row{grid-template-columns:repeat(2,1fr)}.lower-grid{grid-template-columns:1fr}}
 @media (max-width:860px){.sidebar{display:none}header{padding:0 20px}nav{display:none}.page-body{padding:20px 16px}.doc-grid{grid-template-columns:1fr}}
+@media (max-width:768px){
+  #global-header nav, #global-header .header-actions { display:none !important; }
+  .hamburger-btn { display:flex !important; }
+  .stat-row { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .page-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+  .page-header-actions { width: 100% !important; }
+  .page-header-actions button { flex: 1; }
+  .page-header-left h1 { font-size: 1.3rem !important; }
+  .toolbar { flex-direction: column !important; }
+  .search-wrap { min-width: 100% !important; }
+  .filter-tabs { width: 100% !important; overflow-x: auto; }
+  .lower-grid { grid-template-columns: 1fr !important; }
+  .doc-grid { grid-template-columns: 1fr !important; }
+  .upload-zone { padding: 24px 16px !important; }
+  .modal { width: 96vw !important; padding: 20px !important; }
+}
 </style>
 </head>
 <body>
 
-<header>
+<header id="global-header">
   <a class="logo" href="index.html">
     <div class="logo-mark">YM</div>
     YojanaMitra
@@ -622,5 +638,6 @@ function googleTranslateElementInit() {
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script src="js/ai_toggle.js"></script>
+<script src="js/mobile_menu.js"></script>
 </body>
 </html>

@@ -2903,6 +2903,12 @@
       var ctn = document.getElementById('aurora-mount');
       if (!ctn) return;
 
+      // Bypass WebGL initialization on mobile screens
+      if (window.innerWidth <= 768) {
+        ctn.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
+        return;
+      }
+
       var COLOR_STOPS = ['#e36802', '#f6f4fa', '#1b990a'];
       var AMPLITUDE = 1.0;
       var BLEND = 0.82;
@@ -3060,6 +3066,7 @@ void main() {
   <link rel="stylesheet" href="static/css/contextual-ai-unified.css">
   <script src="static/js/contextual-ai-unified.js"></script>
   <script src="js/ai_toggle.js"></script>
+  <script src="js/mobile_menu.js"></script>
 </body>
 
 </html>

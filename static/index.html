@@ -2912,7 +2912,7 @@
             var ov2 = document.getElementById('sv-ov2');
             var wol = document.getElementById('white-out-layer');
             var hint = document.getElementById('scrolly-hint');
-            if (!video || !section) return;
+            if (!video || !section || window.innerWidth <= 768) return;
 
             // Only reset scroll on a true fresh load (not back-navigation or mid-page reload)
             if (history.scrollRestoration) history.scrollRestoration = 'manual';
@@ -3043,6 +3043,12 @@
         (function () {
             var ctn = document.getElementById('aurora-mount');
             if (!ctn) return;
+
+            // Bypass WebGL initialization on mobile screens
+            if (window.innerWidth <= 768) {
+                ctn.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
+                return;
+            }
 
             /* ── Config (matches usage: colorStops, blend, amplitude, speed) ── */
             var COLOR_STOPS = ['#e36802', '#f6f4fa', '#fbfaf7'];
@@ -5647,6 +5653,7 @@
         })();
     </script>
     <script src="js/ai_toggle.js"></script>
+    <script src="js/mobile_menu.js"></script>
 </body>
 
 </html>

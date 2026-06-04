@@ -2946,3 +2946,414 @@ body.animations-paused .aurora-container canvas {
     color: rgba(0,0,0,0.54);
     pointer-events: none;
 }
+
+
+/* ====================================================
+   MOBILE RESPONSIVENESS OVERRIDES (max-width: 768px)
+   ==================================================== */
+@media (max-width: 768px) {
+    /* --- General layout resets --- */
+    .container, .hero-container, .dashboard-container {
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+    }
+    
+    /* Force 2/3 columns layout grids to stack vertically */
+    .grid-2, .grid-3, .row, .col-md-6, .col-md-4, .col-lg-3, .col-lg-4, .col-lg-8 {
+        grid-template-columns: 1fr !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .row {
+        display: flex;
+        flex-direction: column !important;
+    }
+    
+    /* --- Hide desktop elements --- */
+    #global-header nav,
+    #global-header .header-actions {
+        display: none !important;
+    }
+    
+    /* --- Hamburger Button --- */
+    .hamburger-btn {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 100000;
+        outline: none;
+        box-shadow: none !important;
+    }
+    .hamburger-btn .bar {
+        width: 100%;
+        height: 3px;
+        background-color: var(--n-text, #ffffff);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+    .hamburger-btn.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger-btn.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-btn.active .bar:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* --- Mobile Navigation Drawer --- */
+    .mobile-nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 99998;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-nav-drawer {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100%;
+        background: #0b1a16;
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 24px;
+        font-family: \'Outfit\', sans-serif;
+    }
+    .mobile-nav-drawer.open {
+        right: 0;
+    }
+
+    .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 16px;
+    }
+    .drawer-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        color: #ffffff;
+        font-size: 1.2rem;
+    }
+    .drawer-logo .logo-mark {
+        background: #f97316;
+        color: #fff;
+        padding: 3px 6px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 900;
+    }
+    .drawer-close {
+        font-size: 2rem;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+    }
+    .drawer-body {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        flex-grow: 1;
+    }
+    .drawer-nav-group, .drawer-action-group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .drawer-link {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: color 0.2s;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .drawer-link:hover, .drawer-link.active {
+        color: #f97316;
+    }
+    .drawer-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 1rem;
+    }
+    .drawer-btn.btn-primary {
+        background: #f97316;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    }
+    .drawer-btn.btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .drawer-btn.btn-outline {
+        background: transparent;
+        color: #ef4444 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Prevent body scroll when menu open */
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    /* --- Hide Scrollytelling Animation Intro --- */
+    #scrolly-intro, .scrolly-container {
+        display: none !important;
+    }
+    
+    /* --- Hide Aurora background tricolor moving WebGL animation --- */
+    #aurora-mount, .aurora-container, canvas {
+        display: none !important;
+    }
+    
+    /* --- Fallback static background for aurora --- */
+    .global-patriotic-bg {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    }
+
+    /* --- Hero Section adjustments --- */
+    .hero {
+        padding-top: 100px !important;
+        padding-bottom: 40px !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+    .hero h1 {
+        font-size: 2.2rem !important;
+        line-height: 1.2 !important;
+    }
+    .hero-sub {
+        font-size: 1rem !important;
+        margin-bottom: 24px !important;
+    }
+    .hero-btn-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .hero-btn-row button, .hero-btn-row a {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    /* --- Dashboard adjustments --- */
+    .welcome-banner {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    .wb-left, .wb-right {
+        width: 100% !important;
+        position: relative !important;
+        left: 0 !important;
+    }
+    .wb-right {
+        padding: 24px 16px !important;
+    }
+    .wb-stats {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 20px 16px !important;
+    }
+    .wb-stat + .wb-stat {
+        border-left: none !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding-top: 20px !important;
+    }
+    .wb-wedge {
+        display: none !important;
+    }
+    .wb-name {
+        font-size: 28px !important;
+    }
+    .profile-name {
+        font-size: 1.6rem !important;
+    }
+    .dash-card {
+        padding: 1.25rem !important;
+    }
+    .score-circle-wrapper {
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    /* --- Dialogs / Modals --- */
+    .modal-dialog {
+        margin: 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+    }
+    .modal-content {
+        border-radius: 16px !important;
+    }
+    .modal-body {
+        padding: 1.25rem !important;
+    }
+
+    /* --- All Schemes: Filter Bar --- */
+    .glass-filter-bar {
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    .glass-filter-bar .glass-search-wrap {
+        width: 100% !important;
+    }
+    .glass-filter-bar .glass-search-input {
+        width: 100% !important;
+    }
+    .glass-filter-bar .glass-select-group {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .glass-select-trigger {
+        width: 100% !important;
+    }
+
+    /* --- All Schemes: Scheme Card Grid --- */
+    .scheme-grid, #scheme-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .scheme-card {
+        padding: 16px !important;
+    }
+    .scheme-card h5 {
+        font-size: 1rem !important;
+    }
+
+    /* --- Pagination --- */
+    .pagination-bar {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* --- Footer --- */
+    .site-footer, footer {
+        padding: 2rem 1.25rem !important;
+    }
+    .footer-grid, .footer-columns {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .footer-bottom {
+        flex-direction: column !important;
+        gap: 12px !important;
+        text-align: center !important;
+    }
+
+    /* --- Chatbot --- */
+    .chatbox {
+        width: calc(100vw - 24px) !important;
+        right: 12px !important;
+        bottom: 80px !important;
+        max-height: 65vh !important;
+    }
+    .chatbot-bubble {
+        display: none !important;
+    }
+
+    /* --- Dashboard: Grid layouts --- */
+    .dashboard-grid, .dash-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .dash-scheme-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .scheme-meta-dash {
+        flex-wrap: wrap !important;
+    }
+
+    /* --- Dashboard: Resolve Modals --- */
+    #resolve-questions-modal > div,
+    #resolve-results-modal > div {
+        width: 96% !important;
+        max-width: 96vw !important;
+        padding: 20px !important;
+    }
+
+    /* --- Utility Bar: hide on mobile --- */
+    #utility-bar {
+        display: none !important;
+    }
+
+    /* --- Scroll Reveal Text --- */
+    .scroll-reveal-text {
+        font-size: 1.2rem !important;
+    }
+
+    /* --- Section padding --- */
+    section {
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+    }
+
+    /* --- Typography scaling --- */
+    h1 { font-size: 2rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    h3 { font-size: 1.25rem !important; }
+
+    /* --- How It Works / Feature Cards --- */
+    .feature-grid, .how-it-works-grid, .steps-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* --- Bootstrap row/col overrides --- */
+    .col-md-4, .col-md-6, .col-md-8, .col-lg-3, .col-lg-4, .col-lg-6, .col-lg-8 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* --- Datepicker --- */
+    .mui-dp-modal {
+        width: 95vw !important;
+        max-width: 320px !important;
+    }
+}
+
+/* Hide hamburger button on desktop */
+.hamburger-btn {
+    display: none;
+}
