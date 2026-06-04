@@ -1,113 +1,76 @@
 /**
- * YojanaMitra Shared Mobile Menu Controller
- * Dynamically builds and controls a sliding drawer menu for mobile screens
+ * YojanaMitra Mobile Native App-like Navigation
+ * Replaces the header nav with a Bottom Tab Bar on mobile
  */
 
 (function() {
-    function initMobileMenu() {
-        const header = document.getElementById('global-header');
-        if (!header) return;
-
-        // 1. Create Hamburger Button
-        const hamburger = document.createElement('button');
-        hamburger.className = 'hamburger-btn';
-        hamburger.setAttribute('aria-label', 'Toggle navigation menu');
-        hamburger.innerHTML = `
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        `;
-        header.appendChild(hamburger);
-
-        // 2. Create Drawer Overlay and Container
-        const overlay = document.createElement('div');
-        overlay.className = 'mobile-nav-overlay';
+    function initMobileNav() {
+        if (window.innerWidth > 768) return; // Only run on mobile
         
-        const drawer = document.createElement('div');
-        drawer.className = 'mobile-nav-drawer';
-        drawer.innerHTML = `
-            <div class="drawer-header">
-                <div class="drawer-logo">
-                    <div class="logo-mark">YM</div>
-                    <span>YojanaMitra</span>
-                </div>
-                <button class="drawer-close" aria-label="Close menu">&times;</button>
-            </div>
-            <div class="drawer-body"></div>
-        `;
+        // Ensure we don't duplicate
+        if (document.getElementById('mobile-bottom-nav')) return;
 
-        document.body.appendChild(overlay);
-        document.body.appendChild(drawer);
-
-        const drawerBody = drawer.querySelector('.drawer-body');
+        // 1. Create Bottom Navigation Bar
+        const bottomNav = document.createElement('nav');
+        bottomNav.id = 'mobile-bottom-nav';
+        bottomNav.className = 'mobile-bottom-nav';
         
-        // 3. Dynamic Link Discovery & Insertion
-        // Clone desktop nav links
-        const desktopNav = header.querySelector('nav');
-        if (desktopNav) {
-            const navGroup = document.createElement('div');
-            navGroup.className = 'drawer-nav-group';
-            desktopNav.querySelectorAll('a').forEach(link => {
-                const clone = link.cloneNode(true);
-                clone.className = 'drawer-link' + (link.classList.contains('active') ? ' active' : '');
-                navGroup.appendChild(clone);
-            });
-            drawerBody.appendChild(navGroup);
-        }
+        // Define Tabs based on our main pages
+        const currentPath = window.location.pathname;
+        const isSchemes = currentPath.includes('schemes');
+        const isVault = currentPath.includes('vault');
+        const isDashboard = currentPath.includes('dashboard');
+        const isHome = !isSchemes && !isVault && !isDashboard;
 
-        // Clone desktop header actions (Admin, Login, Dashboard)
-        const desktopActions = header.querySelector('.header-actions');
-        if (desktopActions) {
-            const actionGroup = document.createElement('div');
-            actionGroup.className = 'drawer-action-group';
-            desktopActions.querySelectorAll('a, button').forEach(item => {
-                if (item.tagName === 'A' || item.tagName === 'BUTTON') {
-                    const clone = item.cloneNode(true);
-                    // Standardize classes for drawer layout
-                    if (clone.classList.contains('btn-dashboard')) {
-                        clone.className = 'drawer-btn btn-primary';
-                    } else if (clone.classList.contains('btn-login')) {
-                        clone.className = 'drawer-btn btn-secondary';
-                    } else if (clone.classList.contains('admin-link')) {
-                        clone.className = 'drawer-btn btn-outline';
-                    } else {
-                        clone.className = 'drawer-link';
-                    }
-                    actionGroup.appendChild(clone);
-                }
-            });
-            drawerBody.appendChild(actionGroup);
-        }
+        bottomNav.innerHTML = `
+            <a href="index.html" class="nav-item ${isHome ? 'active' : ''}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Home</span>
+            </a>
+            <a href="all_schemes.html" class="nav-item ${isSchemes ? 'active' : ''}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Schemes</span>
+            </a>
+            <a href="vault.html" class="nav-item ${isVault ? 'active' : ''}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span>Vault</span>
+            </a>
+            <a href="dashboard.html" class="nav-item ${isDashboard ? 'active' : ''}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Dashboard</span>
+            </a>
+        `;
+        document.body.appendChild(bottomNav);
 
-        // 4. Event Binding for Slide Transitions
-        function toggleMenu(forceClose = false) {
-            const isOpen = drawer.classList.contains('open');
-            if (isOpen || forceClose) {
-                drawer.classList.remove('open');
-                overlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-                hamburger.classList.remove('active');
+        // 2. Create Floating Action Button (Ask AI)
+        const fab = document.createElement('button');
+        fab.id = 'mobile-fab';
+        fab.className = 'mobile-fab';
+        fab.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        `;
+        
+        // Attempt to hook FAB into existing Ask AI functionality if available
+        fab.addEventListener('click', () => {
+            const contextualBtn = document.getElementById('ai-trigger-btn');
+            if (contextualBtn) {
+                contextualBtn.click();
             } else {
-                drawer.classList.add('open');
-                overlay.classList.add('active');
-                document.body.classList.add('menu-open');
-                hamburger.classList.add('active');
+                alert("YojanaMitra AI is ready to help!");
             }
-        }
-
-        hamburger.addEventListener('click', () => toggleMenu());
-        drawer.querySelector('.drawer-close').addEventListener('click', () => toggleMenu(true));
-        overlay.addEventListener('click', () => toggleMenu(true));
-
-        // Close drawer if a navigation link inside is clicked
-        drawerBody.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => toggleMenu(true));
         });
+        document.body.appendChild(fab);
+        
+        // Hide standard header nav elements on mobile
+        const globalHeaderNav = document.querySelector('#global-header nav');
+        const headerActions = document.querySelector('#global-header .header-actions');
+        if (globalHeaderNav) globalHeaderNav.style.display = 'none';
+        if (headerActions) headerActions.style.display = 'none';
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMobileMenu);
+        document.addEventListener('DOMContentLoaded', initMobileNav);
     } else {
-        initMobileMenu();
+        initMobileNav();
     }
 })();
