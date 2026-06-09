@@ -1,231 +1,193 @@
 /**
- * YojanaMitra AI Engine Toggle
- * Hot-swaps between Google Gemini and NVIDIA Mistral
+ * YojanaMitra AI Engine Toggle v4
+ * Shows immediately on all pages. Hot-swaps between Gemini and NVIDIA Mistral.
  */
-
-(function() {
+(function () {
     // ── STYLES ────────────────────────────────────────────────────────────────
-    const styles = `
-        #ai-engine-toggle-root {
+    var css = `
+        #ym-ai-toggle {
             position: fixed;
-            bottom: 100px;
-            right: 30px;
-            z-index: 9999;
-            font-family: 'Outfit', sans-serif;
-            pointer-events: none;
+            bottom: 90px;
+            right: 20px;
+            z-index: 2147483647;
+            font-family: 'Inter', 'Outfit', system-ui, sans-serif;
         }
-
-        .ai-toggle-pill {
-            background: rgba(11, 26, 22, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 6px 6px 14px;
-            border-radius: 100px;
+        #ym-ai-pill {
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-            pointer-events: auto;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
+            gap: 10px;
+            padding: 8px 10px 8px 14px;
+            border-radius: 100px;
+            background: rgba(11, 26, 22, 0.96);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
             cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
-
-        .ai-toggle-pill:hover {
-            transform: translateY(-2px) scale(1.02);
-            border-color: rgba(249, 115, 22, 0.4);
-            box-shadow: 0 15px 40px rgba(249, 115, 22, 0.2);
+        #ym-ai-pill:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 14px 36px rgba(249,115,22,0.25);
+            border-color: rgba(249,115,22,0.5);
         }
-
-        .ai-toggle-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 11px;
+        #ym-ai-pill:active { transform: scale(0.97); }
+        .ym-ai-label {
+            font-size: 10px;
             font-weight: 700;
-            text-transform: uppercase;
             letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
         }
-
-        .ai-toggle-current {
-            color: #fff;
+        .ym-ai-name {
             font-size: 13px;
             font-weight: 700;
-            margin-right: 4px;
+            color: #fff;
         }
-
-        .ai-toggle-switch {
-            width: 48px;
-            height: 26px;
-            background: #2d3a35;
+        .ym-ai-track {
+            width: 44px;
+            height: 24px;
             border-radius: 100px;
+            background: #1e3a2e;
             position: relative;
             transition: background 0.3s;
+            flex-shrink: 0;
         }
-
-        .ai-toggle-switch::after {
-            content: '';
+        .ym-ai-thumb {
             position: absolute;
             top: 3px;
             left: 3px;
-            width: 20px;
-            height: 20px;
-            background: #fff;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background: #fff;
+            transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.25);
         }
-
-        /* NVIDIA Mode Styles */
-        .ai-toggle-pill.nvidia {
-            background: linear-gradient(135deg, #111 0%, #000 100%);
-            border-color: #76b900; /* NVIDIA Green */
+        /* NVIDIA / Mistral active state */
+        #ym-ai-pill.is-nvidia .ym-ai-track { background: #76b900; }
+        #ym-ai-pill.is-nvidia .ym-ai-thumb { left: 23px; }
+        #ym-ai-pill.is-nvidia .ym-ai-name  { color: #76b900; }
+        #ym-ai-pill.is-nvidia              { border-color: rgba(118,185,0,0.45); }
+        /* Loading spinner */
+        .ym-ai-spin {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: #f97316;
+            border-radius: 50%;
+            animation: ym-spin 0.7s linear infinite;
+            flex-shrink: 0;
         }
-
-        .ai-toggle-pill.nvidia .ai-toggle-switch {
-            background: #76b900;
-        }
-
-        .ai-toggle-pill.nvidia .ai-toggle-switch::after {
-            left: 25px;
-        }
-
-        .ai-toggle-pill.nvidia .ai-toggle-current {
-            color: #76b900;
-        }
-
-        /* Tooltip */
-        .ai-toggle-tooltip {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            background: #000;
+        @keyframes ym-spin { to { transform: rotate(360deg); } }
+        /* Toast */
+        #ym-ai-toast {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            z-index: 2147483647;
+            background: #0b1a16;
             color: #fff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            margin-bottom: 12px;
-            white-space: nowrap;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.3s;
+            transition: opacity 0.3s, transform 0.3s;
             pointer-events: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
         }
-
-        .ai-toggle-pill:hover .ai-toggle-tooltip {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .nvidia-badge {
-            font-size: 10px;
-            background: #76b900;
-            color: #000;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 800;
-            margin-left: 4px;
-            display: none;
-        }
-
-        .ai-toggle-pill.nvidia .nvidia-badge {
-            display: inline-block;
-        }
+        #ym-ai-toast.show { opacity: 1; transform: translateY(0); }
     `;
 
-    // ── IMPLEMENTATION ────────────────────────────────────────────────────────
+    // ── DOM CREATION ──────────────────────────────────────────────────────────
+    var styleEl = document.createElement('style');
+    styleEl.textContent = css;
+    document.head.appendChild(styleEl);
 
-    function initToggle() {
-        // Add styles
-        const styleEl = document.createElement('style');
-        styleEl.textContent = styles;
-        document.head.appendChild(styleEl);
+    var root = document.createElement('div');
+    root.id = 'ym-ai-toggle';
+    root.innerHTML =
+        '<div id="ym-ai-pill" title="Toggle AI Engine">' +
+            '<span class="ym-ai-label">Engine</span>' +
+            '<span class="ym-ai-name" id="ym-ai-name">Gemini</span>' +
+            '<div class="ym-ai-track"><div class="ym-ai-thumb"></div></div>' +
+        '</div>';
+    document.body.appendChild(root);
 
-        // Create container
-        const container = document.createElement('div');
-        container.id = 'ai-engine-toggle-root';
-        document.body.appendChild(container);
+    var toast = document.createElement('div');
+    toast.id = 'ym-ai-toast';
+    document.body.appendChild(toast);
 
-        // Create inner pill
-        const pill = document.createElement('div');
-        pill.className = 'ai-toggle-pill';
-        pill.innerHTML = `
-            <div class="ai-toggle-tooltip">Switch to NVIDIA High-Performance Engine</div>
-            <div class="ai-toggle-label">Engine</div>
-            <div class="ai-toggle-current">Gemini</div>
-            <div class="ai-toggle-switch"></div>
-            <span class="nvidia-badge">70B</span>
-        `;
-        container.appendChild(pill);
+    var pill = document.getElementById('ym-ai-pill');
+    var nameEl = document.getElementById('ym-ai-name');
+    var currentProvider = 'gemini';
+    var busy = false;
 
-        // State management
-        let currentProvider = 'gemini';
-
-        async function fetchState() {
-            try {
-                const res = await fetch('/api/current-ai');
-                const data = await res.json();
-                updateUI(data.provider);
-            } catch (e) {
-                console.warn("AI Toggle: Failed to fetch state", e);
-            }
+    // ── UI UPDATE ─────────────────────────────────────────────────────────────
+    function setProvider(provider) {
+        currentProvider = provider;
+        if (provider === 'nvidia') {
+            pill.classList.add('is-nvidia');
+            nameEl.textContent = 'Mistral';
+        } else {
+            pill.classList.remove('is-nvidia');
+            nameEl.textContent = 'Gemini';
         }
+    }
 
-        function updateUI(provider) {
-            currentProvider = provider;
-            const currentLabel = pill.querySelector('.ai-toggle-current');
-            const tooltip = pill.querySelector('.ai-toggle-tooltip');
-            
-            if (provider === 'nvidia') {
-                pill.classList.add('nvidia');
-                currentLabel.textContent = 'Mistral';
-                tooltip.textContent = 'Active: NVIDIA High-Performance Engine';
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function () { toast.classList.remove('show'); }, 2500);
+    }
+
+    function showSpinner() {
+        nameEl.innerHTML = '<span class="ym-ai-spin"></span>';
+    }
+    function clearSpinner() {
+        nameEl.textContent = currentProvider === 'nvidia' ? 'Mistral' : 'Gemini';
+    }
+
+    // ── FETCH CURRENT STATE ───────────────────────────────────────────────────
+    fetch('/api/current-ai', { credentials: 'include' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+            if (data && data.provider) setProvider(data.provider);
+        })
+        .catch(function () { /* stay on gemini default */ });
+
+    // ── TOGGLE CLICK ──────────────────────────────────────────────────────────
+    pill.addEventListener('click', function () {
+        if (busy) return;
+        busy = true;
+        var next = currentProvider === 'gemini' ? 'nvidia' : 'gemini';
+        showSpinner();
+
+        fetch('/api/toggle-ai', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider: next })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data && data.status === 'success') {
+                setProvider(next);
+                clearSpinner();
+                showToast('Switched to ' + (next === 'nvidia' ? '⚡ NVIDIA Mistral' : '✦ Google Gemini'));
             } else {
-                pill.classList.remove('nvidia');
-                currentLabel.textContent = 'Gemini';
-                tooltip.textContent = 'Switch to NVIDIA High-Performance Engine';
+                clearSpinner();
+                showToast('Switch failed, please retry');
             }
-        }
-
-        async function toggleProvider() {
-            const next = currentProvider === 'gemini' ? 'nvidia' : 'gemini';
-            
-            // Optimistic UI
-            updateUI(next);
-            
-            try {
-                const res = await fetch('/api/toggle-ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ provider: next })
-                });
-                
-                const data = await res.json();
-                if (data.status === 'success') {
-                    // Show a subtle notification
-                    console.log(`AI Engine swapped to ${data.label}`);
-                    
-                    // Force refresh if on dashboard to show new results
-                    if (window.location.pathname.includes('dashboard') || window.location.pathname === '/') {
-                        setTimeout(() => window.location.reload(), 500);
-                    }
-                }
-            } catch (e) {
-                console.error("AI Toggle failed", e);
-                updateUI(currentProvider); // Revert
-            }
-        }
-
-        pill.addEventListener('click', toggleProvider);
-        
-        // Initial fetch
-        fetchState();
-    }
-
-    // Run when ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initToggle);
-    } else {
-        initToggle();
-    }
+        })
+        .catch(function () {
+            clearSpinner();
+            showToast('Network error — try again');
+        })
+        .finally(function () { busy = false; });
+    });
 })();
