@@ -1554,6 +1554,18 @@ def get_current_ai():
         'label': label
     })
 
+@app.route('/api/ai-status', methods=['GET'])
+def ai_status():
+    """Returns configuration status of all AI providers"""
+    nvidia_key = os.environ.get('NVIDIA_API_KEY', '')
+    gemini_key = os.environ.get('GEMINI_API_KEY', '')
+    active = session.get('ai_provider', 'gemini')
+    return jsonify({
+        'active_provider': active,
+        'nvidia_configured': bool(nvidia_key),
+        'gemini_configured': bool(gemini_key),
+    })
+
 @app.route('/unsubscribe')
 def unsubscribe():
     # Placeholder for unsubscribe logic
