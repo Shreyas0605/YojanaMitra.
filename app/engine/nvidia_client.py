@@ -1,12 +1,14 @@
 import json
 import logging
+import os
+import re as _re
 from openai import OpenAI
 from flask import session
 
 logger = logging.getLogger('yojanamitra')
 
-# Using the user provided NVIDIA API Key
-NVIDIA_API_KEY = "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"
+# Load NVIDIA API Key from environment variable
+NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY', '')
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
@@ -350,11 +352,9 @@ def generate_resolve_questions_nvidia(prompt):
             stream=False
         )
         res_text = completion.choices[0].message.content.strip()
-        # Extract JSON array
         json_match = _re.search(r'\[.*\]', res_text, _re.DOTALL)
         if json_match:
             res_text = json_match.group()
-            
         return json.loads(res_text.strip())
     except Exception as e:
         logger.error(f"NVIDIA Resolve Questions Error: {e}")
