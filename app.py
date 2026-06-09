@@ -1537,20 +1537,21 @@ def toggle_ai_provider():
     session['ai_provider'] = new_provider
     logger.info(f"AI Provider hot-swapped to: {new_provider}")
     
-    from app.engine.ai_router import get_current_provider_label
+    label = 'NVIDIA (Mistral)' if new_provider == 'nvidia' else 'Google (Gemini)'
     return jsonify({
         'status': 'success',
         'provider': new_provider,
-        'label': get_current_provider_label()
+        'label': label
     })
 
 @app.route('/api/current-ai', methods=['GET'])
 def get_current_ai():
     """Returns the currently active AI provider"""
-    from app.engine.ai_router import get_current_provider_label
+    provider = session.get('ai_provider', 'gemini')
+    label = 'NVIDIA (Mistral)' if provider == 'nvidia' else 'Google (Gemini)'
     return jsonify({
-        'provider': session.get('ai_provider', 'gemini'),
-        'label': get_current_provider_label()
+        'provider': provider,
+        'label': label
     })
 
 @app.route('/unsubscribe')
