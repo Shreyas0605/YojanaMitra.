@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - YojanaMitra</title>
+    <script>
+    (function() {
+        var s = document.createElement('style');
+        s.textContent = 'body{display:none!important}';
+        document.head.appendChild(s);
+        fetch('/api/user',{credentials:'include'})
+            .then(function(r){if(!r.ok)window.location.replace('auth.html');else if(s.parentNode)s.parentNode.removeChild(s);})
+            .catch(function(){window.location.replace('auth.html');});
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -78,5 +88,6 @@
         <a href="mobile_dashboard.html" class="nav-item active"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
     </nav>
     <script>lucide.createIcons();</script>
+    <script src="js/ai_toggle.js"></script>
 </body>
 </html>
