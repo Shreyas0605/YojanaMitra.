@@ -5691,11 +5691,10 @@ def chat():
         except Exception as e:
             error_str = str(e)
             print(f"Gemini API Error: {error_str}")
-            if "429" in error_str or "quota" in error_str.lower():
-                return jsonify({
-                    'response': "⚠️ I'm currently handling a high volume of requests and have reached my temporary AI limit. I can still help with basic questions about schemes, or you can try again in a few minutes!",
-                    'powered_by': 'system_limit'
-                }), 200
+            return jsonify({
+                'response': f"⚠️ Gemini AI error: {error_str[:300]}. Please check that your GEMINI_API_KEY is valid and has quota available.",
+                'powered_by': 'gemini_error'
+            }), 200
 
     # Fallback response
     fallback = generate_fallback_response(user_message, context)
