@@ -5669,15 +5669,35 @@ def chat():
             # Session exists but user doesn't (stale session)
             session.pop('user_id', None)
     # Try NVIDIA Mistral (via router — imported here so missing deps don't block the rest)
+    provider = session.get('ai_provider', 'gemini')
     bot_response = None
+    nvidia_error = None
     try:
         from app.engine import ai_router
         bot_response = ai_router.chat(user_message, context)
     except Exception as e:
+        nvidia_error = str(e)
         print(f"AI Router Error: {e}")
 
     if bot_response:
         return jsonify({'response': bot_response, 'powered_by': 'nvidia'}), 200
+
+    if provider == 'nvidia':
+        if nvidia_error:
+            return jsonify({
+                'response': f"⚠️ NVIDIA Mistral error: {nvidia_error[:300]}",
+                'powered_by': 'nvidia_error'
+            }), 200
+        nvidia_key_set = bool(os.environ.get('NVIDIA_API_KEY', ''))
+        if not nvidia_key_set:
+            return jsonify({
+                'response': "⚠️ NVIDIA Mistral engine is not configured. Set NVIDIA_API_KEY env var and redeploy, or switch to the Gemini provider.",
+                'powered_by': 'nvidia_error'
+            }), 200
+        return jsonify({
+            'response': "⚠️ NVIDIA Mistral API call failed. Check that your NVIDIA_API_KEY is valid.",
+            'powered_by': 'nvidia_error'
+        }), 200
 
     # Fallback to Gemini
     gemini_model = globals().get('model')
