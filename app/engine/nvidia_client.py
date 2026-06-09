@@ -7,13 +7,20 @@ from flask import session
 
 logger = logging.getLogger('yojanamitra')
 
-# Load NVIDIA API Key from environment variable
-NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY', '')
+_NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 
-client = OpenAI(
-    base_url="https://integrate.api.nvidia.com/v1",
-    api_key=NVIDIA_API_KEY
-)
+def _get_client():
+    key = os.environ.get('NVIDIA_API_KEY', '')
+    if not key:
+        logger.warning("NVIDIA_API_KEY is not set — NVIDIA Mistral engine will not work")
+        return None
+    return OpenAI(base_url=_NVIDIA_BASE_URL, api_key=key)
+
+def _check_configured():
+    if not os.environ.get('NVIDIA_API_KEY', ''):
+        logger.warning("NVIDIA_API_KEY not configured — skipping NVIDIA call")
+        return False
+    return True
 
 # REPLICATED SYSTEM PROMPT FROM contextual_resolver.py
 RESOLVER_SYSTEM_PROMPT = """You are a Contextual Eligibility Engine for Indian Government Schemes.
@@ -69,7 +76,10 @@ def resolve_batch_nvidia(user_profile, possibly_list):
     }
 
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return possibly_list, [], []
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[
                 {"role": "system", "content": RESOLVER_SYSTEM_PROMPT},
@@ -152,7 +162,10 @@ OUTPUT FORMAT (STRICT JSON ONLY):
 ]
 """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return []
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
@@ -202,7 +215,10 @@ TEXT:
 {raw_text}
 """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return [], "mistral-nemotron", "NVIDIA_API_KEY not set", True
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
@@ -268,7 +284,10 @@ def analyze_readiness_nvidia(scheme, user_data, doc_types, clarification_text):
     }}
     """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            raise RuntimeError("NVIDIA_API_KEY not configured")
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
@@ -303,7 +322,11 @@ def chat_nvidia(user_message, context=""):
     messages.append({"role": "user", "content": user_message})
     
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            logger.warning("NVIDIA chat skipped: NVIDIA_API_KEY not set")
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=messages,
             temperature=0.7,
@@ -320,7 +343,10 @@ def contextual_ai_nvidia(prompt):
     NVIDIA MIRROR of Contextual AI assistant logic.
     """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
@@ -344,7 +370,10 @@ def generate_resolve_questions_nvidia(prompt):
     """
     try:
         modified = prompt + GENERATE_FAILSAFE
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": modified}],
             temperature=0.1,
@@ -394,7 +423,10 @@ def distill_questions_nvidia(prompt):
         )
         # Append failsafe in case replacements missed anything
         modified += DISTILL_FAILSAFE
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": modified}],
             temperature=0.1,
@@ -417,7 +449,10 @@ def translate_nvidia(prompt):
     NVIDIA MIRROR of text translation.
     """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
@@ -434,7 +469,10 @@ def batch_evaluate_nvidia(prompt):
     NVIDIA MIRROR of batch eligibility evaluation.
     """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
@@ -458,7 +496,10 @@ def call_ai_nvidia(prompt):
     NVIDIA Generic prompt call.
     """
     try:
-        completion = client.chat.completions.create(
+        c = _get_client()
+        if not c:
+            return None
+        completion = c.chat.completions.create(
             model="mistralai/mistral-nemotron",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
