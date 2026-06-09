@@ -1560,10 +1560,12 @@ def ai_status():
     nvidia_key = os.environ.get('NVIDIA_API_KEY', '')
     gemini_key = os.environ.get('GEMINI_API_KEY', '')
     active = session.get('ai_provider', 'gemini')
+    has_gemini_model = 'model' in globals()
     return jsonify({
         'active_provider': active,
-        'nvidia_configured': bool(nvidia_key),
-        'gemini_configured': bool(gemini_key),
+        'gemini_api_key_set': bool(gemini_key),
+        'gemini_model_loaded': has_gemini_model,
+        'nvidia_api_key_set': bool(nvidia_key),
     })
 
 @app.route('/unsubscribe')
@@ -5678,21 +5680,22 @@ def chat():
         return jsonify({'response': bot_response, 'powered_by': 'nvidia'}), 200
 
     # Fallback to Gemini
-    try:
-        if model:
+    gemini_model = globals().get('model')
+    if gemini_model:
+        try:
             if 'gemini_limiter' in globals():
                 gemini_limiter.wait()
-            response = model.generate_content(f"{system_prompt}\n\nUser: {user_message}\n\nAssistant:")
+            response = gemini_model.generate_content(f"{system_prompt}\n\nUser: {user_message}\n\nAssistant:")
             bot_response = response.text
             return jsonify({'response': bot_response, 'powered_by': 'gemini'}), 200
-    except Exception as e:
-        error_str = str(e)
-        print(f"Gemini API Error: {error_str}")
-        if "429" in error_str or "quota" in error_str.lower():
-            return jsonify({
-                'response': "⚠️ I'm currently handling a high volume of requests and have reached my temporary AI limit. I can still help with basic questions about schemes, or you can try again in a few minutes!",
-                'powered_by': 'system_limit'
-            }), 200
+        except Exception as e:
+            error_str = str(e)
+            print(f"Gemini API Error: {error_str}")
+            if "429" in error_str or "quota" in error_str.lower():
+                return jsonify({
+                    'response': "⚠️ I'm currently handling a high volume of requests and have reached my temporary AI limit. I can still help with basic questions about schemes, or you can try again in a few minutes!",
+                    'powered_by': 'system_limit'
+                }), 200
 
     # Fallback response
     fallback = generate_fallback_response(user_message, context)
@@ -5937,14 +5940,14 @@ def generate_fallback_response(message, context):
         return "Health-related schemes like Ayushman Bharat or State Health cards are usually categorized under 'Healthcare'. These often require an Income Certificate or BPL card."
 
     if 'hello' in msg or 'hi' in msg:
-        return "👋 Hello! I'm your YojanaMitra assistant. My AI engine is currently on a short break, but I can still guide you to the right scheme categories!"
+        return "👋 Hello! I'm your YojanaMitra assistant. I can still guide you to the right scheme categories! To enable AI-powered responses, check that GEMINI_API_KEY or NVIDIA_API_KEY is configured on the server."
         
     if 'eligible' in msg or 'schemes' in msg:
         if 'Not logged in' in context:
             return "Please login first to see personalized scheme recommendations."
         return "Check your 'Recommended Schemes' page. If you see 0% matches, try updating your profile with more details like Religion, Caste, and Occupation."
 
-    return "I can help you with government schemes and eligibility. While my AI brain is temporarily busy, you can explore schemes by category in the sidebar!"
+    return "I can help you with government schemes and eligibility! You can explore schemes by category in the sidebar. If you expected AI-powered responses, check that GEMINI_API_KEY and/or NVIDIA_API_KEY are set on the server."
 # Education Ranking
 # Education Ranking
 EDUCATION_LEVELS = {
