@@ -5666,15 +5666,19 @@ def chat():
         else:
             # Session exists but user doesn't (stale session)
             session.pop('user_id', None)
-    # Call AI API through router
+    # Try NVIDIA Mistral (via router — imported here so missing deps don't block the rest)
+    bot_response = None
     try:
         from app.engine import ai_router
         bot_response = ai_router.chat(user_message, context)
-        
-        if bot_response:
-            return jsonify({'response': bot_response, 'powered_by': 'nvidia'}), 200
-            
-        # Fallback to Gemini
+    except Exception as e:
+        print(f"AI Router Error: {e}")
+
+    if bot_response:
+        return jsonify({'response': bot_response, 'powered_by': 'nvidia'}), 200
+
+    # Fallback to Gemini
+    try:
         if model:
             if 'gemini_limiter' in globals():
                 gemini_limiter.wait()
