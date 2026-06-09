@@ -1521,8 +1521,9 @@ def all_schemes():
 
 @app.route('/dashboard')
 def dashboard():
-    # Redirect to home where the dashboard logic resides
-    return redirect(url_for('index'))
+    if session.get('user_type') != 'user':
+        return redirect('/auth.html')
+    return send_from_directory('static', 'dashboard.html')
 
 @app.route('/api/toggle-ai', methods=['POST'])
 def toggle_ai_provider():
