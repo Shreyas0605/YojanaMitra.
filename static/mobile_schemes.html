@@ -1,85 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Schemes - YojanaMitra</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
-        body{background:#0b1a16;color:#f8fafc;padding-bottom:80px;overflow-x:hidden;}
-        a{text-decoration:none;color:inherit;}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>All Schemes - YojanaMitra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --accent: #f15a24;
+  --accent-dark: #cc4518;
+  --bg: #f6f8fc;
+  --dark: #0b1a16;
+  --mid: #2d3a35;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --white: #fff;
+  --green: #10b981;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --r: 14px;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--dark); overflow-x: hidden; padding-bottom: 80px; }
+a { text-decoration: none; color: inherit; }
 
-        .search-bar{margin:16px;position:relative;}
-        .search-bar input{width:100%;height:48px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);padding:0 16px 0 44px;font-size:15px;color:#f8fafc;outline:none;}
-        .search-bar input::placeholder{color:#64748b;}
-        .search-bar i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748b;}
+/* ── TOP NAV ── */
+.m-nav {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 60px; gap: 12px;
+}
+.m-logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1rem; color: var(--dark); flex-shrink: 0; }
+.m-logo-mark { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; color: #fff; font-size: 0.62rem; font-weight: 800; flex-shrink: 0; }
 
-        .filter-scroll{display:flex;overflow-x:auto;padding:0 16px;gap:8px;scrollbar-width:none;margin-bottom:20px;}
-        .filter-scroll::-webkit-scrollbar{display:none;}
-        .filter-chip{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.12);background:transparent;color:#94a3b8;white-space:nowrap;cursor:pointer;}
-        .filter-chip.active{background:#f97316;color:#fff;border-color:#f97316;}
+/* ── PAGE HEADER ── */
+.m-page-header { padding: 24px 20px 0; }
+.m-page-header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; }
+.m-page-header p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
 
-        .scheme-list{padding:0 16px;display:flex;flex-direction:column;gap:16px;}
-        .scheme-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;}
-        .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 6px;border-radius:4px;margin-bottom:8px;}
-        .badge-central{background:#0284c7;color:#fff;}
-        .badge-state{background:#7c3aed;color:#fff;}
-        .scheme-title{font-size:16px;font-weight:700;margin-bottom:6px;}
-        .scheme-desc{font-size:13px;color:#94a3b8;line-height:1.4;margin-bottom:12px;}
-        .match-score{color:#22c55e;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px;}
-        .btn-outline-orange{width:100%;padding:10px;border-radius:8px;border:1px solid #f97316;color:#f97316;background:transparent;font-weight:600;font-size:14px;text-align:center;display:block;cursor:pointer;}
+/* ── SEARCH & FILTERS ── */
+.m-search-area { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.m-search-wrap {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 0 14px; height: 48px;
+}
+.m-search-wrap i { color: var(--muted); font-size: 0.9rem; }
+.m-search-wrap input {
+  flex: 1; border: none; outline: none; font-family: var(--font);
+  font-size: 0.9rem; background: transparent; color: var(--dark);
+}
+.m-search-wrap input::placeholder { color: var(--muted); }
+.m-search-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  width: 36px; height: 36px; display: grid; place-items: center;
+  cursor: pointer; flex-shrink: 0; font-size: 0.85rem;
+}
+.m-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.m-filters::-webkit-scrollbar { display: none; }
+.m-filter-select {
+  background: #fff; border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 8px 12px; font-family: var(--font); font-size: 0.82rem;
+  font-weight: 600; color: var(--dark); outline: none;
+  white-space: nowrap; flex-shrink: 0; cursor: pointer;
+}
 
-        .mobile-bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:64px;background:#0b1a16;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;z-index:99999;padding-bottom:env(safe-area-inset-bottom);}
-        .nav-item{display:flex;flex-direction:column;align-items:center;color:#64748b;font-size:11px;font-weight:500;gap:4px;width:25%;}
-        .nav-item.active{color:#f97316;}
-        .mobile-fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:#f97316;color:#fff;display:flex;align-items:center;justify-content:center;border:none;box-shadow:0 4px 12px rgba(249,115,22,0.4);z-index:99999;cursor:pointer;}
+/* ── SCHEME COUNT ── */
+.m-count-bar { padding: 0 20px 12px; display: flex; align-items: center; justify-content: space-between; }
+.m-count-text { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+.m-count-badge { background: rgba(241,90,36,0.1); color: var(--accent); padding: 4px 10px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
 
-        @media(min-width:769px){body{display:none;}}
-    </style>
+/* ── SCHEMES LIST ── */
+.m-schemes-list { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+
+.m-scheme-card {
+  background: #fff; border-radius: var(--r); border: 1px solid var(--border);
+  overflow: hidden; cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.m-scheme-card:active { transform: scale(0.99); }
+.m-scheme-card-body { padding: 16px; }
+.m-scheme-cat {
+  display: inline-block; background: rgba(241,90,36,0.1); color: var(--accent);
+  font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+  margin-bottom: 8px;
+}
+.m-scheme-name { font-size: 0.96rem; font-weight: 700; line-height: 1.35; margin-bottom: 6px; }
+.m-scheme-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+.m-scheme-footer {
+  padding: 10px 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.m-scheme-state-tag { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+.m-view-btn {
+  background: var(--dark); color: #fff; border: none; border-radius: 8px;
+  padding: 6px 16px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  font-family: var(--font);
+}
+
+/* ── SKELETON LOADER ── */
+.m-skeleton { background: #e5e7eb; border-radius: 8px; animation: shimmer 1.4s infinite; }
+@keyframes shimmer {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.5; }
+}
+
+/* ── LOADING ── */
+.m-loading { text-align: center; padding: 40px 20px; }
+.m-spinner {
+  width: 36px; height: 36px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.m-loading p { font-size: 0.85rem; color: var(--muted); }
+
+/* ── EMPTY STATE ── */
+.m-empty { text-align: center; padding: 60px 20px; }
+.m-empty i { font-size: 2.5rem; color: var(--muted); opacity: 0.4; margin-bottom: 16px; display: block; }
+.m-empty h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.m-empty p { font-size: 0.85rem; color: var(--muted); }
+
+/* ── PAGINATION ── */
+.m-pagination { padding: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.m-pg-btn {
+  width: 38px; height: 38px; border-radius: 10px; border: 1.5px solid var(--border);
+  background: #fff; color: var(--dark); font-family: var(--font); font-size: 0.85rem;
+  font-weight: 600; cursor: pointer; display: grid; place-items: center;
+}
+.m-pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.m-pg-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+.m-pg-info { font-size: 0.8rem; color: var(--muted); width: 100%; text-align: center; margin-bottom: 4px; }
+
+/* ── MODAL ── */
+.m-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+}
+.m-modal-overlay.open { display: flex; align-items: flex-end; }
+.m-modal-sheet {
+  background: #fff; border-radius: 24px 24px 0 0;
+  width: 100%; max-height: 85vh; overflow-y: auto;
+  padding: 0 0 calc(24px + env(safe-area-inset-bottom));
+  animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.m-modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto; }
+.m-modal-header { padding: 4px 20px 20px; }
+.m-modal-cat { display: inline-block; background: rgba(241,90,36,0.1); color: var(--accent); font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 100px; margin-bottom: 10px; }
+.m-modal-title { font-size: 1.1rem; font-weight: 800; line-height: 1.3; }
+.m-modal-state { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+.m-modal-body { padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+.m-modal-section h4 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.m-modal-section p, .m-modal-section ul { font-size: 0.88rem; color: var(--mid); line-height: 1.6; }
+.m-modal-section ul { padding-left: 18px; }
+.m-modal-section ul li { margin-bottom: 4px; }
+.m-modal-footer { padding: 20px; }
+.m-apply-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--accent); color: #fff; width: 100%; padding: 15px;
+  border-radius: 14px; font-size: 1rem; font-weight: 700;
+  border: none; font-family: var(--font); cursor: pointer;
+}
+.m-modal-close { position: absolute; top: 16px; right: 20px; background: var(--bg); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; z-index: 10; }
+
+/* ── BOTTOM NAV ── */
+.m-bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-around;
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+}
+.m-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 0.68rem; font-weight: 600; color: var(--muted); padding: 4px 14px;
+  cursor: pointer; text-decoration: none; transition: color 0.15s;
+}
+.m-nav-item.active { color: var(--accent); }
+.m-nav-item i { font-size: 1.2rem; }
+</style>
 </head>
 <body>
-    <div class="search-bar">
-        <i data-lucide="search" style="width:18px;height:18px;"></i>
-        <input type="text" placeholder="Search 4,200+ schemes..." id="mobile-scheme-search">
+
+<!-- NAV -->
+<nav class="m-nav">
+  <a class="m-logo" href="mobile_home.html">
+    <div class="m-logo-mark">YM</div>
+    YojanaMitra
+  </a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="m-page-header">
+  <h1>All Schemes <span id="schemes-count" style="font-size:0.9rem;font-weight:600;color:var(--accent);"></span></h1>
+  <p>Browse and filter government welfare schemes</p>
+</div>
+
+<!-- SEARCH & FILTERS -->
+<div class="m-search-area">
+  <div class="m-search-wrap">
+    <i class="fas fa-search"></i>
+    <input type="text" id="search-input" placeholder="Search by name, benefits..." />
+    <button class="m-search-btn" onclick="loadSchemes(1)"><i class="fas fa-arrow-right"></i></button>
+  </div>
+  <div class="m-filters">
+    <select id="category-filter" class="m-filter-select" onchange="loadSchemes(1)">
+      <option value="">All Categories</option>
+      <option value="Agriculture">Agriculture</option>
+      <option value="Healthcare">Healthcare</option>
+      <option value="Education">Education</option>
+      <option value="Housing">Housing</option>
+      <option value="Social Welfare">Social Welfare</option>
+      <option value="Employment">Employment</option>
+      <option value="Financial Inclusion">Financial Inclusion</option>
+    </select>
+    <select id="state-filter" class="m-filter-select" onchange="loadSchemes(1)">
+      <option value="">All States</option>
+      <option value="Andhra Pradesh">Andhra Pradesh</option>
+      <option value="Assam">Assam</option>
+      <option value="Bihar">Bihar</option>
+      <option value="Chhattisgarh">Chhattisgarh</option>
+      <option value="Goa">Goa</option>
+      <option value="Gujarat">Gujarat</option>
+      <option value="Haryana">Haryana</option>
+      <option value="Himachal Pradesh">Himachal Pradesh</option>
+      <option value="Jharkhand">Jharkhand</option>
+      <option value="Karnataka">Karnataka</option>
+      <option value="Kerala">Kerala</option>
+      <option value="Madhya Pradesh">Madhya Pradesh</option>
+      <option value="Maharashtra">Maharashtra</option>
+      <option value="Odisha">Odisha</option>
+      <option value="Punjab">Punjab</option>
+      <option value="Rajasthan">Rajasthan</option>
+      <option value="Tamil Nadu">Tamil Nadu</option>
+      <option value="Telangana">Telangana</option>
+      <option value="Uttar Pradesh">Uttar Pradesh</option>
+      <option value="West Bengal">West Bengal</option>
+      <option value="Central">Central</option>
+    </select>
+  </div>
+</div>
+
+<!-- SCHEMES LIST -->
+<div id="schemes-list" class="m-schemes-list"></div>
+
+<!-- PAGINATION -->
+<div id="pagination-wrapper" class="m-pagination" style="display:none;"></div>
+
+<!-- SCHEME DETAIL MODAL -->
+<div class="m-modal-overlay" id="scheme-modal" onclick="closeModal(event)">
+  <div class="m-modal-sheet">
+    <div style="position:relative;">
+      <button class="m-modal-close" onclick="closeSchemeModal()"><i class="fas fa-times" style="font-size:0.85rem;color:var(--muted);"></i></button>
+      <div class="m-modal-handle"></div>
+      <div class="m-modal-header">
+        <div class="m-modal-cat" id="modal-cat"></div>
+        <div class="m-modal-title" id="modal-title"></div>
+        <div class="m-modal-state" id="modal-state"></div>
+      </div>
     </div>
-
-    <div class="filter-scroll">
-        <div class="filter-chip active">All</div>
-        <div class="filter-chip">Agriculture</div>
-        <div class="filter-chip">Education</div>
-        <div class="filter-chip">Health</div>
-        <div class="filter-chip">Women</div>
-        <div class="filter-chip">Housing</div>
-        <div class="filter-chip">Finance</div>
+    <div class="m-modal-body">
+      <div class="m-modal-section">
+        <h4>About</h4>
+        <p id="modal-desc"></p>
+      </div>
+      <div class="m-modal-section" id="modal-benefits-section">
+        <h4>Benefits</h4>
+        <p id="modal-benefits"></p>
+      </div>
+      <div class="m-modal-section" id="modal-eligibility-section">
+        <h4>Eligibility</h4>
+        <ul id="modal-eligibility"></ul>
+      </div>
+      <div class="m-modal-section" id="modal-docs-section">
+        <h4>Documents Required</h4>
+        <ul id="modal-docs"></ul>
+      </div>
     </div>
-
-    <div class="scheme-list" id="mobile-scheme-list">
-        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Kisan Samman Nidhi</div><div class="scheme-desc">Income support of &#8377;6,000 per year in three equal installments to all landholding farmer families.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 95% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">Ayushman Bharat (PM-JAY)</div><div class="scheme-desc">Health insurance cover of &#8377;5 Lakh per family per year for secondary and tertiary care hospitalization.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 88% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Ladli Behna Yojana</div><div class="scheme-desc">Financial assistance to women to enhance their health, nutrition and financial independence.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 92% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Ujjwala Yojana 2.0</div><div class="scheme-desc">Free LPG connections to BPL households and women below poverty line. Covers deposit, first refill and stove.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 97% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Mukhyamantri Kanya Vivah Yojana</div><div class="scheme-desc">Financial assistance for marriage of daughters from economically weaker sections of society.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 85% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+    <div class="m-modal-footer">
+      <button class="m-apply-btn" id="modal-apply-btn">
+        <i class="fas fa-external-link-alt"></i> Apply on Official Portal
+      </button>
     </div>
+  </div>
+</div>
 
-    <button class="mobile-fab"><i data-lucide="sparkles"></i></button>
-    <nav class="mobile-bottom-nav">
-        <a href="mobile_home.html" class="nav-item"><i data-lucide="home" style="width:22px;height:22px;"></i><span>Home</span></a>
-        <a href="mobile_schemes.html" class="nav-item active"><i data-lucide="search" style="width:22px;height:22px;"></i><span>Schemes</span></a>
-        <a href="mobile_vault.html" class="nav-item"><i data-lucide="folder" style="width:22px;height:22px;"></i><span>Vault</span></a>
-        <a href="mobile_dashboard.html" class="nav-item"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
-    </nav>
+<!-- BOTTOM NAV -->
+<nav class="m-bottom-nav">
+  <a class="m-nav-item" href="mobile_home.html">
+    <i class="fas fa-home"></i>Home
+  </a>
+  <a class="m-nav-item active" href="mobile_schemes.html">
+    <i class="fas fa-list"></i>Schemes
+  </a>
+  <a class="m-nav-item" href="dashboard.html">
+    <i class="fas fa-chart-pie"></i>Dashboard
+  </a>
+  <a class="m-nav-item" href="mobile_vault.html">
+    <i class="fas fa-folder"></i>Vault
+  </a>
+</nav>
 
-    <script>
-        lucide.createIcons();
-        document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-            });
-        });
-    </script>
-    <script src="js/ai_toggle.js?v=4"></script>
+<script>
+const LIMIT = 15;
+let currentPage = 1;
+let totalPages = 1;
+let totalItems = 0;
+let _schemesCache = {};
+
+function decodeHTML(str) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
+
+function truncate(str, max) {
+  if (!str) return '';
+  const clean = decodeHTML(str);
+  return clean.length > max ? clean.substring(0, max) + '…' : clean;
+}
+
+async function loadSchemes(page) {
+  page = page || 1;
+  const query = document.getElementById('search-input').value.trim();
+  const category = document.getElementById('category-filter').value;
+  const state = document.getElementById('state-filter').value;
+
+  const params = new URLSearchParams({
+    q: query, category: category || 'All', state: state || 'All',
+    page: page, limit: LIMIT
+  });
+
+  const listEl = document.getElementById('schemes-list');
+  listEl.innerHTML = `
+    <div class="m-loading">
+      <div class="m-spinner"></div>
+      <p>Loading schemes...</p>
+    </div>`;
+  document.getElementById('pagination-wrapper').style.display = 'none';
+
+  try {
+    const res = await fetch(`api/schemes?${params}`);
+    const data = await res.json();
+
+    currentPage = data.page || page;
+    totalPages = data.total_pages || 1;
+    totalItems = data.total_items || 0;
+
+    const countEl = document.getElementById('schemes-count');
+    if (countEl) countEl.textContent = totalItems.toLocaleString() + ' found';
+
+    if (data.schemes) data.schemes.forEach(s => { _schemesCache[s.id] = s; });
+
+    listEl.innerHTML = '';
+
+    if (!data.schemes || data.schemes.length === 0) {
+      listEl.innerHTML = `
+        <div class="m-empty">
+          <i class="fas fa-search-minus"></i>
+          <h3>No schemes found</h3>
+          <p>Try different search terms or clear the filters.</p>
+        </div>`;
+      return;
+    }
+
+    data.schemes.forEach(scheme => {
+      const card = document.createElement('div');
+      card.className = 'm-scheme-card';
+      card.innerHTML = `
+        <div class="m-scheme-card-body">
+          <span class="m-scheme-cat">${decodeHTML(scheme.category || 'General')}</span>
+          <div class="m-scheme-name">${decodeHTML(scheme.name)}</div>
+          <div class="m-scheme-desc">${truncate(scheme.description, 110)}</div>
+        </div>
+        <div class="m-scheme-footer">
+          <span class="m-scheme-state-tag"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>${decodeHTML(scheme.state || 'Central')}</span>
+          <button class="m-view-btn" onclick="showSchemeDetails(${scheme.id})">View →</button>
+        </div>`;
+      listEl.appendChild(card);
+    });
+
+    renderPagination();
+  } catch (e) {
+    listEl.innerHTML = `
+      <div class="m-empty">
+        <i class="fas fa-exclamation-circle"></i>
+        <h3>Failed to load</h3>
+        <p>Please check your connection and try again.</p>
+      </div>`;
+  }
+}
+
+function renderPagination() {
+  const wrapper = document.getElementById('pagination-wrapper');
+  if (totalPages <= 1) { wrapper.style.display = 'none'; return; }
+  wrapper.style.display = 'flex';
+
+  const from = (currentPage - 1) * LIMIT + 1;
+  const to = Math.min(currentPage * LIMIT, totalItems);
+
+  let html = `<div class="m-pg-info">Showing ${from}–${to} of ${totalItems.toLocaleString()} schemes</div>`;
+  html += `<button class="m-pg-btn${currentPage === 1 ? ' disabled' : ''}" onclick="goToPage(${currentPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
+
+  // Show limited page buttons on mobile
+  let start = Math.max(1, currentPage - 2);
+  let end = Math.min(totalPages, currentPage + 2);
+  if (start > 1) html += `<button class="m-pg-btn" onclick="goToPage(1)">1</button>`;
+  if (start > 2) html += `<span style="display:grid;place-items:center;width:38px;color:var(--muted);">…</span>`;
+  for (let p = start; p <= end; p++) {
+    html += `<button class="m-pg-btn${p === currentPage ? ' active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+  }
+  if (end < totalPages - 1) html += `<span style="display:grid;place-items:center;width:38px;color:var(--muted);">…</span>`;
+  if (end < totalPages) html += `<button class="m-pg-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+
+  html += `<button class="m-pg-btn${currentPage === totalPages ? ' disabled' : ''}" onclick="goToPage(${currentPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
+  wrapper.innerHTML = html;
+}
+
+function goToPage(page) {
+  if (page < 1 || page > totalPages || page === currentPage) return;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  loadSchemes(page);
+}
+
+async function showSchemeDetails(id) {
+  let scheme = _schemesCache[id];
+  if (!scheme) {
+    try {
+      const res = await fetch(`api/scheme/${id}`);
+      scheme = await res.json();
+      _schemesCache[id] = scheme;
+    } catch (e) { return; }
+  }
+
+  document.getElementById('modal-cat').textContent = decodeHTML(scheme.category || 'General');
+  document.getElementById('modal-title').textContent = decodeHTML(scheme.name);
+  document.getElementById('modal-state').textContent = '📍 ' + decodeHTML(scheme.state || 'Central Government');
+  document.getElementById('modal-desc').textContent = decodeHTML(scheme.description || 'Details available on the official portal.');
+
+  // Benefits
+  const benefitsEl = document.getElementById('modal-benefits');
+  const benefitsSec = document.getElementById('modal-benefits-section');
+  if (scheme.benefits) { benefitsEl.textContent = decodeHTML(scheme.benefits); benefitsSec.style.display = ''; }
+  else benefitsSec.style.display = 'none';
+
+  // Eligibility
+  const eligEl = document.getElementById('modal-eligibility');
+  const eligSec = document.getElementById('modal-eligibility-section');
+  if (scheme.eligibility) {
+    const items = decodeHTML(scheme.eligibility).split(/[•\n;]/).map(s => s.trim()).filter(Boolean);
+    eligEl.innerHTML = items.length > 1 ? items.map(i => `<li>${i}</li>`).join('') : `<li>${decodeHTML(scheme.eligibility)}</li>`;
+    eligSec.style.display = '';
+  } else eligSec.style.display = 'none';
+
+  // Docs
+  const docsEl = document.getElementById('modal-docs');
+  const docsSec = document.getElementById('modal-docs-section');
+  if (scheme.documents) {
+    const items = decodeHTML(scheme.documents).split(/[•\n;]/).map(s => s.trim()).filter(Boolean);
+    docsEl.innerHTML = items.length > 1 ? items.map(i => `<li>${i}</li>`).join('') : `<li>${decodeHTML(scheme.documents)}</li>`;
+    docsSec.style.display = '';
+  } else docsSec.style.display = 'none';
+
+  // Apply button
+  const applyBtn = document.getElementById('modal-apply-btn');
+  if (scheme.application_link) {
+    applyBtn.onclick = () => window.open(scheme.application_link, '_blank');
+    applyBtn.style.display = 'flex';
+  } else {
+    applyBtn.style.display = 'none';
+  }
+
+  document.getElementById('scheme-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSchemeModal() {
+  document.getElementById('scheme-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('scheme-modal')) closeSchemeModal();
+}
+
+// Search on Enter
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('search-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') loadSchemes(1);
+  });
+  loadSchemes(1);
+});
+</script>
+
 </body>
 </html>
