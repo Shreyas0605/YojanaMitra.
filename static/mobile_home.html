@@ -1,195 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YojanaMitra</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
-        body{background:#0b1a16;color:#f8fafc;padding-bottom:80px;overflow-x:hidden;}
-        a{text-decoration:none;color:inherit;}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>YojanaMitra - AI Government Welfare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --accent: #f15a24;
+  --accent-dark: #cc4518;
+  --bg: #fbfaf7;
+  --dark: #0b1a16;
+  --mid: #2d3a35;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --white: #fff;
+  --green: #10b981;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --r: 16px;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--dark); overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
 
-        .mobile-header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);}
-        .header-left{display:flex;align-items:center;gap:10px;}
-        .logo-box{width:38px;height:38px;background:#f97316;border-radius:10px;display:flex;justify-content:center;align-items:center;font-weight:900;color:#fff;font-size:16px;}
-        .brand-text{font-weight:800;font-size:18px;}
-        .tagline{color:#64748b;font-size:11px;}
-        .bell-btn{width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;justify-content:center;align-items:center;position:relative;}
-        .bell-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;background:#f97316;border-radius:4px;border:1.5px solid #0b1a16;}
+/* ── TOP NAV ── */
+.m-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(251,250,247,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 60px;
+}
+.m-logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1rem; color: var(--dark); }
+.m-logo-mark { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; color: #fff; font-size: 0.62rem; font-weight: 800; flex-shrink: 0; }
+.m-nav-btn { background: var(--dark); color: #fff; font-size: 0.82rem; font-weight: 700; padding: 8px 18px; border-radius: 100px; border: none; font-family: var(--font); cursor: pointer; }
 
-        .hero-section{padding:20px 16px;}
-        .ai-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(249,115,22,0.12);padding:5px 12px;border-radius:20px;border:1px solid rgba(249,115,22,0.3);margin-bottom:14px;}
-        .ai-chip span{color:#f97316;font-size:12px;font-weight:600;}
-        .hero-title{font-size:30px;font-weight:800;line-height:38px;margin-bottom:12px;}
-        .text-orange{color:#f97316;}
-        .hero-sub{color:#94a3b8;font-size:15px;line-height:23px;margin-bottom:24px;}
-        .btn-primary{background:#f97316;color:#fff;width:100%;height:56px;border-radius:14px;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:700;font-size:16px;border:none;box-shadow:0 6px 12px rgba(249,115,22,0.35);margin-bottom:12px;cursor:pointer;}
-        .btn-secondary{width:100%;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#94a3b8;font-weight:600;font-size:14px;display:flex;justify-content:center;align-items:center;cursor:pointer;}
+/* ── HERO ── */
+.m-hero {
+  padding: 100px 24px 48px;
+  background: linear-gradient(160deg, #fff9f5 0%, #fbfaf7 60%);
+  position: relative; overflow: hidden;
+}
+.m-hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(241,90,36,0.12) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.m-hero::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.m-status-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #fff; padding: 5px 14px; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 600; color: var(--mid);
+  border: 1px solid rgba(0,0,0,0.07); margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.m-status-chip .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.m-hero h1 {
+  font-size: 2.1rem; font-weight: 800; line-height: 1.1;
+  letter-spacing: -0.04em; margin-bottom: 16px; color: var(--dark);
+}
+.m-hero h1 .orange { color: var(--accent); }
+.m-hero p {
+  font-size: 0.96rem; color: var(--muted); line-height: 1.7;
+  margin-bottom: 28px; max-width: 360px;
+}
+.m-hero-btns { display: flex; flex-direction: column; gap: 12px; }
+.m-btn-primary {
+  background: var(--dark); color: #fff;
+  padding: 15px 28px; border-radius: 14px;
+  font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 8px 24px rgba(11,26,22,0.18);
+}
+.m-btn-secondary {
+  background: #fff; color: var(--dark);
+  padding: 14px 28px; border-radius: 14px;
+  font-weight: 600; font-size: 0.96rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1.5px solid var(--border);
+}
 
-        .stats-row{display:flex;margin:24px 16px;background:rgba(255,255,255,0.04);border-radius:14px;border:1px solid rgba(255,255,255,0.08);padding:16px 0;}
-        .stat-card{flex:1;display:flex;flex-direction:column;align-items:center;}
-        .stat-val{font-size:22px;font-weight:800;}
-        .stat-label{color:#64748b;font-size:11px;margin-top:3px;font-weight:500;}
-        .stat-div{width:1px;background:rgba(255,255,255,0.08);margin:4px 0;}
+/* ── TRUST STRIP ── */
+.m-trust {
+  padding: 20px 0; background: #fff;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.m-trust-inner {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: marquee 25s linear infinite;
+}
+.m-trust-inner span { padding: 0 18px; font-size: 0.8rem; font-weight: 600; color: var(--mid); opacity: 0.7; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        .nudge-card{margin:24px 16px;background:rgba(249,115,22,0.06);border-radius:14px;border:1px solid rgba(249,115,22,0.2);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;}
-        .nudge-icon{width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.15);display:flex;justify-content:center;align-items:center;flex-shrink:0;}
-        .nudge-title{font-size:14px;font-weight:700;margin-bottom:2px;}
-        .nudge-sub{color:#94a3b8;font-size:12px;line-height:17px;margin-bottom:8px;}
-        .progress-bg{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:4px;}
-        .progress-fill{width:60%;height:100%;background:#f97316;border-radius:2px;}
-        .progress-text{color:#f97316;font-size:11px;font-weight:600;}
+/* ── STATS ── */
+.m-stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; padding: 28px 20px;
+}
+.m-stat-card {
+  background: #fff; border-radius: var(--r); padding: 20px 16px;
+  border: 1px solid var(--border); text-align: center;
+}
+.m-stat-num { font-size: 1.9rem; font-weight: 800; color: var(--dark); letter-spacing: -0.04em; line-height: 1; }
+.m-stat-num .accent { color: var(--accent); }
+.m-stat-lbl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
 
-        .section-header{display:flex;justify-content:space-between;align-items:center;padding:0 16px;margin:28px 0 14px 0;}
-        .section-title{font-size:18px;font-weight:700;}
-        .section-link{color:#f97316;font-size:13px;font-weight:600;display:flex;align-items:center;gap:2px;}
+/* ── HOW IT WORKS ── */
+.m-section { padding: 32px 20px; }
+.m-section-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.m-section-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; line-height: 1.2; }
+.m-steps { display: flex; flex-direction: column; gap: 16px; }
+.m-step {
+  background: #fff; border-radius: var(--r); padding: 20px;
+  border: 1px solid var(--border); display: flex; gap: 16px; align-items: flex-start;
+}
+.m-step-num {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--accent);
+  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.m-step-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 4px; }
+.m-step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
 
-        .horizontal-scroll{display:flex;overflow-x:auto;padding:0 16px;gap:10px;scrollbar-width:none;}
-        .horizontal-scroll::-webkit-scrollbar{display:none;}
-        .cat-pill{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:72px;}
-        .cat-icon-box{width:52px;height:52px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);display:flex;justify-content:center;align-items:center;}
-        .cat-label{color:#94a3b8;font-size:11px;font-weight:600;}
+/* ── DASHBOARD PREVIEW CARD ── */
+.m-preview-card {
+  background: #fff; border-radius: 20px; margin: 0 20px 32px;
+  border: 1px solid var(--border); overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+}
+.m-preview-header {
+  background: linear-gradient(135deg, var(--dark) 0%, #1a3a2e 100%);
+  padding: 20px; color: #fff;
+}
+.m-preview-header h3 { font-size: 0.88rem; font-weight: 600; opacity: 0.7; margin-bottom: 4px; }
+.m-preview-num { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.04em; }
+.m-preview-sub { font-size: 0.78rem; opacity: 0.6; margin-top: 2px; }
+.m-preview-body { padding: 16px; }
+.m-scheme-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.m-scheme-row:last-child { border-bottom: none; }
+.m-scheme-info { display: flex; flex-direction: column; gap: 2px; }
+.m-scheme-name { font-size: 0.88rem; font-weight: 700; }
+.m-scheme-tag { font-size: 0.72rem; color: var(--muted); }
+.m-scheme-badge {
+  padding: 4px 10px; border-radius: 100px; font-size: 0.72rem; font-weight: 700;
+}
+.badge-green { background: #dcfce7; color: #15803d; }
+.badge-amber { background: #fef9c3; color: #854d0e; }
+.badge-blue { background: #dbeafe; color: #1d4ed8; }
 
-        .scheme-card{width:300px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;flex-shrink:0;}
-        .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 6px;border-radius:4px;margin-bottom:8px;}
-        .badge-central{background:#0284c7;color:#fff;}
-        .badge-state{background:#7c3aed;color:#fff;}
-        .scheme-title{font-size:16px;font-weight:700;margin-bottom:6px;}
-        .scheme-desc{font-size:13px;color:#94a3b8;line-height:1.4;margin-bottom:12px;}
-        .match-score{color:#22c55e;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;margin-bottom:12px;}
-        .btn-outline-orange{width:100%;padding:10px;border-radius:8px;border:1px solid #f97316;color:#f97316;background:transparent;font-weight:600;font-size:14px;text-align:center;display:block;cursor:pointer;}
+/* ── FEATURES ── */
+.m-features { display: flex; flex-direction: column; gap: 12px; }
+.m-feature-card {
+  background: #fff; border-radius: var(--r); padding: 20px;
+  border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start;
+}
+.m-feature-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0;
+}
+.fi-orange { background: #fff5f0; }
+.fi-green { background: #f0fdf4; }
+.fi-blue { background: #eff6ff; }
+.fi-purple { background: #faf5ff; }
+.m-feature-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 4px; }
+.m-feature-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
 
-        /* Featured */
-        .featured-card{margin:0 16px;background:rgba(249,115,22,0.07);border-radius:16px;border:1px solid rgba(249,115,22,0.25);padding:18px;}
-        .featured-top{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-        .featured-badge{display:flex;align-items:center;gap:4px;background:rgba(249,115,22,0.15);border-radius:6px;padding:3px 8px;border:1px solid rgba(249,115,22,0.3);color:#f97316;font-size:10px;font-weight:700;}
-        .featured-central{background:rgba(3,105,161,0.2);border-radius:6px;padding:3px 8px;color:#38bdf8;font-size:10px;font-weight:700;}
-        .featured-title{font-size:20px;font-weight:800;margin-bottom:8px;}
-        .featured-desc{color:#94a3b8;font-size:13px;line-height:20px;margin-bottom:16px;}
-        .benefits-row{display:flex;gap:8px;margin-bottom:16px;}
-        .benefit-chip{flex:1;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);padding:10px;text-align:center;}
-        .benefit-val{font-size:15px;font-weight:800;}
-        .benefit-label{color:#64748b;font-size:10px;margin-top:2px;}
-        .btn-featured{background:#f97316;border-radius:10px;height:46px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;width:100%;color:#0b1a16;font-weight:800;font-size:14px;cursor:pointer;}
+/* ── CTA ── */
+.m-cta {
+  margin: 0 20px 40px; background: var(--dark); border-radius: 20px;
+  padding: 32px 24px; text-align: center; color: #fff;
+}
+.m-cta h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.03em; }
+.m-cta p { font-size: 0.88rem; opacity: 0.7; margin-bottom: 24px; line-height: 1.6; }
+.m-cta-btn {
+  background: var(--accent); color: #fff; padding: 14px 32px;
+  border-radius: 14px; font-weight: 700; font-size: 1rem;
+  display: inline-block; box-shadow: 0 6px 20px rgba(241,90,36,0.35);
+}
 
-        /* Steps */
-        .steps-container{margin:0 16px;background:rgba(255,255,255,0.03);border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:18px;}
-        .step-row{display:flex;gap:14px;}
-        .step-left{display:flex;flex-direction:column;align-items:center;width:40px;}
-        .step-icon{width:40px;height:40px;border-radius:20px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);display:flex;justify-content:center;align-items:center;}
-        .step-connector{flex:1;width:1px;background:rgba(249,115,22,0.2);margin:6px 0;min-height:20px;}
-        .step-num{color:#f97316;font-size:10px;font-weight:700;letter-spacing:1px;}
-        .step-title{font-size:15px;font-weight:700;margin:2px 0 4px;}
-        .step-desc{color:#64748b;font-size:13px;line-height:19px;}
+/* ── BOTTOM NAV ── */
+.m-bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-around; padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+}
+.m-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 0.68rem; font-weight: 600; color: var(--muted); padding: 4px 16px;
+  cursor: pointer; text-decoration: none; transition: color 0.15s;
+}
+.m-nav-item.active { color: var(--accent); }
+.m-nav-item i { font-size: 1.2rem; }
 
-        /* Trust */
-        .trust-row{display:flex;gap:8px;justify-content:center;padding:0 16px;margin-top:24px;}
-        .trust-badge{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border-radius:20px;padding:7px 12px;border:1px solid rgba(255,255,255,0.08);}
-        .trust-text{color:#94a3b8;font-size:12px;font-weight:600;}
-
-        /* Bottom CTA */
-        .bottom-cta{margin:28px 16px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;text-align:center;}
-        .bottom-cta-emoji{font-size:32px;margin-bottom:12px;}
-        .bottom-cta-title{font-size:20px;font-weight:800;margin-bottom:8px;}
-        .bottom-cta-sub{color:#94a3b8;font-size:14px;margin-bottom:16px;}
-
-        .mobile-bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:64px;background:#0b1a16;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-around;align-items:center;z-index:99999;padding-bottom:env(safe-area-inset-bottom);}
-        .nav-item{display:flex;flex-direction:column;align-items:center;color:#64748b;font-size:11px;font-weight:500;gap:4px;width:25%;}
-        .nav-item.active{color:#f97316;}
-        .mobile-fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:#f97316;color:#fff;display:flex;align-items:center;justify-content:center;border:none;box-shadow:0 4px 12px rgba(249,115,22,0.4);z-index:99999;cursor:pointer;}
-
-        @media(min-width:769px){body{display:none;}}
-    </style>
+/* ── FOOTER ── */
+.m-footer {
+  padding: 32px 20px 120px; border-top: 1px solid var(--border);
+  background: #fff;
+}
+.m-footer-brand { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+.m-footer-brand span { font-weight: 800; font-size: 1rem; }
+.m-footer-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.m-footer-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 20px; }
+.m-footer-links a { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+.m-footer-copy { font-size: 0.75rem; color: var(--muted); }
+</style>
 </head>
 <body>
-    <header class="mobile-header">
-        <div class="header-left">
-            <div class="logo-box">YM</div>
-            <div><div class="brand-text">YojanaMitra</div><div class="tagline">Your welfare companion</div></div>
-        </div>
-        <div class="bell-btn"><i data-lucide="bell" style="color:#f8fafc;width:20px;height:20px;"></i><div class="bell-dot"></div></div>
-    </header>
 
-    <section class="hero-section">
-        <div class="ai-chip"><i data-lucide="sparkles" style="color:#f97316;width:13px;height:13px;"></i><span>AI-Powered Matching</span></div>
-        <h1 class="hero-title">Access Government Welfare <span class="text-orange">Made Simple</span></h1>
-        <p class="hero-sub">Personalised scheme matches for 140Cr+ citizens. Answer 5 questions and discover benefits you deserve today.</p>
-        <button class="btn-primary" onclick="window.location.href='dashboard.html'"><i data-lucide="sparkles" style="width:18px;"></i> Match Me With Schemes</button>
-        <button class="btn-secondary" onclick="window.location.href='all_schemes.html'">Browse All 4,200+ Schemes</button>
-    </section>
+<!-- NAV -->
+<nav class="m-nav">
+  <a class="m-logo" href="mobile_home.html">
+    <div class="m-logo-mark">YM</div>
+    YojanaMitra
+  </a>
+  <a href="auth.html#login" class="m-nav-btn">Login</a>
+</nav>
 
-    <div class="stats-row">
-        <div class="stat-card"><div class="stat-val">4,200+</div><div class="stat-label">Schemes</div></div>
-        <div class="stat-div"></div>
-        <div class="stat-card"><div class="stat-val">&#8377;2.8Cr</div><div class="stat-label">Disbursed</div></div>
-        <div class="stat-div"></div>
-        <div class="stat-card"><div class="stat-val">28</div><div class="stat-label">States</div></div>
-    </div>
-
-    <a class="nudge-card" href="dashboard.html">
-        <div class="nudge-icon"><i data-lucide="zap" style="color:#f97316;width:20px;"></i></div>
-        <div style="flex:1;"><div class="nudge-title">Complete Your Profile</div><div class="nudge-sub">Unlock 12 more scheme matches tailored to you</div><div class="progress-bg"><div class="progress-fill"></div></div><div class="progress-text">60% complete</div></div>
-        <i data-lucide="chevron-right" style="color:#f97316;width:18px;"></i>
+<!-- HERO -->
+<section class="m-hero">
+  <div class="m-status-chip">
+    <div class="dot"></div>
+    4,200+ Schemes · Updated Today
+  </div>
+  <h1>AI-Powered Access to <span class="orange">Government Welfare</span></h1>
+  <p>Discover every benefit you're eligible for. YojanaMitra matches your profile to thousands of state & central schemes.</p>
+  <div class="m-hero-btns">
+    <a href="dashboard.html" class="m-btn-primary">
+      <i class="fas fa-chart-pie"></i> My Dashboard
     </a>
+    <a href="mobile_schemes.html" class="m-btn-secondary">
+      <i class="fas fa-search"></i> Explore All Schemes
+    </a>
+  </div>
+</section>
 
-    <div class="section-header"><div class="section-title">Browse by Category</div></div>
-    <div class="horizontal-scroll">
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(34,197,94,0.1);"><i data-lucide="leaf" style="color:#22c55e;"></i></div><div class="cat-label">Agriculture</div></div>
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(239,68,68,0.1);"><i data-lucide="heart" style="color:#ef4444;"></i></div><div class="cat-label">Health</div></div>
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(59,130,246,0.1);"><i data-lucide="book-open" style="color:#3b82f6;"></i></div><div class="cat-label">Education</div></div>
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(167,139,250,0.1);"><i data-lucide="home" style="color:#a78bfa;"></i></div><div class="cat-label">Housing</div></div>
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(245,158,11,0.1);"><i data-lucide="landmark" style="color:#f59e0b;"></i></div><div class="cat-label">Finance</div></div>
-        <div class="cat-pill"><div class="cat-icon-box" style="background:rgba(236,72,153,0.1);"><i data-lucide="users" style="color:#ec4899;"></i></div><div class="cat-label">Women</div></div>
+<!-- TRUST MARQUEE -->
+<div class="m-trust">
+  <div class="m-trust-inner">
+    <span>Seva Sindhu</span><span>|</span>
+    <span>MyScheme India</span><span>|</span>
+    <span>PM-KISAN Portal</span><span>|</span>
+    <span>NSP Scholarships</span><span>|</span>
+    <span>Ayushman Bharat</span><span>|</span>
+    <span>PM Awas Yojana</span><span>|</span>
+    <span>Jan Dhan PMJDY</span><span>|</span>
+    <span>DigiLocker API</span><span>|</span>
+    <span>Atal Pension</span><span>|</span>
+    <span>Skill India</span><span>|</span>
+    <!-- duplicate for seamless loop -->
+    <span>Seva Sindhu</span><span>|</span>
+    <span>MyScheme India</span><span>|</span>
+    <span>PM-KISAN Portal</span><span>|</span>
+    <span>NSP Scholarships</span><span>|</span>
+    <span>Ayushman Bharat</span><span>|</span>
+    <span>PM Awas Yojana</span><span>|</span>
+    <span>Jan Dhan PMJDY</span><span>|</span>
+    <span>DigiLocker API</span><span>|</span>
+    <span>Atal Pension</span><span>|</span>
+    <span>Skill India</span><span>|</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="m-stats">
+  <div class="m-stat-card">
+    <div class="m-stat-num">4,<span class="accent">200</span>+</div>
+    <div class="m-stat-lbl">Schemes Indexed</div>
+  </div>
+  <div class="m-stat-card">
+    <div class="m-stat-num"><span class="accent">15</span>+</div>
+    <div class="m-stat-lbl">Official Portals</div>
+  </div>
+  <div class="m-stat-card">
+    <div class="m-stat-num"><span class="accent">AI</span></div>
+    <div class="m-stat-lbl">Eligibility Engine</div>
+  </div>
+  <div class="m-stat-card">
+    <div class="m-stat-num"><span class="accent">Free</span></div>
+    <div class="m-stat-lbl">Always Free</div>
+  </div>
+</div>
+
+<!-- DASHBOARD PREVIEW -->
+<div class="m-preview-card">
+  <div class="m-preview-header">
+    <h3>Your Matched Schemes</h3>
+    <div class="m-preview-num">36</div>
+    <div class="m-preview-sub">72% explored · Eligibility score 95%</div>
+  </div>
+  <div class="m-preview-body">
+    <div class="m-scheme-row">
+      <div class="m-scheme-info">
+        <div class="m-scheme-name">PM Awas Yojana</div>
+        <div class="m-scheme-tag">Housing · ₹2,67,000</div>
+      </div>
+      <span class="m-scheme-badge badge-green">ELIGIBLE</span>
     </div>
-
-    <div class="section-header"><div class="section-title">Trending Schemes</div><a href="all_schemes.html" class="section-link">See All <i data-lucide="chevron-right" style="width:14px;"></i></a></div>
-    <div class="horizontal-scroll" style="gap:14px;">
-        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">PM Kisan Samman Nidhi</div><div class="scheme-desc">Income support of &#8377;6,000 per year in three equal installments to all landholding farmer families.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 95% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-central">CENTRAL GOVT</div><div class="scheme-title">Ayushman Bharat (PM-JAY)</div><div class="scheme-desc">Health insurance cover of &#8377;5 Lakh per family per year for secondary and tertiary care hospitalization.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 88% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
-        <div class="scheme-card"><div class="badge badge-state">STATE GOVT</div><div class="scheme-title">Ladli Behna Yojana</div><div class="scheme-desc">Financial assistance to women to enhance their health, nutrition and financial independence.</div><div class="match-score"><i data-lucide="check-circle" style="width:14px;"></i> 92% Eligibility Match</div><a href="#" class="btn-outline-orange">View Details &amp; Apply</a></div>
+    <div class="m-scheme-row">
+      <div class="m-scheme-info">
+        <div class="m-scheme-name">Ayushman Bharat</div>
+        <div class="m-scheme-tag">Health · ₹5,00,000/yr</div>
+      </div>
+      <span class="m-scheme-badge badge-green">ELIGIBLE</span>
     </div>
-
-    <div class="section-header"><div class="section-title">Featured This Week</div></div>
-    <div class="featured-card">
-        <div class="featured-top"><div class="featured-badge"><i data-lucide="trending-up" style="width:11px;"></i> FEATURED</div><div class="featured-central">Central Govt</div></div>
-        <div class="featured-title">PM Ujjwala Yojana 2.0</div>
-        <div class="featured-desc">Free LPG connections to BPL households and women below poverty line. Covers deposit, first refill and stove at no cost.</div>
-        <div class="benefits-row"><div class="benefit-chip"><div class="benefit-val">&#8377;1,600</div><div class="benefit-label">One-time Aid</div></div><div class="benefit-chip"><div class="benefit-val">8.3Cr+</div><div class="benefit-label">Beneficiaries</div></div><div class="benefit-chip"><div class="benefit-val">97%</div><div class="benefit-label">Your Match</div></div></div>
-        <button class="btn-featured">View &amp; Apply Now <i data-lucide="arrow-right" style="width:16px;"></i></button>
+    <div class="m-scheme-row">
+      <div class="m-scheme-info">
+        <div class="m-scheme-name">NSP Scholarship</div>
+        <div class="m-scheme-tag">Education · ₹50,000/yr</div>
+      </div>
+      <span class="m-scheme-badge badge-amber">POSSIBLE</span>
     </div>
-
-    <div class="section-header"><div class="section-title">How It Works</div></div>
-    <div class="steps-container">
-        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="users" style="color:#f97316;width:18px;"></i></div><div class="step-connector"></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 01</div><div class="step-title">Build Your Profile</div><div class="step-desc">Answer a few simple questions about your income, location, and family.</div><div style="height:20px;"></div></div></div>
-        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="sparkles" style="color:#f97316;width:18px;"></i></div><div class="step-connector"></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 02</div><div class="step-title">AI Matches You</div><div class="step-desc">Our engine scans 4,200+ schemes and ranks your eligibility instantly.</div><div style="height:20px;"></div></div></div>
-        <div class="step-row"><div class="step-left"><div class="step-icon"><i data-lucide="check-circle" style="color:#f97316;width:18px;"></i></div></div><div style="flex:1;padding-top:8px;"><div class="step-num">STEP 03</div><div class="step-title">Apply in Minutes</div><div class="step-desc">Use your secure Document Vault to apply with pre-filled forms.</div></div></div>
+    <div class="m-scheme-row">
+      <div class="m-scheme-info">
+        <div class="m-scheme-name">PM-KISAN</div>
+        <div class="m-scheme-tag">Agriculture · ₹6,000/yr</div>
+      </div>
+      <span class="m-scheme-badge badge-blue">CHECK</span>
     </div>
+  </div>
+</div>
 
-    <div class="trust-row">
-        <div class="trust-badge"><i data-lucide="shield" style="color:#22c55e;width:14px;"></i><span class="trust-text">Govt. Verified</span></div>
-        <div class="trust-badge"><i data-lucide="star" style="color:#f59e0b;width:14px;"></i><span class="trust-text">4.9 Rating</span></div>
-        <div class="trust-badge"><i data-lucide="zap" style="color:#a78bfa;width:14px;"></i><span class="trust-text">Instant Match</span></div>
+<!-- HOW IT WORKS -->
+<section class="m-section">
+  <div class="m-section-label">How it works</div>
+  <div class="m-section-title">Three steps to your benefits</div>
+  <div class="m-steps">
+    <div class="m-step">
+      <div class="m-step-num">1</div>
+      <div>
+        <div class="m-step-title">Build Your Profile</div>
+        <div class="m-step-desc">Answer a few simple questions about yourself — income, category, location, and more.</div>
+      </div>
     </div>
-
-    <div class="bottom-cta">
-        <div class="bottom-cta-emoji">&#127470;&#127475;</div>
-        <div class="bottom-cta-title">Ready to claim your benefits?</div>
-        <div class="bottom-cta-sub">It's free, secure, and takes under 3 minutes.</div>
-        <button class="btn-primary" onclick="window.location.href='dashboard.html'">Get Started Free</button>
+    <div class="m-step">
+      <div class="m-step-num">2</div>
+      <div>
+        <div class="m-step-title">AI Matches Schemes</div>
+        <div class="m-step-desc">Our engine cross-checks thousands of state & central schemes against your profile in seconds.</div>
+      </div>
     </div>
+    <div class="m-step">
+      <div class="m-step-num">3</div>
+      <div>
+        <div class="m-step-title">Apply with Guidance</div>
+        <div class="m-step-desc">Get a precise document checklist and direct application links — no confusion, no guesswork.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <button class="mobile-fab"><i data-lucide="sparkles"></i></button>
+<!-- FEATURES -->
+<section class="m-section" style="padding-top: 0;">
+  <div class="m-section-label">Features</div>
+  <div class="m-section-title">Everything you need</div>
+  <div class="m-features">
+    <div class="m-feature-card">
+      <div class="m-feature-icon fi-orange">🎯</div>
+      <div>
+        <div class="m-feature-title">Precision Matching</div>
+        <div class="m-feature-desc">AI scans 4,200+ schemes to find your exact eligibility — state and central.</div>
+      </div>
+    </div>
+    <div class="m-feature-card">
+      <div class="m-feature-icon fi-green">📋</div>
+      <div>
+        <div class="m-feature-title">Document Checklist</div>
+        <div class="m-feature-desc">Know exactly which documents to gather before you walk into any office.</div>
+      </div>
+    </div>
+    <div class="m-feature-card">
+      <div class="m-feature-icon fi-blue">🤖</div>
+      <div>
+        <div class="m-feature-title">AI Readiness Score</div>
+        <div class="m-feature-desc">Get a score out of 100 for any scheme. Know your gaps before applying.</div>
+      </div>
+    </div>
+    <div class="m-feature-card">
+      <div class="m-feature-icon fi-purple">🔒</div>
+      <div>
+        <div class="m-feature-title">Document Vault</div>
+        <div class="m-feature-desc">Securely store your documents once, use them for multiple scheme applications.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <nav class="mobile-bottom-nav">
-        <a href="mobile_home.html" class="nav-item active"><i data-lucide="home" style="width:22px;height:22px;"></i><span>Home</span></a>
-        <a href="all_schemes.html" class="nav-item"><i data-lucide="search" style="width:22px;height:22px;"></i><span>Schemes</span></a>
-        <a href="vault.html" class="nav-item"><i data-lucide="folder" style="width:22px;height:22px;"></i><span>Vault</span></a>
-        <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i><span>Dashboard</span></a>
-    </nav>
+<!-- CTA -->
+<div class="m-cta">
+  <h2>Find your government benefits today</h2>
+  <p>Thousands of Indians miss out on schemes they qualify for. Don't be one of them.</p>
+  <a href="dashboard.html" class="m-cta-btn">Get Started Free →</a>
+</div>
 
-    <script>lucide.createIcons();</script>
-    <script src="js/ai_toggle.js?v=4"></script>
+<!-- FOOTER -->
+<footer class="m-footer">
+  <div class="m-footer-brand">
+    <div class="m-logo-mark">YM</div>
+    <span>YojanaMitra</span>
+  </div>
+  <p class="m-footer-desc">An independent AI platform connecting citizens to government welfare schemes. Not affiliated with any government body.</p>
+  <div class="m-footer-links">
+    <a href="mobile_schemes.html">All Schemes</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="mobile_vault.html">My Vault</a>
+    <a href="auth.html#login">Login</a>
+  </div>
+  <p class="m-footer-copy">© 2025 YojanaMitra. All rights reserved.</p>
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav class="m-bottom-nav">
+  <a class="m-nav-item active" href="mobile_home.html">
+    <i class="fas fa-home"></i>
+    Home
+  </a>
+  <a class="m-nav-item" href="mobile_schemes.html">
+    <i class="fas fa-list"></i>
+    Schemes
+  </a>
+  <a class="m-nav-item" href="dashboard.html">
+    <i class="fas fa-chart-pie"></i>
+    Dashboard
+  </a>
+  <a class="m-nav-item" href="mobile_vault.html">
+    <i class="fas fa-folder"></i>
+    Vault
+  </a>
+</nav>
+
 </body>
 </html>
