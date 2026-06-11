@@ -1,0 +1,224 @@
+C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\google\api_core\_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.0) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\google\api_core\_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.0) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+Exception in thread Thread-1 (serve_forever):
+Traceback (most recent call last):
+  File "C:\Program Files\Python310\lib\threading.py", line 1009, in _bootstrap_inner
+C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\google\api_core\_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.0) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\google\api_core\_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.0) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\werkzeug\middleware\proxy_fix.py", line 182, in __call__
+    return self.app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "C:\yojanamitra_complete\app.py", line 6136, in batch_approve_pending_schemes
+    approved_scheme = Scheme(
+  File "<string>", line 4, in __init__
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\decl_base.py", line 2170, in _declarative_constructor
+    setattr(self, k, kwargs[k])
+  File "C:\yojanamitra_complete\app.py", line 924, in __setattr__
+    raise AttributeError(
+AttributeError: Flat column 'min_age' is deprecated. Use Condition table for eligibility criteria.
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\werkzeug\middleware\proxy_fix.py", line 182, in __call__
+    return self.app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "C:\yojanamitra_complete\app.py", line 6136, in batch_approve_pending_schemes
+    approved_scheme = Scheme(
+  File "<string>", line 4, in __init__
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\decl_base.py", line 2170, in _declarative_constructor
+    setattr(self, k, kwargs[k])
+  File "C:\yojanamitra_complete\app.py", line 924, in __setattr__
+    raise AttributeError(
+AttributeError: Flat column 'min_age' is deprecated. Use Condition table for eligibility criteria.
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\werkzeug\middleware\proxy_fix.py", line 182, in __call__
+    return self.app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "C:\yojanamitra_complete\app.py", line 6136, in batch_approve_pending_schemes
+    approved_scheme = Scheme(
+  File "<string>", line 4, in __init__
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\decl_base.py", line 2170, in _declarative_constructor
+    setattr(self, k, kwargs[k])
+  File "C:\yojanamitra_complete\app.py", line 924, in __setattr__
+    raise AttributeError(
+AttributeError: Flat column 'min_age' is deprecated. Use Condition table for eligibility criteria.
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\werkzeug\middleware\proxy_fix.py", line 182, in __call__
+    return self.app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "C:\yojanamitra_complete\app.py", line 6136, in batch_approve_pending_schemes
+    approved_scheme = Scheme(
+  File "<string>", line 4, in __init__
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 571, in _initialize_instance
+    with util.safe_reraise():
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\state.py", line 569, in _initialize_instance
+    manager.original_init(*mixed[1:], **kwargs)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\decl_base.py", line 2170, in _declarative_constructor
+    setattr(self, k, kwargs[k])
+  File "C:\yojanamitra_complete\app.py", line 924, in __setattr__
+    raise AttributeError(
+AttributeError: Flat column 'min_age' is deprecated. Use Condition table for eligibility criteria.
+C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\google\api_core\_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.0) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\werkzeug\middleware\proxy_fix.py", line 182, in __call__
+    return self.app(environ, start_response)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "C:\yojanamitra_complete\app.py", line 6155, in batch_approve_pending_schemes
+    AdminNotification.query.filter_by(pending_scheme_id=s_id).delete()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\query.py", line 3161, in delete
+    result: CursorResult[Any] = self.session.execute(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 2215, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\bulk_persistence.py", line 703, in orm_pre_session_exec
+    session._autoflush()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 3050, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 3039, in _autoflush
+    self.flush()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 4341, in flush
+    self._flush(objects)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 4476, in _flush
+    with util.safe_reraise():
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\session.py", line 4437, in _flush
+    flush_context.execute()
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\persistence.py", line 85, in save_obj
+    _emit_update_statements(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\orm\persistence.py", line 912, in _emit_update_statements
+    c = connection.execute(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\91994\AppData\Roaming\Python\Python310\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.OperationalError) database is locked
+[SQL: UPDATE pending_scheme SET status=?, approved_at=? WHERE pending_scheme.id = ?]
+[parameters: ('approved', '2026-05-17 18:18:45.033972', 4466)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

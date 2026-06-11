@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YojanaMitra - Defense Cheat Sheet</title>
+    <style>
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --text-dark: #1f2937;
+            --text-light: #4b5563;
+            --bg-gray: #f3f4f6;
+            --accent: #2563eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: white;
+        }
+
+        h1 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin-top: 40px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: var(--accent);
+            margin-top: 25px;
+        }
+
+        p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        .highlight-box {
+            background-color: var(--bg-gray);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .code-block {
+            background-color: #111827;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .tech-item {
+            margin-bottom: 25px;
+        }
+
+        .tech-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        .tech-reason {
+            display: block;
+            margin-top: 5px;
+            color: var(--text-light);
+        }
+
+        /* PDF Printing Styles */
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            @page {
+                margin: 2cm;
+            }
+            .code-block {
+                background-color: #f3f4f6;
+                color: #000;
+                border: 1px solid #d1d5db;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>YojanaMitra: Project Defense & Cheat Sheet</h1>
+
+    <div class="highlight-box">
+        <strong>Objective:</strong> To articulate the socio-economic impact, the architectural decision-making, and the exact code implementations during the project presentation to external lecturers and judges.
+    </div>
+
+    <!-- Section 1: The Core Value Proposition -->
+    <h2>1. The "Why It Matters" Pitch (Socio-Economic Impact)</h2>
+    
+    <h3>The Hidden Crisis (The Information Gap)</h3>
+    <p>"When we look at India's welfare system, the biggest bottleneck isn't a lack of funds—it is an <strong>information gap</strong>. The government offers thousands of incredible schemes, but the majority of the population is completely unaware of them. Because of this digital divide, billions of rupees in life-changing benefits go unclaimed every year. YojanaMitra isn't just a search engine; it's a bridge to those unclaimed resources."</p>
+
+    <h3>The Human Cost (The Micro Impact)</h3>
+    <p>"Right now, there is a family struggling to survive who is unaware that they qualify for a specific government education scholarship. Because of that lack of awareness, they are forced to pull their bright child out of school and send them to do manual labor just to make ends meet. That is a tragedy caused purely by an information gap. If that family had YojanaMitra, that child would be in a classroom."</p>
+
+    <h3>The Economic Ripple Effect (The Macro Impact)</h3>
+    <p>"There are countless schemes designed to provide seed money for small businesses, agricultural subsidies, and female entrepreneurship. When citizens miss out on these opportunities, they remain trapped in poverty. By connecting the right person to the right business grant at the right time, we are giving them the opportunity to start businesses and become self-reliant. <strong>By solving this awareness gap, YojanaMitra indirectly accelerates India's overall economic growth.</strong>"</p>
+
+    <div class="page-break"></div>
+
+    <!-- Section 2: Interactive Judge Engagement -->
+    <h2>2. Interactive Examples for the Judges</h2>
+    <p><em>Use this to prove the platform is universally valuable, not just for the underprivileged.</em></p>
+    
+    <div class="highlight-box">
+        <strong>Script:</strong> "Sir/Ma'am, it’s a common misconception that government schemes are only for those below the poverty line. In reality, the government has brilliant initiatives designed to support academics, professionals, and families across all income brackets. For example, as a professor or parent, are you aware of the TARE Scheme or the E-E-E benefits of the SSY?"
+    </div>
+
+    <ul>
+        <li><strong>TARE (Teachers Associateship for Research Excellence):</strong> For lecturers. Grants up to ₹5 Lakhs per year in research funding to collaborate with premier institutions like IITs/IISc.</li>
+        <li><strong>Sukanya Samriddhi Yojana (SSY):</strong> For fathers of daughters under 10. Offers 'Exempt-Exempt-Exempt' tax status. The investment, the 8.2% interest, and the maturity amount are entirely tax-free regardless of income bracket.</li>
+        <li><strong>PM Surya Ghar Muft Bijli Yojana:</strong> For homeowners. Offers a direct bank subsidy of up to ₹78,000 to install rooftop solar panels, effectively dropping electricity bills to zero.</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- Section 3: Technology Stack Justification -->
+    <h2>3. Technology Stack & Justifications (The "Why")</h2>
+
+    <div class="tech-item no-break">
+        <span class="tech-title">Backend Framework: Python + Flask (Over Node.js or Django)</span>
+        <span class="tech-reason"><strong>Why:</strong> Python is the undisputed industry standard for AI integration. It allowed us to natively use the <code>google.generativeai</code> and <code>openai</code> SDKs without complex middleware. We chose Flask over Django because YojanaMitra relies on dynamic AI orchestration rather than standard blog-style database entries. Flask gave us absolute micro-control over our API routing without heavy bloat.</span>
+    </div>
+
+    <div class="tech-item no-break">
+        <span class="tech-title">Database: SQLAlchemy Relational DB (Over MongoDB/NoSQL)</span>
+        <span class="tech-reason"><strong>Why:</strong> Government scheme eligibility is highly structured and relational (User → Profile Attributes → Schemes → Nested Conditions). Using a schema-less NoSQL database risks massive data inconsistencies (e.g., storing income as a string vs. an integer). SQLAlchemy enforces strict data types, ensuring our deterministic eligibility engine never crashes due to bad data.</span>
+    </div>
+
+    <div class="tech-item no-break">
+        <span class="tech-title">Frontend: Vanilla JS & CSS (Over React.js or Angular)</span>
+        <span class="tech-reason"><strong>Why:</strong> Our target demographic includes rural citizens accessing the internet on low-end, budget smartphones. React requires downloading heavy JavaScript bundles and suffers from "hydration lag." By keeping the frontend Vanilla, our dashboard loads almost instantly on a 3G connection. The heavy lifting is done server-side by the AI.</span>
+    </div>
+
+    <div class="tech-item no-break">
+        <span class="tech-title">AI Architecture: Gemini Flash + NVIDIA Mistral (Over purely GPT-4)</span>
+        <span class="tech-reason"><strong>Why:</strong> GPT-4 is incredible but too slow and expensive for batch-processing 1,000+ schemes. Gemini Flash provides a massive context window to feed entire databases into memory instantly. We added NVIDIA Mistral-Nemotron to create a <strong>Fault-Tolerant Dual-Engine</strong>. If Google's servers time out, our router seamlessly catches the failure and switches to NVIDIA. It's an enterprise-grade failover system.</span>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Section 4: Code Map & Core Snippets -->
+    <h2>4. Core Features: Code Map & Snippets</h2>
+
+    <div class="no-break">
+        <h3>A. All Phases of Matching & Conflict Resolution (The Eligibility Engine)</h3>
+        <p><strong>File:</strong> <code>app/engine/eligibility.py</code> and <code>app/engine_compat.py</code></p>
+        <p><strong>What it does:</strong> The deterministic brain. It filters schemes, checks hard rules (Conflict Resolution), and assigns a confidence score.</p>
+        <div class="code-block">
+# app/engine_compat.py
+def evaluate_single_scheme(self, scheme, user, use_cache=True):
+    # Phase 1: Hard database check (Conflict Resolution)
+    # If the user is male but the scheme is strictly female, instantly kill it.
+    for condition in scheme.conditions:
+        if user_value == condition.operator_logic():
+            return EligibilityOutput(result=INELIGIBLE, blocking_reason="Gender mismatch")
+            
+    # Phase 2: If no conflicts, hand over to AI for semantic probability scoring
+    confidence_score = self.quick_score(user, scheme)
+    return EligibilityOutput(result=POSSIBLE, confidence=confidence_score)
+        </div>
+    </div>
+
+    <div class="no-break">
+        <h3>B. Benefit Advisor (The Scoring & Ranking Engine)</h3>
+        <p><strong>File:</strong> <code>app/engine/scorer.py</code></p>
+        <p><strong>What it does:</strong> Determines the display order of schemes by mathematically weighing the AI confidence score against the financial payout and difficulty of application.</p>
+        <div class="code-block">
+# app/engine/scorer.py
+class ResultRanker:
+    def rank(self, scheme_results):
+        ranked = []
+        for scheme, eo in scheme_results:
+            # Weighs AI confidence against the payout value
+            final_score = (eo.confidence * 0.7) + (scheme.payout_value * 0.3)
+            ranked.append(RankedScheme(scheme, final_score))
+            
+        # Sort highest to lowest score
+        return sorted(ranked, key=lambda x: x.final_score, reverse=True)
+        </div>
+    </div>
+
+    <div class="no-break">
+        <h3>C. Question Generation & Distillation (Phase 3 AI)</h3>
+        <p><strong>Files:</strong> <code>app.py</code> and <code>app/engine/ai_router.py</code></p>
+        <p><strong>What it does:</strong> Identifies missing user data and commands the AI to generate a strict JSON array of dynamically created questions, while preventing over-consolidation.</p>
+        <div class="code-block">
+# app.py (@app.route('/api/generate-resolve-questions'))
+prompt = f"""
+STRICT OUTPUT RULES:
+- IMPORTANT: Generate a separate question object for EACH field.
+- Do NOT merge disparate eligibility criteria into a single question.
+- OUTPUT STRICT JSON ARRAY ONLY.
+"""
+# AI Router seamlessly sends to Gemini or NVIDIA based on the toggle
+questions = ai_router.call_ai(prompt)
+        </div>
+    </div>
+
+    <div class="no-break">
+        <h3>D. Contextual AI Assistant (The Floating Widget)</h3>
+        <p><strong>Files:</strong> <code>app.py</code> (Backend) and <code>static/js/contextual-ai-unified.js</code> (Frontend)</p>
+        <p><strong>What it does:</strong> Grabs highlighted text on the screen, scrubs it of Personal Identifiable Information (PII) for security, and asks the AI to explain, define, or summarize it.</p>
+        <div class="code-block">
+# app.py (@app.route('/api/contextual-ai'))
+def contextual_ai():
+    # 1. Grab selected text from frontend
+    selected_text = request.json.get('selected_text')
+    
+    # 2. PII Scrubbing (Security Layer)
+    PII_KEYS = {'aadhaar', 'pan', 'email', 'mobile'}
+    safe_profile = {k: v for k, v in profile.items() if k not in PII_KEYS}
+    
+    # 3. Dynamic Prompting via Router
+    prompt = f"Simplify the following text so any Indian citizen can understand it easily: {selected_text}"
+    return ai_router.call_ai(prompt)
+        </div>
+    </div>
+
+</body>
+</html>

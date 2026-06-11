@@ -10,7 +10,7 @@
         s.textContent = 'body{display:none!important}';
         document.head.appendChild(s);
         fetch('/api/user',{credentials:'include'})
-            .then(function(r){if(!r.ok)window.location.replace('mobile_mobile_auth.html');else if(s.parentNode)s.parentNode.removeChild(s);})
+            .then(function(r){if(!r.ok)window.location.replace('mobile_auth.html');else if(s.parentNode)s.parentNode.removeChild(s);})
             .catch(function(){window.location.replace('mobile_auth.html');});
     })();
     </script>

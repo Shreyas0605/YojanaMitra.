@@ -1,452 +1,840 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>YojanaMitra - AI Government Welfare</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-:root {
-  --accent: #f15a24;
-  --accent-dark: #cc4518;
-  --bg: #fbfaf7;
-  --dark: #0b1a16;
-  --mid: #2d3a35;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --white: #fff;
-  --green: #10b981;
-  --font: 'Plus Jakarta Sans', sans-serif;
-  --r: 16px;
-}
-body { font-family: var(--font); background: var(--bg); color: var(--dark); overflow-x: hidden; }
-a { text-decoration: none; color: inherit; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>YojanaMitra - AI Government Welfare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-/* ── TOP NAV ── */
-.m-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(251,250,247,0.95); backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px; height: 60px;
-}
-.m-logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1rem; color: var(--dark); }
-.m-logo-mark { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; color: #fff; font-size: 0.62rem; font-weight: 800; flex-shrink: 0; }
-.m-nav-btn { background: var(--dark); color: #fff; font-size: 0.82rem; font-weight: 700; padding: 8px 18px; border-radius: 100px; border: none; font-family: var(--font); cursor: pointer; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-/* ── HERO ── */
-.m-hero {
-  padding: 100px 24px 48px;
-  background: linear-gradient(160deg, #fff9f5 0%, #fbfaf7 60%);
-  position: relative; overflow: hidden;
-}
-.m-hero::before {
-  content: '';
-  position: absolute; top: -60px; right: -60px;
-  width: 240px; height: 240px;
-  background: radial-gradient(circle, rgba(241,90,36,0.12) 0%, transparent 70%);
-  border-radius: 50%; pointer-events: none;
-}
-.m-hero::after {
-  content: '';
-  position: absolute; bottom: -40px; left: -40px;
-  width: 180px; height: 180px;
-  background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
-  border-radius: 50%; pointer-events: none;
-}
-.m-status-chip {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: #fff; padding: 5px 14px; border-radius: 100px;
-  font-size: 0.78rem; font-weight: 600; color: var(--mid);
-  border: 1px solid rgba(0,0,0,0.07); margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.m-status-chip .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-.m-hero h1 {
-  font-size: 2.1rem; font-weight: 800; line-height: 1.1;
-  letter-spacing: -0.04em; margin-bottom: 16px; color: var(--dark);
-}
-.m-hero h1 .orange { color: var(--accent); }
-.m-hero p {
-  font-size: 0.96rem; color: var(--muted); line-height: 1.7;
-  margin-bottom: 28px; max-width: 360px;
-}
-.m-hero-btns { display: flex; flex-direction: column; gap: 12px; }
-.m-btn-primary {
-  background: var(--dark); color: #fff;
-  padding: 15px 28px; border-radius: 14px;
-  font-weight: 700; font-size: 1rem;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 8px 24px rgba(11,26,22,0.18);
-}
-.m-btn-secondary {
-  background: #fff; color: var(--dark);
-  padding: 14px 28px; border-radius: 14px;
-  font-weight: 600; font-size: 0.96rem;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  border: 1.5px solid var(--border);
-}
+        :root {
+            --accent: #f15a24;
+            --accent-dark: #cc4518;
+            --bg: #fbfaf7;
+            --dark: #0b1a16;
+            --mid: #2d3a35;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --white: #fff;
+            --green: #10b981;
+            --font: 'Plus Jakarta Sans', sans-serif;
+            --r: 16px;
+        }
 
-/* ── TRUST STRIP ── */
-.m-trust {
-  padding: 20px 0; background: #fff;
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  overflow: hidden;
-}
-.m-trust-inner {
-  display: flex; gap: 0; white-space: nowrap;
-  animation: marquee 25s linear infinite;
-}
-.m-trust-inner span { padding: 0 18px; font-size: 0.8rem; font-weight: 600; color: var(--mid); opacity: 0.7; }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
 
-/* ── STATS ── */
-.m-stats {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; padding: 28px 20px;
-}
-.m-stat-card {
-  background: #fff; border-radius: var(--r); padding: 20px 16px;
-  border: 1px solid var(--border); text-align: center;
-}
-.m-stat-num { font-size: 1.9rem; font-weight: 800; color: var(--dark); letter-spacing: -0.04em; line-height: 1; }
-.m-stat-num .accent { color: var(--accent); }
-.m-stat-lbl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-/* ── HOW IT WORKS ── */
-.m-section { padding: 32px 20px; }
-.m-section-label {
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
-.m-section-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; line-height: 1.2; }
-.m-steps { display: flex; flex-direction: column; gap: 16px; }
-.m-step {
-  background: #fff; border-radius: var(--r); padding: 20px;
-  border: 1px solid var(--border); display: flex; gap: 16px; align-items: flex-start;
-}
-.m-step-num {
-  width: 36px; height: 36px; border-radius: 10px; background: var(--accent);
-  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 0.85rem;
-  flex-shrink: 0;
-}
-.m-step-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 4px; }
-.m-step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+        /* ── TOP NAV ── */
+        .m-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(251, 250, 247, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 60px;
+        }
 
-/* ── DASHBOARD PREVIEW CARD ── */
-.m-preview-card {
-  background: #fff; border-radius: 20px; margin: 0 20px 32px;
-  border: 1px solid var(--border); overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-}
-.m-preview-header {
-  background: linear-gradient(135deg, var(--dark) 0%, #1a3a2e 100%);
-  padding: 20px; color: #fff;
-}
-.m-preview-header h3 { font-size: 0.88rem; font-weight: 600; opacity: 0.7; margin-bottom: 4px; }
-.m-preview-num { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.04em; }
-.m-preview-sub { font-size: 0.78rem; opacity: 0.6; margin-top: 2px; }
-.m-preview-body { padding: 16px; }
-.m-scheme-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 0; border-bottom: 1px solid var(--border);
-}
-.m-scheme-row:last-child { border-bottom: none; }
-.m-scheme-info { display: flex; flex-direction: column; gap: 2px; }
-.m-scheme-name { font-size: 0.88rem; font-weight: 700; }
-.m-scheme-tag { font-size: 0.72rem; color: var(--muted); }
-.m-scheme-badge {
-  padding: 4px 10px; border-radius: 100px; font-size: 0.72rem; font-weight: 700;
-}
-.badge-green { background: #dcfce7; color: #15803d; }
-.badge-amber { background: #fef9c3; color: #854d0e; }
-.badge-blue { background: #dbeafe; color: #1d4ed8; }
+        .m-logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--dark);
+        }
 
-/* ── FEATURES ── */
-.m-features { display: flex; flex-direction: column; gap: 12px; }
-.m-feature-card {
-  background: #fff; border-radius: var(--r); padding: 20px;
-  border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start;
-}
-.m-feature-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0;
-}
-.fi-orange { background: #fff5f0; }
-.fi-green { background: #f0fdf4; }
-.fi-blue { background: #eff6ff; }
-.fi-purple { background: #faf5ff; }
-.m-feature-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 4px; }
-.m-feature-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+        .m-logo-mark {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
 
-/* ── CTA ── */
-.m-cta {
-  margin: 0 20px 40px; background: var(--dark); border-radius: 20px;
-  padding: 32px 24px; text-align: center; color: #fff;
-}
-.m-cta h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.03em; }
-.m-cta p { font-size: 0.88rem; opacity: 0.7; margin-bottom: 24px; line-height: 1.6; }
-.m-cta-btn {
-  background: var(--accent); color: #fff; padding: 14px 32px;
-  border-radius: 14px; font-weight: 700; font-size: 1rem;
-  display: inline-block; box-shadow: 0 6px 20px rgba(241,90,36,0.35);
-}
+        .m-nav-btn {
+            background: var(--dark);
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 100px;
+            border: none;
+            font-family: var(--font);
+            cursor: pointer;
+        }
 
-/* ── BOTTOM NAV ── */
-.m-bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex; justify-content: space-around; padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
-}
-.m-nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  font-size: 0.68rem; font-weight: 600; color: var(--muted); padding: 4px 16px;
-  cursor: pointer; text-decoration: none; transition: color 0.15s;
-}
-.m-nav-item.active { color: var(--accent); }
-.m-nav-item i { font-size: 1.2rem; }
+        /* ── HERO ── */
+        .m-hero {
+            padding: 100px 24px 48px;
+            background: linear-gradient(160deg, #fff9f5 0%, #fbfaf7 60%);
+            position: relative;
+            overflow: hidden;
+        }
 
-/* ── FOOTER ── */
-.m-footer {
-  padding: 32px 20px 120px; border-top: 1px solid var(--border);
-  background: #fff;
-}
-.m-footer-brand { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
-.m-footer-brand span { font-weight: 800; font-size: 1rem; }
-.m-footer-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-.m-footer-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 20px; }
-.m-footer-links a { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
-.m-footer-copy { font-size: 0.75rem; color: var(--muted); }
-</style>
+        .m-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(241, 90, 36, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .m-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .m-status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #fff;
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--mid);
+            border: 1px solid rgba(0, 0, 0, 0.07);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .m-status-chip .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+        }
+
+        .m-hero h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .m-hero h1 .orange {
+            color: var(--accent);
+        }
+
+        .m-hero p {
+            font-size: 0.96rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 28px;
+            max-width: 360px;
+        }
+
+        .m-hero-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .m-btn-primary {
+            background: var(--dark);
+            color: #fff;
+            padding: 15px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 24px rgba(11, 26, 22, 0.18);
+        }
+
+        .m-btn-secondary {
+            background: #fff;
+            color: var(--dark);
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.96rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1.5px solid var(--border);
+        }
+
+        /* ── TRUST STRIP ── */
+        .m-trust {
+            padding: 20px 0;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .m-trust-inner {
+            display: flex;
+            gap: 0;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+        }
+
+        .m-trust-inner span {
+            padding: 0 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--mid);
+            opacity: 0.7;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ── STATS ── */
+        .m-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 28px 20px;
+        }
+
+        .m-stat-card {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 20px 16px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .m-stat-num {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .m-stat-num .accent {
+            color: var(--accent);
+        }
+
+        .m-stat-lbl {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .m-section {
+            padding: 32px 20px;
+        }
+
+        .m-section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .m-section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .m-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .m-step {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 20px;
+            border: 1px solid var(--border);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .m-step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--accent);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .m-step-title {
+            font-size: 0.96rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .m-step-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ── DASHBOARD PREVIEW CARD ── */
+        .m-preview-card {
+            background: #fff;
+            border-radius: 20px;
+            margin: 0 20px 32px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .m-preview-header {
+            background: linear-gradient(135deg, var(--dark) 0%, #1a3a2e 100%);
+            padding: 20px;
+            color: #fff;
+        }
+
+        .m-preview-header h3 {
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .m-preview-num {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .m-preview-sub {
+            font-size: 0.78rem;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
+        .m-preview-body {
+            padding: 16px;
+        }
+
+        .m-scheme-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .m-scheme-row:last-child {
+            border-bottom: none;
+        }
+
+        .m-scheme-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .m-scheme-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .m-scheme-tag {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .m-scheme-badge {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-amber {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* ── FEATURES ── */
+        .m-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .m-feature-card {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 20px;
+            border: 1px solid var(--border);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .m-feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .fi-orange {
+            background: #fff5f0;
+        }
+
+        .fi-green {
+            background: #f0fdf4;
+        }
+
+        .fi-blue {
+            background: #eff6ff;
+        }
+
+        .fi-purple {
+            background: #faf5ff;
+        }
+
+        .m-feature-title {
+            font-size: 0.96rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .m-feature-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ── CTA ── */
+        .m-cta {
+            margin: 0 20px 40px;
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .m-cta h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.03em;
+        }
+
+        .m-cta p {
+            font-size: 0.88rem;
+            opacity: 0.7;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .m-cta-btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-block;
+            box-shadow: 0 6px 20px rgba(241, 90, 36, 0.35);
+        }
+
+        /* ── BOTTOM NAV ── */
+        .m-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+        }
+
+        .m-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 4px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .m-nav-item.active {
+            color: var(--accent);
+        }
+
+        .m-nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* ── FOOTER ── */
+        .m-footer {
+            padding: 32px 20px 120px;
+            border-top: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .m-footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 12px;
+        }
+
+        .m-footer-brand span {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .m-footer-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .m-footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 24px;
+            margin-bottom: 20px;
+        }
+
+        .m-footer-links a {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .m-footer-copy {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav class="m-nav">
-  <a class="m-logo" href="mobile_home.html">
-    <div class="m-logo-mark">YM</div>
-    YojanaMitra
-  </a>
-  <a href="mobile_auth.html#login" class="m-nav-btn">Login</a>
-</nav>
+    <!-- NAV -->
+    <nav class="m-nav">
+        <a class="m-logo" href="mobile_home.html">
+            <div class="m-logo-mark">YM</div>
+            YojanaMitra
+        </a>
+        <a href="mobile_auth.html#login" class="m-nav-btn">Login</a>
+    </nav>
 
-<!-- HERO -->
-<section class="m-hero">
-  <div class="m-status-chip">
-    <div class="dot"></div>
-    4,200+ Schemes · Updated Today
-  </div>
-  <h1>AI-Powered Access to <span class="orange">Government Welfare</span></h1>
-  <p>Discover every benefit you're eligible for. YojanaMitra matches your profile to thousands of state & central schemes.</p>
-  <div class="m-hero-btns">
-    <a href="dashboard.html" class="m-btn-primary">
-      <i class="fas fa-chart-pie"></i> My Dashboard
-    </a>
-    <a href="mobile_schemes.html" class="m-btn-secondary">
-      <i class="fas fa-search"></i> Explore All Schemes
-    </a>
-  </div>
-</section>
+    <!-- HERO -->
+    <section class="m-hero">
+        <div class="m-status-chip">
+            <div class="dot"></div>
+            4,200+ Schemes · Updated Today
+        </div>
+        <h1>AI-Powered Access to <span class="orange">Government Welfare</span></h1>
+        <p>Discover every benefit you're eligible for. YojanaMitra matches your profile to thousands of state & central
+            schemes.</p>
+        <div class="m-hero-btns">
+            <a href="dashboard.html" class="m-btn-primary">
+                <i class="fas fa-chart-pie"></i> My Dashboard
+            </a>
+            <a href="mobile_schemes.html" class="m-btn-secondary">
+                <i class="fas fa-search"></i> Explore All Schemes
+            </a>
+        </div>
+    </section>
 
-<!-- TRUST MARQUEE -->
-<div class="m-trust">
-  <div class="m-trust-inner">
-    <span>Seva Sindhu</span><span>|</span>
-    <span>MyScheme India</span><span>|</span>
-    <span>PM-KISAN Portal</span><span>|</span>
-    <span>NSP Scholarships</span><span>|</span>
-    <span>Ayushman Bharat</span><span>|</span>
-    <span>PM Awas Yojana</span><span>|</span>
-    <span>Jan Dhan PMJDY</span><span>|</span>
-    <span>DigiLocker API</span><span>|</span>
-    <span>Atal Pension</span><span>|</span>
-    <span>Skill India</span><span>|</span>
-    <!-- duplicate for seamless loop -->
-    <span>Seva Sindhu</span><span>|</span>
-    <span>MyScheme India</span><span>|</span>
-    <span>PM-KISAN Portal</span><span>|</span>
-    <span>NSP Scholarships</span><span>|</span>
-    <span>Ayushman Bharat</span><span>|</span>
-    <span>PM Awas Yojana</span><span>|</span>
-    <span>Jan Dhan PMJDY</span><span>|</span>
-    <span>DigiLocker API</span><span>|</span>
-    <span>Atal Pension</span><span>|</span>
-    <span>Skill India</span><span>|</span>
-  </div>
-</div>
+    <!-- TRUST MARQUEE -->
+    <div class="m-trust">
+        <div class="m-trust-inner">
+            <span>Seva Sindhu</span><span>|</span>
+            <span>MyScheme India</span><span>|</span>
+            <span>PM-KISAN Portal</span><span>|</span>
+            <span>NSP Scholarships</span><span>|</span>
+            <span>Ayushman Bharat</span><span>|</span>
+            <span>PM Awas Yojana</span><span>|</span>
+            <span>Jan Dhan PMJDY</span><span>|</span>
+            <span>DigiLocker API</span><span>|</span>
+            <span>Atal Pension</span><span>|</span>
+            <span>Skill India</span><span>|</span>
+            <!-- duplicate for seamless loop -->
+            <span>Seva Sindhu</span><span>|</span>
+            <span>MyScheme India</span><span>|</span>
+            <span>PM-KISAN Portal</span><span>|</span>
+            <span>NSP Scholarships</span><span>|</span>
+            <span>Ayushman Bharat</span><span>|</span>
+            <span>PM Awas Yojana</span><span>|</span>
+            <span>Jan Dhan PMJDY</span><span>|</span>
+            <span>DigiLocker API</span><span>|</span>
+            <span>Atal Pension</span><span>|</span>
+            <span>Skill India</span><span>|</span>
+        </div>
+    </div>
 
-<!-- STATS -->
-<div class="m-stats">
-  <div class="m-stat-card">
-    <div class="m-stat-num">4,<span class="accent">200</span>+</div>
-    <div class="m-stat-lbl">Schemes Indexed</div>
-  </div>
-  <div class="m-stat-card">
-    <div class="m-stat-num"><span class="accent">15</span>+</div>
-    <div class="m-stat-lbl">Official Portals</div>
-  </div>
-  <div class="m-stat-card">
-    <div class="m-stat-num"><span class="accent">AI</span></div>
-    <div class="m-stat-lbl">Eligibility Engine</div>
-  </div>
-  <div class="m-stat-card">
-    <div class="m-stat-num"><span class="accent">Free</span></div>
-    <div class="m-stat-lbl">Always Free</div>
-  </div>
-</div>
+    <!-- STATS -->
+    <div class="m-stats">
+        <div class="m-stat-card">
+            <div class="m-stat-num">4,<span class="accent">200</span>+</div>
+            <div class="m-stat-lbl">Schemes Indexed</div>
+        </div>
+        <div class="m-stat-card">
+            <div class="m-stat-num"><span class="accent">15</span>+</div>
+            <div class="m-stat-lbl">Official Portals</div>
+        </div>
+        <div class="m-stat-card">
+            <div class="m-stat-num"><span class="accent">AI</span></div>
+            <div class="m-stat-lbl">Eligibility Engine</div>
+        </div>
+        <div class="m-stat-card">
+            <div class="m-stat-num"><span class="accent">Free</span></div>
+            <div class="m-stat-lbl">Always Free</div>
+        </div>
+    </div>
 
-<!-- DASHBOARD PREVIEW -->
-<div class="m-preview-card">
-  <div class="m-preview-header">
-    <h3>Your Matched Schemes</h3>
-    <div class="m-preview-num">36</div>
-    <div class="m-preview-sub">72% explored · Eligibility score 95%</div>
-  </div>
-  <div class="m-preview-body">
-    <div class="m-scheme-row">
-      <div class="m-scheme-info">
-        <div class="m-scheme-name">PM Awas Yojana</div>
-        <div class="m-scheme-tag">Housing · ₹2,67,000</div>
-      </div>
-      <span class="m-scheme-badge badge-green">ELIGIBLE</span>
+    <!-- DASHBOARD PREVIEW -->
+    <div class="m-preview-card">
+        <div class="m-preview-header">
+            <h3>Your Matched Schemes</h3>
+            <div class="m-preview-num">36</div>
+            <div class="m-preview-sub">72% explored · Eligibility score 95%</div>
+        </div>
+        <div class="m-preview-body">
+            <div class="m-scheme-row">
+                <div class="m-scheme-info">
+                    <div class="m-scheme-name">PM Awas Yojana</div>
+                    <div class="m-scheme-tag">Housing · ₹2,67,000</div>
+                </div>
+                <span class="m-scheme-badge badge-green">ELIGIBLE</span>
+            </div>
+            <div class="m-scheme-row">
+                <div class="m-scheme-info">
+                    <div class="m-scheme-name">Ayushman Bharat</div>
+                    <div class="m-scheme-tag">Health · ₹5,00,000/yr</div>
+                </div>
+                <span class="m-scheme-badge badge-green">ELIGIBLE</span>
+            </div>
+            <div class="m-scheme-row">
+                <div class="m-scheme-info">
+                    <div class="m-scheme-name">NSP Scholarship</div>
+                    <div class="m-scheme-tag">Education · ₹50,000/yr</div>
+                </div>
+                <span class="m-scheme-badge badge-amber">POSSIBLE</span>
+            </div>
+            <div class="m-scheme-row">
+                <div class="m-scheme-info">
+                    <div class="m-scheme-name">PM-KISAN</div>
+                    <div class="m-scheme-tag">Agriculture · ₹6,000/yr</div>
+                </div>
+                <span class="m-scheme-badge badge-blue">CHECK</span>
+            </div>
+        </div>
     </div>
-    <div class="m-scheme-row">
-      <div class="m-scheme-info">
-        <div class="m-scheme-name">Ayushman Bharat</div>
-        <div class="m-scheme-tag">Health · ₹5,00,000/yr</div>
-      </div>
-      <span class="m-scheme-badge badge-green">ELIGIBLE</span>
-    </div>
-    <div class="m-scheme-row">
-      <div class="m-scheme-info">
-        <div class="m-scheme-name">NSP Scholarship</div>
-        <div class="m-scheme-tag">Education · ₹50,000/yr</div>
-      </div>
-      <span class="m-scheme-badge badge-amber">POSSIBLE</span>
-    </div>
-    <div class="m-scheme-row">
-      <div class="m-scheme-info">
-        <div class="m-scheme-name">PM-KISAN</div>
-        <div class="m-scheme-tag">Agriculture · ₹6,000/yr</div>
-      </div>
-      <span class="m-scheme-badge badge-blue">CHECK</span>
-    </div>
-  </div>
-</div>
 
-<!-- HOW IT WORKS -->
-<section class="m-section">
-  <div class="m-section-label">How it works</div>
-  <div class="m-section-title">Three steps to your benefits</div>
-  <div class="m-steps">
-    <div class="m-step">
-      <div class="m-step-num">1</div>
-      <div>
-        <div class="m-step-title">Build Your Profile</div>
-        <div class="m-step-desc">Answer a few simple questions about yourself — income, category, location, and more.</div>
-      </div>
-    </div>
-    <div class="m-step">
-      <div class="m-step-num">2</div>
-      <div>
-        <div class="m-step-title">AI Matches Schemes</div>
-        <div class="m-step-desc">Our engine cross-checks thousands of state & central schemes against your profile in seconds.</div>
-      </div>
-    </div>
-    <div class="m-step">
-      <div class="m-step-num">3</div>
-      <div>
-        <div class="m-step-title">Apply with Guidance</div>
-        <div class="m-step-desc">Get a precise document checklist and direct application links — no confusion, no guesswork.</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- HOW IT WORKS -->
+    <section class="m-section">
+        <div class="m-section-label">How it works</div>
+        <div class="m-section-title">Three steps to your benefits</div>
+        <div class="m-steps">
+            <div class="m-step">
+                <div class="m-step-num">1</div>
+                <div>
+                    <div class="m-step-title">Build Your Profile</div>
+                    <div class="m-step-desc">Answer a few simple questions about yourself — income, category, location,
+                        and more.</div>
+                </div>
+            </div>
+            <div class="m-step">
+                <div class="m-step-num">2</div>
+                <div>
+                    <div class="m-step-title">AI Matches Schemes</div>
+                    <div class="m-step-desc">Our engine cross-checks thousands of state & central schemes against your
+                        profile in seconds.</div>
+                </div>
+            </div>
+            <div class="m-step">
+                <div class="m-step-num">3</div>
+                <div>
+                    <div class="m-step-title">Apply with Guidance</div>
+                    <div class="m-step-desc">Get a precise document checklist and direct application links — no
+                        confusion, no guesswork.</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- FEATURES -->
-<section class="m-section" style="padding-top: 0;">
-  <div class="m-section-label">Features</div>
-  <div class="m-section-title">Everything you need</div>
-  <div class="m-features">
-    <div class="m-feature-card">
-      <div class="m-feature-icon fi-orange">🎯</div>
-      <div>
-        <div class="m-feature-title">Precision Matching</div>
-        <div class="m-feature-desc">AI scans 4,200+ schemes to find your exact eligibility — state and central.</div>
-      </div>
-    </div>
-    <div class="m-feature-card">
-      <div class="m-feature-icon fi-green">📋</div>
-      <div>
-        <div class="m-feature-title">Document Checklist</div>
-        <div class="m-feature-desc">Know exactly which documents to gather before you walk into any office.</div>
-      </div>
-    </div>
-    <div class="m-feature-card">
-      <div class="m-feature-icon fi-blue">🤖</div>
-      <div>
-        <div class="m-feature-title">AI Readiness Score</div>
-        <div class="m-feature-desc">Get a score out of 100 for any scheme. Know your gaps before applying.</div>
-      </div>
-    </div>
-    <div class="m-feature-card">
-      <div class="m-feature-icon fi-purple">🔒</div>
-      <div>
-        <div class="m-feature-title">Document Vault</div>
-        <div class="m-feature-desc">Securely store your documents once, use them for multiple scheme applications.</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- FEATURES -->
+    <section class="m-section" style="padding-top: 0;">
+        <div class="m-section-label">Features</div>
+        <div class="m-section-title">Everything you need</div>
+        <div class="m-features">
+            <div class="m-feature-card">
+                <div class="m-feature-icon fi-orange">🎯</div>
+                <div>
+                    <div class="m-feature-title">Precision Matching</div>
+                    <div class="m-feature-desc">AI scans 4,200+ schemes to find your exact eligibility — state and
+                        central.</div>
+                </div>
+            </div>
+            <div class="m-feature-card">
+                <div class="m-feature-icon fi-green">📋</div>
+                <div>
+                    <div class="m-feature-title">Document Checklist</div>
+                    <div class="m-feature-desc">Know exactly which documents to gather before you walk into any office.
+                    </div>
+                </div>
+            </div>
+            <div class="m-feature-card">
+                <div class="m-feature-icon fi-blue">🤖</div>
+                <div>
+                    <div class="m-feature-title">AI Readiness Score</div>
+                    <div class="m-feature-desc">Get a score out of 100 for any scheme. Know your gaps before applying.
+                    </div>
+                </div>
+            </div>
+            <div class="m-feature-card">
+                <div class="m-feature-icon fi-purple">🔒</div>
+                <div>
+                    <div class="m-feature-title">Document Vault</div>
+                    <div class="m-feature-desc">Securely store your documents once, use them for multiple scheme
+                        applications.</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- CTA -->
-<div class="m-cta">
-  <h2>Find your government benefits today</h2>
-  <p>Thousands of Indians miss out on schemes they qualify for. Don't be one of them.</p>
-  <a href="dashboard.html" class="m-cta-btn">Get Started Free →</a>
-</div>
+    <!-- CTA -->
+    <div class="m-cta">
+        <h2>Find your government benefits today</h2>
+        <p>Thousands of Indians miss out on schemes they qualify for. Don't be one of them.</p>
+        <a href="dashboard.html" class="m-cta-btn">Get Started Free →</a>
+    </div>
 
-<!-- FOOTER -->
-<footer class="m-footer">
-  <div class="m-footer-brand">
-    <div class="m-logo-mark">YM</div>
-    <span>YojanaMitra</span>
-  </div>
-  <p class="m-footer-desc">An independent AI platform connecting citizens to government welfare schemes. Not affiliated with any government body.</p>
-  <div class="m-footer-links">
-    <a href="mobile_schemes.html">All Schemes</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="mobile_vault.html">My Vault</a>
-    <a href="mobile_auth.html#login">Login</a>
-  </div>
-  <p class="m-footer-copy">© 2025 YojanaMitra. All rights reserved.</p>
-</footer>
+    <!-- FOOTER -->
+    <footer class="m-footer">
+        <div class="m-footer-brand">
+            <div class="m-logo-mark">YM</div>
+            <span>YojanaMitra</span>
+        </div>
+        <p class="m-footer-desc">An independent AI platform connecting citizens to government welfare schemes. Not
+            affiliated with any government body.</p>
+        <div class="m-footer-links">
+            <a href="mobile_schemes.html">All Schemes</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="mobile_vault.html">My Vault</a>
+            <a href="mobile_auth.html#login">Login</a>
+        </div>
+        <p class="m-footer-copy">© 2025 YojanaMitra. All rights reserved.</p>
+    </footer>
 
-<!-- BOTTOM NAV -->
-<nav class="m-bottom-nav">
-  <a class="m-nav-item active" href="mobile_home.html">
-    <i class="fas fa-home"></i>
-    Home
-  </a>
-  <a class="m-nav-item" href="mobile_schemes.html">
-    <i class="fas fa-list"></i>
-    Schemes
-  </a>
-  <a class="m-nav-item" href="dashboard.html">
-    <i class="fas fa-chart-pie"></i>
-    Dashboard
-  </a>
-  <a class="m-nav-item" href="mobile_vault.html">
-    <i class="fas fa-folder"></i>
-    Vault
-  </a>
-</nav>
+    <!-- BOTTOM NAV -->
+    <nav class="m-bottom-nav">
+        <a class="m-nav-item active" href="mobile_home.html">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+        <a class="m-nav-item" href="mobile_schemes.html">
+            <i class="fas fa-list"></i>
+            Schemes
+        </a>
+        <a class="m-nav-item" href="dashboard.html">
+            <i class="fas fa-chart-pie"></i>
+            Dashboard
+        </a>
+        <a class="m-nav-item" href="mobile_vault.html">
+            <i class="fas fa-folder"></i>
+            Vault
+        </a>
+    </nav>
 
 </body>
+
 </html>
