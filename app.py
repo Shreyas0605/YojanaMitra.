@@ -1522,10 +1522,26 @@ def _scheme_get_conditions(self):
 
 
 # ----------------- Routes -----------------
+BUILD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'build')
+
 @app.route('/')
 def index():
-    # Serve the main index.html from /static
-    return send_from_directory('static', 'index.html')
+    # Serve the React build's index.html (home page)
+    return send_from_directory(BUILD_DIR, 'index.html')
+
+@app.route('/static/js/<path:filename>')
+def serve_react_js(filename):
+    """Serve React bundle JS assets"""
+    return send_from_directory(os.path.join(BUILD_DIR, 'static', 'js'), filename)
+
+@app.route('/static/css/<path:filename>')
+def serve_react_css(filename):
+    """Serve React bundle CSS assets"""
+    return send_from_directory(os.path.join(BUILD_DIR, 'static', 'css'), filename)
+
+@app.route('/vault.html')
+def serve_vault():
+    return send_from_directory('static', 'vault.html')
 
 @app.route('/all-schemes')
 def all_schemes():
