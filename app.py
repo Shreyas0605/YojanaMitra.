@@ -74,6 +74,10 @@ if hasattr(sys.stdout, 'reconfigure'):
 app = Flask(__name__, static_folder='static')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
 
+# Cloudinary CDN helper for Jinja templates
+from config import cdn_url
+app.jinja_env.globals["cdn"] = cdn_url
+
 db_url = os.getenv('DATABASE_URL', 'sqlite:///yojanamitra.db')
 
 # Fix for Supabase / SQLAlchemy compatibility
@@ -127,6 +131,14 @@ if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
     model = genai.GenerativeModel('gemini-flash-latest')
     print("Gemini model initialized (using premium gemini-flash-latest for complex reasoning).")
+
+# ----------------- Cloudinary CDN Setup -----------------
+import cloudinary
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 # ----------------- Utility Functions -----------------
 def strip_markdown(text):
