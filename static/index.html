@@ -244,11 +244,14 @@
             content: '';
             position: absolute;
             inset: 0;
-            /* Fade intensity reduced by 50% */
+            z-index: 2;
+            /* Strong left-edge fade: image blends into the cream hero background */
             background: linear-gradient(to right,
                     #fbfaf7 0%,
-                    rgba(251, 250, 247, 0.4) 17%,
-                    rgba(251, 250, 247, 0.0) 25%);
+                    #fbfaf7 5%,
+                    rgba(251, 250, 247, 0.85) 20%,
+                    rgba(251, 250, 247, 0.45) 35%,
+                    rgba(251, 250, 247, 0.0) 55%);
         }
 
         .hero-container {
