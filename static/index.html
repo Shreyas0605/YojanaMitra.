@@ -245,13 +245,11 @@
             position: absolute;
             inset: 0;
             z-index: 2;
-            /* Strong left-edge fade: image blends into the cream hero background */
+            /* Tight left-edge fade: transitions quickly so image appears right at the boundary */
             background: linear-gradient(to right,
                     #fbfaf7 0%,
-                    #fbfaf7 5%,
-                    rgba(251, 250, 247, 0.85) 20%,
-                    rgba(251, 250, 247, 0.45) 35%,
-                    rgba(251, 250, 247, 0.0) 55%);
+                    rgba(251, 250, 247, 0.7) 10%,
+                    rgba(251, 250, 247, 0.0) 28%);
         }
 
         .hero-container {
