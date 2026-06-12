@@ -3335,6 +3335,33 @@
 
             window.addEventListener('scroll', onScroll, { passive: true });
 
+            // ── Trackpad / wheel dampening ──────────────────────────────────
+            // Intercept wheel events to slow down fast trackpad swipes
+            var SCROLL_SENSITIVITY = 0.28; // lower = slower (0.1 very slow, 1.0 = normal)
+            var wheelAccum = 0;
+            var wheelRafId = null;
+
+            window.addEventListener('wheel', function (e) {
+                var prog = getScrollProg();
+                // Only intercept while we're inside the scrolly section (0 < prog < 1)
+                if (prog <= 0 && e.deltaY < 0) return; // allow scroll up to exit
+                if (prog >= 1 && e.deltaY > 0) return; // allow scroll down to exit
+                if (prog < 0 || prog > 1) return;
+
+                e.preventDefault();
+
+                // Accumulate dampened delta
+                wheelAccum += e.deltaY * SCROLL_SENSITIVITY;
+
+                if (!wheelRafId) {
+                    wheelRafId = requestAnimationFrame(function flushWheel() {
+                        window.scrollBy(0, wheelAccum);
+                        wheelAccum = 0;
+                        wheelRafId = null;
+                    });
+                }
+            }, { passive: false });
+
             video.addEventListener('loadedmetadata', function () {
                 targetProg = getScrollProg();
                 currentProg = targetProg;
