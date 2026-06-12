@@ -3337,7 +3337,7 @@
 
             // ── Trackpad / wheel dampening ──────────────────────────────────
             // Intercept wheel events to slow down fast trackpad swipes
-            var SCROLL_SENSITIVITY = 0.28; // lower = slower (0.1 very slow, 1.0 = normal)
+            var SCROLL_SENSITIVITY = 0.476; // 0.28 * 1.7 — lower = slower
             var wheelAccum = 0;
             var wheelRafId = null;
 
@@ -3868,7 +3868,7 @@
                 var spokeAngles = [0, 90, 180, 270];
                 var TOTAL_STEPS = 4;
                 var current = 0;
-                var DEBOUNCE = 800;
+                var DEBOUNCE = 1600; // 800ms * 2 — slows step transitions by 50%
                 var lastStepTime = 0;
 
                 function applyStep(step, instant) {
@@ -5254,7 +5254,7 @@
                 const bg = document.getElementById('story-bg');
 
                 const TOTAL_SLOTS = 10;
-                const DEBOUNCE = 800;
+                const DEBOUNCE = 1600; // 800ms * 2 — slows step transitions by 50%
                 let current = 0;
                 let lastStepTime = 0;
 
