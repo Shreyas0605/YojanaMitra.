@@ -2015,22 +2015,16 @@ input:-webkit-autofill:active {
     right: 0;
     width: 65%;
     height: 100%;
-    background-image: url('https://res.cloudinary.com/dpnbibk6d/image/upload/v1781159724/yojanamitra/img/hero.webp');
+    background-image:
+        linear-gradient(to right,
+            #fbfaf7 0%,
+            rgba(251, 250, 247, 0.75) 12%,
+            rgba(251, 250, 247, 0.0) 30%),
+        url('https://res.cloudinary.com/dpnbibk6d/image/upload/v1781159724/yojanamitra/img/hero.webp');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
     z-index: 1;
-}
-
-.hero-bg-image::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background: linear-gradient(to right,
-            #fbfaf7 0%,
-            rgba(251, 250, 247, 0.7) 10%,
-            rgba(251, 250, 247, 0.0) 28%);
 }
 
 .hero-container {
