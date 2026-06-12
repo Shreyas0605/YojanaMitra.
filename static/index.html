@@ -3284,12 +3284,30 @@
                 return clamp((st - top) / scrollable, 0, 1);
             }
 
+            // Seek guard — prevents queue overflow that causes "stuck at 50%"
+            var isSeeking = false;
+            var pendingTime = null;
+
+            function seekTo(t) {
+                if (isSeeking) { pendingTime = t; return; }
+                if (Math.abs(video.currentTime - t) <= 0.004) return;
+                isSeeking = true;
+                try {
+                    if (video.fastSeek) { video.fastSeek(t); }
+                    else { video.currentTime = t; }
+                } catch (e) { isSeeking = false; }
+            }
+
+            video.addEventListener('seeked', function () {
+                isSeeking = false;
+                if (pendingTime !== null) {
+                    var t = pendingTime; pendingTime = null; seekTo(t);
+                }
+            });
+
             function applyProg(prog) {
-                if (video.readyState >= 1 && video.duration && isFinite(video.duration)) {
-                    var t = prog * video.duration;
-                    if (Math.abs(video.currentTime - t) > 0.004) {
-                        try { video.currentTime = t; } catch (e) { }
-                    }
+                if (video.readyState >= 2 && video.duration && isFinite(video.duration)) {
+                    seekTo(prog * video.duration);
                 }
                 fadeEl(ov1, prog, 0, 0.03, 0.14, 0.167);
                 fadeEl(ov2, prog, 0.21, 0.25, 0.62, 0.67);
