@@ -3336,30 +3336,34 @@
             window.addEventListener('scroll', onScroll, { passive: true });
 
             // ── Trackpad / wheel dampening ──────────────────────────────────
-            // Intercept wheel events to slow down fast trackpad swipes
-            var SCROLL_SENSITIVITY = 0.476; // 0.28 * 1.7 — lower = slower
+            // Only active while INSIDE the scrolly section (raw, unclamped check)
+            var SCROLL_SENSITIVITY = 0.714; // 0.476 * 1.5
             var wheelAccum = 0;
             var wheelRafId = null;
 
+            function getRawProg() {
+                var st = window.scrollY;
+                var top = section.getBoundingClientRect().top + window.scrollY;
+                var scrollable = section.offsetHeight - window.innerHeight;
+                if (scrollable <= 0) return -1;
+                return (st - top) / scrollable; // NOT clamped — negative above, >1 below
+            }
+
             window.addEventListener('wheel', function (e) {
-                var prog = getScrollProg();
-                // Only intercept while we're inside the scrolly section (0 < prog < 1)
-                if (prog <= 0 && e.deltaY < 0) return; // allow scroll up to exit
-                if (prog >= 1 && e.deltaY > 0) return; // allow scroll down to exit
-                if (prog < 0 || prog > 1) return;
-
-                e.preventDefault();
-
-                // Accumulate dampened delta
-                wheelAccum += e.deltaY * SCROLL_SENSITIVITY;
-
-                if (!wheelRafId) {
-                    wheelRafId = requestAnimationFrame(function flushWheel() {
-                        window.scrollBy(0, wheelAccum);
-                        wheelAccum = 0;
-                        wheelRafId = null;
-                    });
+                var raw = getRawProg();
+                // Strictly inside section: intercept and dampen
+                if (raw > 0 && raw < 1) {
+                    e.preventDefault();
+                    wheelAccum += e.deltaY * SCROLL_SENSITIVITY;
+                    if (!wheelRafId) {
+                        wheelRafId = requestAnimationFrame(function () {
+                            window.scrollBy(0, wheelAccum);
+                            wheelAccum = 0;
+                            wheelRafId = null;
+                        });
+                    }
                 }
+                // Outside section (above or below): let native scroll through untouched
             }, { passive: false });
 
             video.addEventListener('loadedmetadata', function () {
