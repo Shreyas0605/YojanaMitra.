@@ -3258,50 +3258,39 @@
             var hint = document.getElementById('scrolly-hint');
             if (!video || !section || window.innerWidth <= 768) return;
 
-            // Only reset scroll on a true fresh load (not back-navigation or mid-page reload)
             if (history.scrollRestoration) history.scrollRestoration = 'manual';
-            if (window.scrollY < 10) window.scrollTo(0, 0);
-
-            // Pause immediately — scroll drives playback
             video.pause();
             video.currentTime = 0;
 
-            function lerp(a, b, t) { return a + (b - a) * t }
-            function clamp(v, a, b) { return Math.max(a, Math.min(b, v)) }
+            function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+            function lerp(a, b, t) { return a + (b - a) * t; }
+
             function fadeEl(el, p, i0, i1, o0, o1) {
                 var op = 0, ty = 14;
-                if (p >= i0 && p < i1) { var t = (p - i0) / (i1 - i0); op = t; ty = lerp(14, 0, t); }
+                if (p >= i0 && p < i1) { var tt = (p - i0) / (i1 - i0); op = tt; ty = lerp(14, 0, tt); }
                 else if (p >= i1 && (!o0 || p < o0)) { op = 1; ty = 0; }
-                else if (o0 && p >= o0 && p <= o1) { var t = (p - o0) / (o1 - o0); op = 1 - t; ty = lerp(0, -14, t); }
+                else if (o0 && p >= o0 && p <= o1) { var tt = (p - o0) / (o1 - o0); op = 1 - tt; ty = lerp(0, -14, tt); }
                 else if (o1 && p > o1) { op = 0; ty = -14; }
                 el.style.opacity = op;
                 el.style.transform = 'translateY(' + ty + 'px)';
             }
 
-            // ── Smooth scroll-scrub with lerp + rAF loop ──────────────────
-            var targetProg = 0;
-            var currentProg = 0;
-            var rafId = null;
-            var isLooping = false;
-
+            // Direct linear mapping — no lerp, perfectly uniform
             function getScrollProg() {
                 var st = window.scrollY;
                 var top = section.getBoundingClientRect().top + window.scrollY;
-                var height = section.offsetHeight;
-                var scrollable = height - window.innerHeight;
+                var scrollable = section.offsetHeight - window.innerHeight;
                 if (scrollable <= 0) return 0;
                 return clamp((st - top) / scrollable, 0, 1);
             }
 
             function applyProg(prog) {
-                // Scrub video
-                if (video.readyState >= 2 && video.duration && isFinite(video.duration)) {
+                if (video.readyState >= 1 && video.duration && isFinite(video.duration)) {
                     var t = prog * video.duration;
-                    if (Math.abs(video.currentTime - t) > 0.008) {
+                    if (Math.abs(video.currentTime - t) > 0.004) {
                         try { video.currentTime = t; } catch (e) { }
                     }
                 }
-                // Overlays
                 fadeEl(ov1, prog, 0, 0.03, 0.14, 0.167);
                 fadeEl(ov2, prog, 0.21, 0.25, 0.62, 0.67);
                 hint.style.opacity = prog < 0.04 ? 1 : 0;
@@ -3309,81 +3298,31 @@
                 section.style.pointerEvents = prog >= 1 ? 'none' : 'auto';
             }
 
-            function loop() {
-                // Lerp current toward target for smooth interpolation
-                currentProg = lerp(currentProg, targetProg, 0.08);
-                applyProg(currentProg);
-
-                // Keep looping only while there's meaningful difference
-                if (Math.abs(currentProg - targetProg) > 0.0002) {
-                    rafId = requestAnimationFrame(loop);
-                } else {
-                    currentProg = targetProg;
-                    applyProg(currentProg);
-                    isLooping = false;
-                    rafId = null;
-                }
-            }
-
+            // rAF-throttled scroll handler — one DOM write per frame max
+            var rafPending = false;
             function onScroll() {
-                targetProg = getScrollProg();
-                if (!isLooping) {
-                    isLooping = true;
-                    rafId = requestAnimationFrame(loop);
-                }
+                if (rafPending) return;
+                rafPending = true;
+                requestAnimationFrame(function () {
+                    applyProg(getScrollProg());
+                    rafPending = false;
+                });
             }
 
             window.addEventListener('scroll', onScroll, { passive: true });
+            video.addEventListener('loadedmetadata', function () { applyProg(getScrollProg()); });
 
-            // ── Trackpad / wheel dampening ──────────────────────────────────
-            // Only active while INSIDE the scrolly section (raw, unclamped check)
-            var SCROLL_SENSITIVITY = 6.142;
-            var wheelAccum = 0;
-            var wheelRafId = null;
-
-            function getRawProg() {
-                var st = window.scrollY;
-                var top = section.getBoundingClientRect().top + window.scrollY;
-                var scrollable = section.offsetHeight - window.innerHeight;
-                if (scrollable <= 0) return -1;
-                return (st - top) / scrollable; // NOT clamped — negative above, >1 below
+            // Wait for full layout to settle before initialising
+            // (fixes load-vs-refresh inconsistency caused by CSS injecting late)
+            function init() {
+                if (window.scrollY < 10) window.scrollTo(0, 0);
+                applyProg(getScrollProg());
             }
-
-            window.addEventListener('wheel', function (e) {
-                var raw = getRawProg();
-                // Strictly inside section: intercept and dampen
-                if (raw > 0 && raw < 1) {
-                    e.preventDefault();
-                    wheelAccum += e.deltaY * SCROLL_SENSITIVITY;
-                    if (!wheelRafId) {
-                        wheelRafId = requestAnimationFrame(function () {
-                            window.scrollBy(0, wheelAccum);
-                            wheelAccum = 0;
-                            wheelRafId = null;
-                        });
-                    }
-                }
-                // Outside section (above or below): let native scroll through untouched
-            }, { passive: false });
-
-            video.addEventListener('loadedmetadata', function () {
-                targetProg = getScrollProg();
-                currentProg = targetProg;
-                applyProg(currentProg);
-            });
-
-            window.addEventListener('load', function () {
-                if (window.scrollY < 10) {
-                    targetProg = 0; currentProg = 0;
-                    setTimeout(function () { applyProg(0); }, 100);
-                } else {
-                    targetProg = getScrollProg();
-                    currentProg = targetProg;
-                    applyProg(currentProg);
-                }
-            });
-
-            applyProg(0);
+            if (document.readyState === 'complete') {
+                setTimeout(init, 150);
+            } else {
+                window.addEventListener('load', function () { setTimeout(init, 150); });
+            }
         })();
     </script>
     <!-- ════════════════════════ END SCROLLYTELLING ════════════════════════ -->
